@@ -1,0 +1,64 @@
+[
+  {
+    "witness": "Amber Heard",
+    "verdict": "evolved",
+    "reasoning": "Both statements concern Amber Heard's testimony about domestic violence in her marriage and related timeline/details, but they address different aspects and events rather than asserting the same fact in incompatible ways.",
+    "moment_a": {
+      "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+      "start": 0.0,
+      "end": 300.33,
+      "text": "Heard had initially testified the violence started in 2013, but on Monday, she said it was actually 2012.",
+      "score": null,
+      "session_title": "Amber Heard cross-examination (May 16)",
+      "session_type": "",
+      "stream_url": "",
+      "player_url": "",
+      "attrs": {}
+    },
+    "moment_b": {
+      "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+      "start": 1977.97,
+      "end": 2069.73,
+      "text": " You edited that video before you gave it to TMZ So that only Mr. Depp would look bad. Yes. That's absurd. Right in the middle of your divorce proceedings. Again, you're very wrong. I'd like to show you a picture from. That's already admitted into evidence. It's defendants exhibit 799. This is you at the courthouse on May 27, 2016, when you got your domestic violence restraining order against Mr. Depp, right? It is. And next to you is a woman named Jody Gottlieb, right? Right? Yes. Yes. Jody Gottlieb is your publicist and dear friend. Now, I'd like to show you what's been marked as plaintiff's exhibit 1316. This is a picture of you and your friend Rocky Pennington, right? That is correct. Your Honor, I'd like to move to admit this photograph. Any objection to 1316? No, you, Honor. All right, 1316 in evidence. You can publish the jury. This is a picture of you on May 28, 2016, right, Ms. Heard? I don't know when this was taken. This is the day after you obtained the domestic violence restraining order against Mr. Depp, right? I have no idea when this image was taken.",
+      "score": 0.528121054,
+      "session_title": "Amber Heard rebuttal testimony (May 26)",
+      "session_type": "trial_day",
+      "stream_url": "https://play.videodb.io/v1/a82333ff-b308-4997-8d78-9a63efee9279.m3u8",
+      "player_url": "",
+      "attrs": {}
+    },
+    "clip_a": "https://play.videodb.io/v1/7b740a27-229b-4cd6-afcd-69cf56ad3b36.m3u8",
+    "clip_b": "https://play.videodb.io/v1/82d9f697-8503-4ccf-bf53-fa9fb2c17304.m3u8"
+  },
+  {
+    "witness": "Amber Heard",
+    "verdict": "evolved",
+    "reasoning": "Both statements concern Heard\u2019s account of reacting to Depp\u2019s violence, but Statement B adds later, more detailed testimony about why she expected corroborating witnesses and what she believed at the time, so it expands rather than directly contradicts Statement A.",
+    "moment_a": {
+      "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+      "start": 0.0,
+      "end": 300.33,
+      "text": "There are two different altercations between Johnny and I... I would have to resort to reactively hitting him.",
+      "score": null,
+      "session_title": "Amber Heard cross-examination (May 16)",
+      "session_type": "",
+      "stream_url": "",
+      "player_url": "",
+      "attrs": {}
+    },
+    "moment_b": {
+      "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+      "start": 2877.01,
+      "end": 2969.75,
+      "text": " Moss to agree to testify that that never happened, did you? Incorrect. I know how many people will come out of the woodwork to be in support of Johnny. So you think that needs to come out of the W to testify for Mr. Depp? Everybody who was around in the 90s and the early aughts knew that rumor. I had heard that rumor from multiple people. Of course, that's what flashed through my head. When my violent husband not only swung for me, but all of a sudden swung for my sister. Of course I thought of that. I did not expect her to show up or not expect her to show up. It didn't matter. It doesn't change what I believed at the time. When we were on the stairs and I thought he was going to kill my sister by pushing her down the stairs. You told this jury under oath that Mr. Depp was aggressive and trashed a trailer in Hicksville. You didn't expect the manager of the Hicksville property, Morgan Knight, to come forward and testify that that wasn't true, did you? Incorrect. I've already been through trials with this man. I know how many people will come out in support of him. When you told this jury under oath that you had no idea that the paparazzi would be at the courthouse on May 27, 2016, you didn't expect a TMZ employee to show up to testify that TMZ had been alerted that you would be at the courthouse and knew exactly which side of your face to take a picture of, did you? I know how many people will come out and say whatever for him. That's his power. That's why I wrote the op ed is I was speaking to that phenomenon. How many people will come out in support of him and will fall to his power? He is a very powerful man, and people love currying favor with powerful men. I know that. Jail time for committing perjury.",
+      "score": 0.576617181,
+      "session_title": "Amber Heard rebuttal testimony (May 26)",
+      "session_type": "trial_day",
+      "stream_url": "https://play.videodb.io/v1/a82333ff-b308-4997-8d78-9a63efee9279.m3u8",
+      "player_url": "",
+      "attrs": {}
+    },
+    "clip_a": "https://play.videodb.io/v1/82a14119-52cd-4500-a168-42668aec9fda.m3u8",
+    "clip_b": "https://play.videodb.io/v1/4090eeb0-dcd9-424a-8479-8cf642cacd68.m3u8"
+  }
+]

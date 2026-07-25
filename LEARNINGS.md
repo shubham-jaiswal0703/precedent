@@ -156,6 +156,20 @@ work later; webhook/real-time canon lives in videodb-capture-quickstart.
 - Cost/perf: three videos (~2.7 h total footage) uploaded + spoken-indexed in
   under 5 min combined; contradiction run over an 18-min segment ≈ 2 min.
 
+## API/UI build (2026-07-26)
+
+- `video.search()` RAISES `InvalidRequestError("No results found")` on zero
+  hits instead of returning an empty result — wrap every search call.
+- Reel stitching returns `stream.videodb.io/v3/published/manifests/...m3u8`
+  (different host than single-video `play.videodb.io` clips); both play fine
+  in hls.js.
+- Precomputing contradictions to `data/contradictions/<case>.json` keeps the
+  UI snappy — the finder takes ~2 min per witness pair, too slow for a
+  request/response cycle.
+- macOS TCC blocks the Claude preview launcher from exec-ing binaries under
+  ~/Desktop; run uvicorn from a regular shell and attach the browser to the
+  URL instead.
+
 ## Footage notes
 
 - 2026-07-25: Depp v. Heard chosen as primary corpus (see SOURCES.md).

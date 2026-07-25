@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Precedent — Playable Testimony</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<style>
+  :root { --ink:#1a1712; --paper:#f6f2ea; --accent:#8a1f1f; --line:#d8d0c0; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background:var(--paper); color:var(--ink); }
+  header { padding:28px 32px 18px; border-bottom:3px double var(--ink); display:flex; align-items:baseline; gap:16px; }
+  header h1 { font-size:28px; letter-spacing:.5px; }
+  header span { color:#6b6353; font-style:italic; }
+  nav { display:flex; gap:4px; padding:0 32px; border-bottom:1px solid var(--line); background:#efe9dd; }
+  nav button { font:inherit; padding:10px 18px; border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; }
+  nav button.active { border-bottom-color:var(--accent); font-weight:bold; }
+  main { padding:24px 32px; max-width:1100px; margin:0 auto; }
+  .searchbar { display:flex; gap:10px; margin-bottom:20px; }
+  .searchbar input { flex:1; font:inherit; font-size:17px; padding:12px 14px; border:1px solid var(--line); background:#fff; }
+  .searchbar button, .pill { font:inherit; padding:12px 20px; border:1px solid var(--ink); background:var(--ink); color:var(--paper); cursor:pointer; }
+  .hint { color:#6b6353; font-style:italic; margin-bottom:16px; }
+  .card { background:#fff; border:1px solid var(--line); padding:16px; margin-bottom:14px; }
+  .card .meta { font-size:13px; color:#6b6353; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card blockquote { border-left:3px solid var(--accent); padding-left:12px; font-style:italic; margin:8px 0; }
+  .badge { display:inline-block; font-size:12px; padding:2px 8px; border:1px solid var(--accent); color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
+  video { width:100%; max-height:360px; background:#000; margin-top:10px; }
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .split h4 { margin-bottom:6px; }
+  .loading { padding:30px; text-align:center; font-style:italic; color:#6b6353; }
+  .tabpane { display:none; } .tabpane.show { display:block; }
+</style>
+</head>
+<body>
+<header><h1>PRECEDENT</h1><span>Playable testimony — students used to read this in a book; now they watch the moment.</span></header>
+<nav>
+  <button data-tab="ask" class="active">Ask the Archive</button>
+  <button data-tab="objections">Objection Log</button>
+  <button data-tab="contradictions">Contradictions</button>
+  <button data-tab="reel">Teaching Reel</button>
+</nav>
+<main>
+  <section id="ask" class="tabpane show">
+    <div class="searchbar">
+      <input id="q" placeholder='Ask like a professor — "Where is the witness confronted with her deposition?"'>
+      <button onclick="runSearch()">Search</button>
+    </div>
+    <div class="hint">Semantic search over the spoken-word index of the whole case archive. Every answer is a playable moment.</div>
+    <div id="results"></div>
+  </section>
+  <section id="objections" class="tabpane">
+    <div class="hint">Rule-extracted objection log with grounds and rulings, from the case pack.</div>
+    <div id="objlog" class="loading">Loading case pack…</div>
+  </section>
+  <section id="contradictions" class="tabpane">
+    <div class="hint">Same witness, different day: claims cross-matched between sessions and judged. Clips play side by side.</div>
+    <div id="contra" class="loading">Loading…</div>
+  </section>
+  <section id="reel" class="tabpane">
+    <div class="searchbar">
+      <input id="reelq" placeholder='Teaching reel topic — "objections during cross-examination"'>
+      <button onclick="runReel()">Build reel</button>
+    </div>
+    <div class="hint">Stitches matching moments from across the archive into one compilation stream.</div>
+    <div id="reelout"></div>
+  </section>
+</main>
+<script>
+const CASE = "depp-v-heard";
+const $ = (s) => document.querySelector(s);
+
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll(".tabpane").forEach(x => x.classList.remove("show"));
+  b.classList.add("active");
+  document.getElementById(b.dataset.tab).classList.add("show");
+  if (b.dataset.tab === "objections") loadObjections();
+  if (b.dataset.tab === "contradictions") loadContradictions();
+});
+
+function player(url) {
+  const v = document.createElement("video");
+  v.controls = true; v.preload = "none";
+  if (v.canPlayType("application/vnd.apple.mpegurl")) { v.src = url; }
+  else if (window.Hls) { const h = new Hls(); h.loadSource(url); h.attachMedia(v); }
+  return v;
+}
+
+function ts(s) { s = Math.floor(s); return `${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`; }
+
+function momentCard(m, extraBadges = []) {
+  const card = document.createElement("div"); card.className = "card";
+  const badges = extraBadges.map(b => `<span class="badge">${b}</span>`).join("");
+  card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)}–${ts(m.end)}</div>
+    ${badges}<blockquote>${(m.text || "").slice(0, 320)}</blockquote>`;
+  if (m.stream_url) card.appendChild(player(m.stream_url));
+  return card;
+}
+
+async function runSearch() {
+  const out = $("#results"); out.innerHTML = '<div class="loading">Searching the archive…</div>';
+  const r = await fetch(`/api/search?case=${CASE}&q=${encodeURIComponent($("#q").value)}`);
+  const items = await r.json();
+  out.innerHTML = items.length ? "" : '<div class="loading">No moments found.</div>';
+  items.forEach(m => out.appendChild(momentCard(m, m.score ? [`score ${m.score.toFixed(2)}`] : [])));
+}
+$("#q").addEventListener("keydown", e => e.key === "Enter" && runSearch());
+$("#reelq").addEventListener("keydown", e => e.key === "Enter" && runReel());
+
+let objLoaded = false;
+async function loadObjections() {
+  if (objLoaded) return; objLoaded = true;
+  const r = await fetch(`/api/casepack/${CASE}`);
+  const pack = await r.json();
+  const out = $("#objlog"); out.classList.remove("loading"); out.innerHTML = "";
+  pack.objection_log.forEach(e => {
+    const badges = [];
+    if (e.ground) badges.push(e.ground);
+    if (e.ruling) badges.push(e.ruling);
+    out.appendChild(momentCard(e, badges));
+  });
+}
+
+let contraLoaded = false;
+async function loadContradictions() {
+  if (contraLoaded) return; contraLoaded = true;
+  const out = $("#contra");
+  const r = await fetch(`/api/contradictions/${CASE}`);
+  if (!r.ok) { out.textContent = "No precomputed contradictions yet — run scripts/find_contradictions.py"; return; }
+  const items = await r.json();
+  out.classList.remove("loading"); out.innerHTML = "";
+  items.forEach(c => {
+    const card = document.createElement("div"); card.className = "card";
+    card.innerHTML = `<span class="badge">${c.verdict}</span><b>${c.witness}</b>
+      <blockquote>${c.reasoning}</blockquote>`;
+    const split = document.createElement("div"); split.className = "split";
+    [["A", c.moment_a, c.clip_a], ["B", c.moment_b, c.clip_b]].forEach(([label, m, clip]) => {
+      const col = document.createElement("div");
+      col.innerHTML = `<h4>${label}: ${m.session_title} · ${ts(m.start)}</h4><blockquote>${(m.text || "").slice(0, 200)}</blockquote>`;
+      if (clip) col.appendChild(player(clip));
+      split.appendChild(col);
+    });
+    card.appendChild(split); out.appendChild(card);
+  });
+}
+
+async function runReel() {
+  const out = $("#reelout"); out.innerHTML = '<div class="loading">Cutting the reel — stitching moments from across the archive…</div>';
+  const r = await fetch(`/api/reel?case=${CASE}&q=${encodeURIComponent($("#reelq").value)}`);
+  if (!r.ok) { out.innerHTML = '<div class="loading">No moments matched.</div>'; return; }
+  const data = await r.json();
+  out.innerHTML = `<div class="card"><div class="meta">${data.count} moments compiled</div></div>`;
+  out.firstChild.appendChild(player(data.stream_url));
+}
+</script>
+</body>
+</html>

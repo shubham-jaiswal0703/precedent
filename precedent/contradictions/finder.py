@@ -130,13 +130,17 @@ def find_contradictions(
 
     results: List[Contradiction] = []
     for claim in extract_claims(video_a):
-        search = vid_b.search(
-            query=claim.claim,
-            search_type=SearchType.semantic,
-            index_type=IndexType.spoken_word,
-            result_threshold=2,
-        )
-        for shot in search.get_shots():
+        try:
+            search = vid_b.search(
+                query=claim.claim,
+                search_type=SearchType.semantic,
+                index_type=IndexType.spoken_word,
+                result_threshold=2,
+            )
+            shots = search.get_shots()
+        except Exception:
+            continue  # SDK raises InvalidRequestError("No results found") on zero hits
+        for shot in shots:
             verdict_raw = _llm(
                 JUDGE_PROMPT.format(
                     label_a=label_a, text_a=f"{claim.claim} — quote: {claim.quote}",

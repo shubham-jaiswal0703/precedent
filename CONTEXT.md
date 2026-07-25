@@ -71,6 +71,16 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
   Demo beats 1 (search→clips) and 3 (contradiction) proven; reels and case
   packs still to exercise.
 
+- 2026-07-26 (later): All five product surfaces working. Teaching reel
+  (8 objections stitched cross-video), case pack (19-objection log with
+  grounds/rulings + 29-event timeline + key exchanges, every entry playable),
+  contradictions precomputed + cached, FastAPI + single-page UI (hls.js)
+  verified in browser: search → playable moments, side-by-side contradiction
+  players, reel builder tab. Server: `uvicorn precedent.api.app:app --port
+  8321` (preview launcher can't exec under Desktop due to macOS TCC — run
+  from a normal shell). GitHub issues used as work log (#1–#8; #2 and #6
+  open: VO-contamination filter, Search V2 migration).
+
 ## Next steps (build order)
 
 1. `ingest` + catalog + `indexing` wrappers — one trial segment searchable end-to-end
