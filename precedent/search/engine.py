@@ -106,4 +106,10 @@ def clip_url(video_id: str, start: float, end: float, pad: float = 2.0) -> str:
     conn = get_connection()
     coll = conn.get_collection(session.collection_id) if session else conn.get_collection()
     video = coll.get_video(video_id)
-    return video.generate_stream(timeline=[(max(0, start - pad), end + pad)])
+    clip_start = max(0.0, start - pad)
+    clip_end = end + pad
+    duration = (session.duration if session else None) or getattr(video, "length", None)
+    if duration:
+        clip_end = min(clip_end, float(duration))
+        clip_start = min(clip_start, max(0.0, clip_end - 1.0))
+    return video.generate_stream(timeline=[(clip_start, clip_end)])
