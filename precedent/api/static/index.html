@@ -29,6 +29,19 @@
   .split h4 { margin-bottom:6px; }
   .loading { padding:30px; text-align:center; font-style:italic; color:#6b6353; }
   .tabpane { display:none; } .tabpane.show { display:block; }
+  .transcript { margin-top:10px; padding:12px; background:#faf8f3; border:1px solid var(--line); line-height:2; font-size:15px; max-height:150px; overflow-y:auto; }
+  .transcript w { cursor:pointer; padding:1px 2px; border-radius:2px; }
+  .transcript w:hover { background:#e6ded0; }
+  .transcript w.hit { background:#f5e08c; font-weight:bold; box-shadow:0 1px 0 var(--accent); }
+  .transcript w.at { background:var(--ink); color:var(--paper); }
+  .rolechip { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#6b6353; border:1px dashed var(--line); padding:1px 6px; margin-left:6px; }
+  .controls { display:flex; gap:14px; align-items:center; margin-bottom:14px; font-size:14px; color:#6b6353; }
+  .controls label { cursor:pointer; }
+  .caption { font-size:13px; color:#6b6353; margin-top:6px; font-style:italic; }
+  .interp { padding:10px 14px; margin-bottom:16px; background:#efe9dd; border-left:4px solid var(--accent); font-size:15px; }
+  .interp .caption { display:block; margin-top:4px; }
+  .examples { margin-bottom:16px; font-size:14px; }
+  .examples a { color:var(--accent); cursor:pointer; margin-right:14px; text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -38,6 +51,7 @@
   <button data-tab="objections">Objection Log</button>
   <button data-tab="contradictions">Contradictions</button>
   <button data-tab="reel">Teaching Reel</button>
+  <button data-tab="drop">Analyze a Link</button>
 </nav>
 <main>
   <section id="ask" class="tabpane show">
@@ -45,7 +59,25 @@
       <input id="q" placeholder='Ask like a professor — "Where is the witness confronted with her deposition?"'>
       <button onclick="runSearch()">Search</button>
     </div>
-    <div class="hint">Semantic search over the spoken-word index of the whole case archive. Every answer is a playable moment.</div>
+    <div class="controls">
+      <label><input type="checkbox" id="precise" checked> Narrow to the exact words</label>
+      <label>Spoken by:
+        <select id="role">
+          <option value="">anyone</option>
+          <option value="witness">the witness</option>
+          <option value="examiner">an attorney</option>
+          <option value="judge">the judge</option>
+        </select>
+      </label>
+    </div>
+    <div class="examples">Try:
+      <a onclick="ask('show me every sustained objection')">every sustained objection</a>
+      <a onclick="ask('objection hearsay')">hearsay objections</a>
+      <a onclick="ask('FRE 611 leading question')">FRE 611 leading</a>
+      <a onclick="ask('cross-examination')">cross-examination</a>
+      <a onclick="ask('&quot;no further questions&quot;')">"no further questions"</a>
+    </div>
+    <div class="hint">Objections, rulings, and rule numbers are answered from the structured legal-moment index; everything else falls back to semantic search narrowed to the exact sentences. Click any transcript word to jump there.</div>
     <div id="results"></div>
   </section>
   <section id="objections" class="tabpane">
@@ -63,6 +95,14 @@
     </div>
     <div class="hint">Stitches matching moments from across the archive into one compilation stream.</div>
     <div id="reelout"></div>
+  </section>
+  <section id="drop" class="tabpane">
+    <div class="searchbar">
+      <input id="dropurl" placeholder="Paste a YouTube URL of any trial, hearing, or oral argument">
+      <button onclick="runDrop()">Analyze</button>
+    </div>
+    <div class="hint">We ingest it, transcribe it, and index it — then you can search it like the rest of the library.</div>
+    <div id="dropout"></div>
   </section>
 </main>
 <script>
@@ -88,22 +128,108 @@ function player(url) {
 
 function ts(s) { s = Math.floor(s); return `${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`; }
 
+const ROLE_NAMES = { witness: "witness", examiner: "attorney", judge: "the court", narrator: "broadcast voiceover", other: "unidentified" };
+
+// Word-level transcript: matched words highlighted, click a word to seek there.
+function transcriptPanel(highlight, clipStart, video) {
+  const words = highlight.words || [];
+  if (!words.length) return null;
+  const panel = document.createElement("div");
+  panel.className = "transcript";
+  words.forEach(w => {
+    const el = document.createElement("w");
+    el.textContent = w.text + " ";
+    if (w.match) el.className = "hit";
+    el.dataset.start = w.start;
+    el.title = ts(w.start);
+    el.onclick = () => { if (video) { video.currentTime = Math.max(0, w.start - clipStart); video.play(); } };
+    panel.appendChild(el);
+  });
+  if (video) {
+    // Follow along: mark the word currently being spoken.
+    video.addEventListener("timeupdate", () => {
+      const now = clipStart + video.currentTime;
+      let current = null;
+      panel.querySelectorAll("w").forEach(el => {
+        el.classList.remove("at");
+        if (parseFloat(el.dataset.start) <= now) current = el;
+      });
+      if (current) current.classList.add("at");
+    });
+  }
+  return panel;
+}
+
 function momentCard(m, extraBadges = []) {
   const card = document.createElement("div"); card.className = "card";
-  const badges = extraBadges.map(b => `<span class="badge">${b}</span>`).join("");
-  card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)}–${ts(m.end)}</div>
-    ${badges}<blockquote>${(m.text || "").slice(0, 320)}</blockquote>`;
-  if (m.stream_url) card.appendChild(player(m.stream_url));
+  const h = (m.attrs && m.attrs.highlight) || {};
+  const badges = [...extraBadges];
+  (m.attrs?.roles_present || []).forEach(r => { if (ROLE_NAMES[r] && r !== "other") badges.push(ROLE_NAMES[r]); });
+  const dur = (m.end - m.start).toFixed(0);
+  card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)}–${ts(m.end)} · ${dur}s</div>
+    ${badges.map(b => `<span class="badge">${b}</span>`).join("")}
+    <blockquote>${(h.quote || m.text || "").slice(0, 320)}</blockquote>`;
+  let video = null;
+  if (m.stream_url) { video = player(m.stream_url); card.appendChild(video); }
+  const panel = transcriptPanel(h, m.start, video);
+  if (panel) {
+    card.appendChild(panel);
+    const note = document.createElement("div");
+    note.className = "caption";
+    note.textContent = (h.matched_terms || []).length
+      ? `Highlighted: ${h.matched_terms.join(", ")} — click any word to jump there.`
+      : "Click any word to jump there.";
+    card.appendChild(note);
+  }
   return card;
 }
 
 async function runSearch() {
-  const out = $("#results"); out.innerHTML = '<div class="loading">Searching the archive…</div>';
-  const r = await fetch(`/api/search?case=${CASE}&q=${encodeURIComponent($("#q").value)}`);
-  const items = await r.json();
-  out.innerHTML = items.length ? "" : '<div class="loading">No moments found.</div>';
-  items.forEach(m => out.appendChild(momentCard(m, m.score ? [`score ${m.score.toFixed(2)}`] : [])));
+  const out = $("#results"); out.innerHTML = '<div class="loading">Searching the archive, then narrowing to the exact words…</div>';
+  const params = new URLSearchParams({ case: CASE, q: $("#q").value, precise: $("#precise").checked });
+  if ($("#role").value) params.set("role", $("#role").value);
+  const r = await fetch(`/api/search?${params}`);
+  const data = await r.json();
+  const items = data.results || [];
+  out.innerHTML = "";
+  const banner = document.createElement("div");
+  banner.className = "interp";
+  const chips = Object.entries(data.filters || {}).map(([k, v]) => `<span class="badge">${k}: ${v}</span>`).join(" ");
+  banner.innerHTML = `<b>Read as:</b> ${data.interpretation || ""} ${chips}
+    <span class="caption">${items.length} moment${items.length === 1 ? "" : "s"}</span>`;
+  out.appendChild(banner);
+  if (!items.length) { out.innerHTML += '<div class="loading">No moments found.</div>'; return; }
+  items.forEach(m => {
+    const badges = [];
+    if (m.attrs?.ground) badges.push(m.attrs.ground.replace(/_/g, " "));
+    if (m.attrs?.ruling) badges.push(m.attrs.ruling);
+    if (m.score) badges.push(`score ${m.score.toFixed(2)}`);
+    out.appendChild(momentCard(m, badges));
+  });
 }
+
+async function runDrop() {
+  const out = $("#dropout");
+  const url = $("#dropurl").value.trim();
+  if (!url) return;
+  out.innerHTML = '<div class="loading">Uploading…</div>';
+  const r = await fetch(`/api/analyze?url=${encodeURIComponent(url)}&title=${encodeURIComponent("Dropped: " + url.slice(-11))}`, { method: "POST" });
+  const { job_id } = await r.json();
+  const poll = setInterval(async () => {
+    const s = await (await fetch(`/api/analyze/${job_id}`)).json();
+    if (s.state === "ready") {
+      clearInterval(poll);
+      out.innerHTML = `<div class="card"><div class="meta">Indexed · ${Math.round((s.duration || 0) / 60)} min</div>
+        <blockquote>Ready to search. Switch the archive to “Dropped links” to query it.</blockquote></div>`;
+    } else if (s.state === "failed") {
+      clearInterval(poll);
+      out.innerHTML = `<div class="card"><div class="meta">Failed</div><blockquote>${s.error}</blockquote></div>`;
+    } else {
+      out.innerHTML = `<div class="loading">${s.state}… (transcription takes a couple of minutes)</div>`;
+    }
+  }, 4000);
+}
+function ask(q) { $("#q").value = q; runSearch(); }
 $("#q").addEventListener("keydown", e => e.key === "Enter" && runSearch());
 $("#reelq").addEventListener("keydown", e => e.key === "Enter" && runReel());
 

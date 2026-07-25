@@ -49,16 +49,59 @@ def _case_collection(case_id: str):
     return conn.get_collection(sessions[0].collection_id), sessions
 
 
-def semantic_search(case_id: str, query: str, limit: int = 10) -> List[PlayableMoment]:
-    """Archive-wide semantic search over spoken words."""
+def semantic_search(
+    case_id: str,
+    query: str,
+    limit: int = 10,
+    precise: bool = True,
+    speaker_role: Optional[str] = None,
+) -> List[PlayableMoment]:
+    """Archive-wide semantic search over spoken words.
+
+    With `precise`, each hit is narrowed to the sentences that actually answer
+    the query and annotated with word-level highlights. `speaker_role` keeps
+    only moments where that role speaks (e.g. the witness, not the broadcaster).
+    """
     coll, _ = _case_collection(case_id)
-    result = coll.search(
-        query=query,
-        search_type=SearchType.semantic,
-        index_type=IndexType.spoken_word,
-        result_threshold=limit,
-    )
-    return [_to_moment(s) for s in result.get_shots()]
+    try:
+        result = coll.search(
+            query=query,
+            search_type=SearchType.semantic,
+            index_type=IndexType.spoken_word,
+            result_threshold=limit,
+        )
+        moments = [_to_moment(s) for s in result.get_shots()]
+    except Exception:
+        return []  # SDK raises rather than returning an empty result set
+
+    if precise:
+        from .precision import refine_many  # local import: keeps SDK-only paths light
+
+        moments = refine_many(moments, query)
+    if speaker_role:
+        moments = filter_by_role(moments, speaker_role)
+    return moments
+
+
+def filter_by_role(moments: List[PlayableMoment], role: str) -> List[PlayableMoment]:
+    """Keep moments in which the given courtroom role speaks."""
+    from ..moments.speakers import ROLE_NARRATOR, role_map
+
+    kept: List[PlayableMoment] = []
+    cache: dict = {}
+    for m in moments:
+        if m.video_id not in cache:
+            try:
+                cache[m.video_id] = role_map(m.video_id)
+            except Exception:
+                cache[m.video_id] = {}
+        roles = cache[m.video_id]
+        speakers = (m.attrs.get("highlight") or {}).get("speakers") or []
+        present = {roles.get(s, "other") for s in speakers}
+        m.attrs["roles_present"] = sorted(present)
+        if role in present or (role != ROLE_NARRATOR and not speakers):
+            kept.append(m)
+    return kept
 
 
 def keyword_search(case_id: str, phrase: str) -> List[PlayableMoment]:

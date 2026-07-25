@@ -1,3 +1,49 @@
+# Footage sources
+
+## Bulk sources (verified live, 2026-07-26) — the real library
+
+These are the scale answer, and pedagogically stronger than celebrity trials:
+appellate advocacy is core 1L/2L curriculum.
+
+### 1. Oyez — US Supreme Court oral arguments (BEST quality-per-item)
+
+Verified working, no auth, public S3 media:
+- Case list: `https://api.oyez.org/cases?per_page=30&filter=term:2022`
+- Case detail carries `oral_argument_audio[].href` →
+  `https://api.oyez.org/case_media/oral_argument_audio/<id>`
+- That returns `media_file[]` with **direct MP3** (and OGG, and HLS `.m3u8`):
+  `https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-476/21-476_20221205-argument.delivery.mp3`
+
+**The killer feature: Oyez ships a speaker-labeled, time-aligned transcript.**
+`transcript.sections[].turns[]` gives `speaker.name` ("John G. Roberts, Jr.")
+with `speaker.roles[].type` ("scotus_justice") and `text_blocks[]` carrying
+`start`/`stop`/`text`. So for SCOTUS we get named-justice attribution for free —
+no diarization inference. Volume: ~60-70 arguments/term, back to the 1950s
+(thousands of hours). Rights: US government work, public domain.
+
+### 2. CourtListener / Free Law Project — 102,864 oral-argument recordings
+
+`https://www.courtlistener.com/api/rest/v4/audio/?count=on` → **102864**.
+Each record has `download_url` (the court's own MP3, e.g.
+`ca11.uscourts.gov/.../25-10656_07242026.mp3`), `local_path_mp3`, `duration`,
+`case_name`, `docket`, `panel`/`judges`, and an `stt_transcript` field (they run
+their own speech-to-text). Federal circuit + state appellate coverage, updated
+daily. No auth needed for reads; note the API rejects unknown filter params —
+use documented ones (`docket__court`, `date_created__gte`, etc.).
+
+This is the volume play: tens of thousands of real arguments, keyed to courts,
+judges, and dockets — exactly the facets the query-layer research says
+practitioners expect.
+
+### 3. Trial footage (for cross-examination/objection material)
+
+Court TV and Law&Crime YouTube channels remain the best trial-video source
+(see the Depp v. Heard corpus below). Trials are where objections,
+impeachment, and witness examination live; appellate audio covers advocacy
+under questioning. Precedent wants both.
+
+---
+
 # Demo footage sources
 
 Evaluated for: clean audio, objection density, cross-examination material, and

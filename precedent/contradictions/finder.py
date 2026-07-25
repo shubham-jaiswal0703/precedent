@@ -87,9 +87,32 @@ def _parse_json(raw: str):
     return None
 
 
+def _testimony_windows(video_id: str) -> List[tuple]:
+    """Time ranges of actual courtroom speech, excluding broadcast narration.
+
+    Law&Crime/Court TV uploads carry anchor voiceover at intros and recesses;
+    claims mined from that are about the trial rather than sworn testimony.
+    """
+    try:
+        from ..moments.speakers import ROLE_NARRATOR, label_turns
+
+        turns, profiles = label_turns(video_id)
+    except Exception:
+        return []
+    if not any(p.role == ROLE_NARRATOR for p in profiles.values()):
+        return []
+    return [(t.start, t.end) for t in turns if t.role != ROLE_NARRATOR]
+
+
 def extract_claims(video_id: str, window_seconds: float = 300.0, max_claims: int = 5) -> List[Claim]:
     """Chunk the transcript into windows and extract claims per window."""
     segments = get_transcript(video_id)
+    testimony = _testimony_windows(video_id)
+    if testimony:
+        segments = [
+            s for s in segments
+            if any(start <= float(s["start"]) <= end for start, end in testimony)
+        ]
     claims: List[Claim] = []
     window: List[dict] = []
     w_start = 0.0

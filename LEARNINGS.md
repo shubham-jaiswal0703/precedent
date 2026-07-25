@@ -170,6 +170,52 @@ work later; webhook/real-time canon lives in videodb-capture-quickstart.
   ~/Desktop; run uvicorn from a regular shell and attach the browser to the
   URL instead.
 
+## Big discoveries (2026-07-26, session 2)
+
+### VideoDB transcripts DO carry speaker labels
+`get_transcript(segmenter=Segmenter.word)` returns
+`{'start','end','text','speaker'}` — diarization labels ('A','B','C'...) are
+present on uploaded footage. The earlier "no diarization" gap was wrong.
+`Segmenter.sentence` gives clean sentence boundaries (no speaker field —
+aggregate from word level). This unlocked:
+- **Speaker-role inference** (`moments/speakers.py`): the examiner asks
+  questions, the witness answers at length, the judge rules. Verified on real
+  footage — correctly identified judge (5 rulings), two examiners, and the
+  witness in the Heard rebuttal.
+- **Narrator detection**: broadcast anchor voiceover is a distinct speaker who
+  talks *about* the proceeding in third person, never says "your honor" or
+  "objection". Detecting it fixed the claim-contamination bug (issue #2) by
+  excluding those windows from contradiction claim extraction.
+
+### Search precision needs three layers, not one
+Semantic search alone returns topically-adjacent junk — "objection hearsay
+sustained" surfaced the judge adjourning for the day. What fixed it:
+1. **`search/precision.py`** — narrow each shot to the best run of sentences
+   (90s → 9s), with word-level match flags for UI highlighting, and re-rank by
+   hits on the user's *own* words (`core_hits`) above synonym expansions.
+   Bug found: expanding "hearsay" → "out of court" leaked the stopword "of"
+   into matching; expansions must be stopword-filtered.
+2. **`search/router.py`** — classify intent first. Objections, rulings, and FRE
+   rule numbers are *filters* over the structured moment layer, not similarity
+   searches; nobody says "403" out loud. Routing those away from vector search
+   is what made results defensible.
+3. Verbatim quoted phrases → keyword search.
+
+### Ruling detection missed the actual courtroom phrasing
+Judges say "I'll **sustain** the objection", not "sustained". Widening the regex
+to `sustain(ed|s|ing)?` (plus "I'll allow it" / "the answer stands" for
+overruled) took sustained-objection detection from 0 to 2 in the archive.
+
+### Bulk corpus sources (verified live)
+- **Oyez** ships speaker-labeled, time-aligned SCOTUS transcripts with real
+  names and roles (`speaker.name` = "John G. Roberts, Jr.", role
+  `scotus_justice`) plus public S3 MP3s. Ground-truth attribution, no inference.
+  Ingested 303 Creative (2h22m) end to end.
+- **CourtListener** has **102,864** oral-argument recordings via a free REST
+  API with per-court MP3 download URLs. The volume play. Its API rejects
+  unknown filter params — use documented ones.
+See SOURCES.md for endpoints.
+
 ## Footage notes
 
 - 2026-07-25: Depp v. Heard chosen as primary corpus (see SOURCES.md).

@@ -12,10 +12,13 @@ from typing import List, Optional
 from ..indexing.indexer import get_transcript
 
 # Anchor patterns -> moment type. Order matters: rulings checked near objections.
+SUSTAIN_RE = r"\bsustain(?:ed|s|ing)?\b"
+OVERRULE_RE = r"\boverrul(?:ed|e|es|ing)\b|\bi'?ll allow it\b|\bthe answer (?:may )?stands?\b"
+
 ANCHORS = [
     (r"\bobjection\b", "objection"),
-    (r"\bsustained\b", "ruling_sustained"),
-    (r"\boverruled\b", "ruling_overruled"),
+    (SUSTAIN_RE, "ruling_sustained"),
+    (OVERRULE_RE, "ruling_overruled"),
     (r"\bmove to strike\b", "motion_to_strike"),
     (r"\bsidebar\b|\bapproach the bench\b|\bmay we approach\b", "sidebar"),
     (r"\bno further questions\b|\bnothing further\b|\bpass the witness\b", "examination_end"),
@@ -77,10 +80,10 @@ def extract_moments(video_id: str, context_seconds: float = 20.0) -> List[Moment
                     if re.search(gp, context):
                         attrs["ground"] = ground
                         break
-                # look ahead for the ruling in the next few segments
-                if re.search(r"\bsustained\b", context):
+                # the ruling follows the objection: "Objection. Hearsay." / "Sustained."
+                if re.search(SUSTAIN_RE, context):
                     attrs["ruling"] = "sustained"
-                elif re.search(r"\boverruled\b", context):
+                elif re.search(OVERRULE_RE, context):
                     attrs["ruling"] = "overruled"
             moments.append(
                 Moment(

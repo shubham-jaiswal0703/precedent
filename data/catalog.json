@@ -3,6 +3,10 @@
     "depp-v-heard": {
       "name": "Depp v. Heard (2022)",
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994"
+    },
+    "scotus-oral-arguments": {
+      "name": "US Supreme Court \u2014 Oral Arguments",
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29"
     }
   },
   "sessions": {
@@ -53,6 +57,44 @@
       ],
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994",
       "duration": 1131.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e": {
+      "video_id": "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e",
+      "case_id": "scotus-oral-arguments",
+      "title": "303 Creative LLC v. Elenis \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-476/21-476_20221205-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Brian H. Fletcher",
+        "Eric R. Olson",
+        "Kristen Kellie Waggoner"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 8517.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bac-27a8-79a3-8104-7338b4adbc09": {
+      "video_id": "m-z-019f9bac-27a8-79a3-8104-7338b4adbc09",
+      "case_id": "scotus-oral-arguments",
+      "title": "Dobbs v. Jackson Women's Health Organization \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/19-1392/19-1392_20211201-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Elizabeth B. Prelogar",
+        "Julie Rikelman",
+        "Scott G. Stewart"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 6782.0,
       "indexes": {
         "spoken_word": "default"
       }

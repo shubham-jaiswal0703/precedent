@@ -81,6 +81,27 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
   from a normal shell). GitHub issues used as work log (#1–#8; #2 and #6
   open: VO-contamination filter, Search V2 migration).
 
+- 2026-07-26 (session 2): Pivoted the corpus strategy and rebuilt search.
+  * Corpus: added **SCOTUS oral arguments via Oyez** (named speakers +
+    time-aligned transcripts, public-domain MP3s) — appellate advocacy is core
+    law-school curriculum, and CourtListener offers 102k more recordings for
+    scale. Trials stay for objections/cross-examination.
+  * Search precision: `search/precision.py` (sentence-level narrowing + word
+    highlighting + core-term re-ranking) and `search/router.py` (intent
+    classification → structured moment filters for objections/rulings/FRE
+    rules, keyword for quoted phrases, semantic otherwise).
+  * Speakers: `moments/speakers.py` infers judge/examiner/witness/narrator from
+    VideoDB's speaker labels; narrator detection closes the broadcaster-VO
+    contamination issue.
+  * UI: transcript panel with highlighted matches, click-a-word-to-seek,
+    follow-along highlighting, "Read as:" interpretation banner with filter
+    chips, role filter, and an "Analyze a Link" tab (drop any YouTube URL).
+  * Hosting: see HOSTING.md — Railway/Render recommended; two blockers noted
+    (local-file state, in-process jobs) before multi-instance hosting.
+  * Query-layer research: full moment taxonomy, FRE mapping, and 60+ realistic
+    student queries captured (see the research notes in this file's history and
+    router.py's tables, which implement the first slice).
+
 ## Next steps (build order)
 
 1. `ingest` + catalog + `indexing` wrappers — one trial segment searchable end-to-end
