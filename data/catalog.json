@@ -1,0 +1,25 @@
+{
+  "cases": {
+    "depp-v-heard": {
+      "name": "Depp v. Heard (2022)",
+      "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994"
+    }
+  },
+  "sessions": {
+    "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac": {
+      "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+      "case_id": "depp-v-heard",
+      "title": "Kate James testimony (Depp v. Heard)",
+      "session_type": "trial_day",
+      "source_url": "https://www.youtube.com/watch?v=iPSvDxcBqIQ",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Kate James"
+      ],
+      "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994",
+      "duration": 4965.0,
+      "indexes": {}
+    }
+  }
+}
