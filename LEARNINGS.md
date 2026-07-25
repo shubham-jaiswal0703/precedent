@@ -64,6 +64,53 @@ any clip.
 - Director (MIT) has ~27 agents incl. prompt_clip, comparison, subtitle —
   liftable.
 
+## github.com/video-db org sweep (43 repos, 2026-07-25)
+
+Full survey done; the assets worth reusing, in priority order:
+
+1. **deepsearch** (Python, LangGraph) — stateful multi-turn video retrieval:
+   LLM-planned multi-index subqueries, validator loop, reranking, session
+   memory, explainable ranked clips. The closest architecture to our
+   contradiction finder ("find the objection... now find where the witness
+   said the opposite"). Lift its retrieval design.
+2. **skills** repo (112★, pushed 2026-07-25) — Claude Code plugin
+   (`npx skills add video-db/skills`) whose `python/reference/*.md` is the
+   best current map of the NEW SDK surface (indexing, search, editor,
+   sandbox GPU models, rtstream, legacy→new migration). Use as dev-time
+   grounding docs.
+3. **rts-intruder-detection** (Next.js/React) — the org's only React UI:
+   HLS player + time-synced alert overlays + scene-index panel + copilot
+   chat. ~80% of a courtroom-footage viewer layout; APIs are mocked →
+   forkable skeleton for our UI.
+4. **worldcup-video-agent** (Next.js + Postgres) — end-to-end production
+   reference: NL request → scene-index events on clock timestamps →
+   compiled playable reels → gallery. Same shape as our reel pipeline.
+5. **PromptClip** (174★) — "prompt → supercut" notebooks (text/visual/
+   multimodal); quickest prototype path for teaching reels (legacy SDK).
+6. **fact-checker** — claim-extraction → verification loop over live
+   transcript buffers; repurpose the loop for testimony-vs-testimony
+   contradiction judgment.
+7. **agent-toolkit** — `llms-full.txt` (auto-generated full SDK context, feed
+   to codegen) + MCP server `uvx videodb-director-mcp --api-key=...`.
+8. **videodb-player / videodb-chat** (Vue) — `SearchInsideMedia` overlay and
+   contentType message handlers (text/video/image) are the interaction
+   patterns to replicate in React; not drop-in (Vue).
+9. **Node SDK caution** — videodb-node is active but documents only the
+   legacy surface; keep backend Python, React talks to our FastAPI.
+
+Cookbook recipes to crib (of 64 notebooks): `custom_annotations` (custom
+scene labels = our legal moments), `Keyword_Search_Counter` (objection
+counting), `scene_level_metadata_indexing` (filterable metadata),
+`advanced_visual_search`, `Beep Curse Words` (keyword→timestamp→audio edit =
+redaction), `Interview_Evaluation_To_Slack` (testimony → structured eval),
+`automated_video_copyright_detection` (cross-video matching),
+`Multicam_Public_Surveillance` (multi-angle sync), all `editor/feature/*`
+(stitched reels), `lecture_notes_1` (hearing summaries).
+
+Also noted: managed GPU **sandboxes** (Whisper/Gemma/Qwen/FLUX/RT-DETR) exist
+in the new surface — a possible in-platform route for diarization-ish audio
+work later; webhook/real-time canon lives in videodb-capture-quickstart.
+
 ## Environment / build notes
 
 - 2026-07-25: macOS system Python is 3.9.6 — pinned `requires-python >=3.9`.

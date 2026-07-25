@@ -50,8 +50,10 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
   footage sources evaluated (Depp v. Heard primary, Gates deposition
   secondary); API key verified against live account; repo scaffolded
   (package layout, pyproject, venv); ARCHITECTURE.md, SOURCES.md,
-  CONTEXT.md, LEARNINGS.md written. GitHub org sweep (all video-db repos)
-  in progress — results go into LEARNINGS.md.
+  CONTEXT.md, LEARNINGS.md written. Full github.com/video-db org sweep done
+  (43 repos) — reusable assets logged in LEARNINGS.md; headline finds:
+  deepsearch (retrieval architecture), skills repo (new-SDK reference docs),
+  rts-intruder-detection (React UI skeleton), PromptClip (reel prototype).
 
 ## Next steps (build order)
 
