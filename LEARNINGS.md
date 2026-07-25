@@ -139,6 +139,23 @@ work later; webhook/real-time canon lives in videodb-capture-quickstart.
 - Transcript segments come back as short phrase-level chunks — anchor+window
   approach works well with them.
 
+## Contradiction pipeline validation (2026-07-26)
+
+- `conn.youtube_search()` works (SerpAPI-backed) — found the Heard cross
+  segment programmatically; nice demo beat ("the system found its own
+  footage").
+- `coll.generate_text()` returns `{'output': '<text>'}` (dict), NOT a plain
+  string — unwrap `.output`. LLM output needs tolerant JSON parsing (code
+  fences/prose around JSON).
+- First live run: cross (May 16) vs rebuttal (May 26), Amber Heard →
+  1 "evolved" pair with two instant playable clips. Pipeline: claims (LLM via
+  VideoDB generate_text) → semantic search in the other video → judge →
+  generate_stream clips. Quality tuning to do: witness-only claim filtering
+  (broadcaster VO contaminates claims), more windows, stricter judge prompt,
+  richer pair selection from catalog.
+- Cost/perf: three videos (~2.7 h total footage) uploaded + spoken-indexed in
+  under 5 min combined; contradiction run over an 18-min segment ≈ 2 min.
+
 ## Footage notes
 
 - 2026-07-25: Depp v. Heard chosen as primary corpus (see SOURCES.md).

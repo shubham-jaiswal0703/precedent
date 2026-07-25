@@ -60,12 +60,31 @@ class Contradiction:
 def _llm(prompt: str) -> str:
     conn = get_connection()
     coll = conn.get_collection()
-    return str(coll.generate_text(prompt=prompt, response_type="text"))
+    result = coll.generate_text(prompt=prompt, response_type="text")
+    if isinstance(result, dict):
+        return str(result.get("output", result))
+    output = getattr(result, "output", None)
+    return str(output if output is not None else result)
 
 
 def _parse_json(raw: str):
-    match = re.search(r"\[.*\]|\{.*\}", raw, re.DOTALL)
-    return json.loads(match.group(0)) if match else None
+    """Tolerant JSON extraction from LLM output (fences, prose, quotes)."""
+    raw = re.sub(r"```(?:json)?", "", raw).strip()
+    candidates = []
+    for open_c, close_c in (("[", "]"), ("{", "}")):
+        start, end = raw.find(open_c), raw.rfind(close_c)
+        if start != -1 and end > start:
+            candidates.append(raw[start : end + 1])
+    candidates.append(raw)
+    for cand in candidates:
+        try:
+            return json.loads(cand)
+        except json.JSONDecodeError:
+            try:
+                return json.loads(cand.replace("'", '"'))
+            except json.JSONDecodeError:
+                continue
+    return None
 
 
 def extract_claims(video_id: str, window_seconds: float = 300.0, max_claims: int = 5) -> List[Claim]:
@@ -79,8 +98,11 @@ def extract_claims(video_id: str, window_seconds: float = 300.0, max_claims: int
         if flush and window:
             text = " ".join(s["text"] for s in window if s.get("text"))
             w_end = float(window[-1]["end"])
-            raw = _llm(CLAIM_PROMPT.format(transcript=text[:8000], max_claims=max_claims))
-            parsed = _parse_json(raw) or []
+            try:
+                raw = _llm(CLAIM_PROMPT.format(transcript=text[:8000], max_claims=max_claims))
+                parsed = _parse_json(raw) or []
+            except Exception:
+                parsed = []
             for item in parsed:
                 if isinstance(item, dict) and item.get("claim"):
                     claims.append(Claim(item["claim"], item.get("quote", ""), w_start, w_end))

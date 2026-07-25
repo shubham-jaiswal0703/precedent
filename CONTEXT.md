@@ -63,9 +63,13 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
   side-by-side clips), teaching-reel builder (Timeline add_inline + text
   overlays). First corpus video: Kate James testimony (83 min) indexed in
   `depp-v-heard` collection.
-- 2026-07-26: BLOCKED on GitHub push: no local `gh` auth for
-  shubham-jaiswal0703 (only LastHumanCoder/shivDroid/lastHumanCoder-again).
-  Needs `gh auth login` as shubham, or repo created + collaborator added.
+- 2026-07-26: GitHub live: https://github.com/shubham-jaiswal0703/precedent
+  (gh auth added for shubham-jaiswal0703; repo created + pushed).
+- 2026-07-26: Contradiction finder validated on real footage: Heard cross
+  (May 16, found via conn.youtube_search) vs rebuttal (May 26) → "evolved"
+  testimony pair with two playable clips. Archive now has 3 videos (~2.7 h).
+  Demo beats 1 (search→clips) and 3 (contradiction) proven; reels and case
+  packs still to exercise.
 
 ## Next steps (build order)
 
