@@ -120,6 +120,25 @@ work later; webhook/real-time canon lives in videodb-capture-quickstart.
   `c-35765392-fc14-4cee-bb76-89c8b78bf2c2` ("shubham jaiswal's collection"),
   0 videos.
 
+## End-to-end validation (2026-07-26)
+
+- Ingested Kate James testimony segment (83 min, YouTube URL) into a
+  dedicated `depp-v-heard` collection: upload 68s, spoken-word index ~2 min
+  total. Fast enough to ingest live during a demo if needed.
+- Collection-level semantic search returns scored, timestamped shots; SDK
+  shows a progress bar during blocking index calls; legacy search emits a
+  UserWarning pointing at Search V2 (`semantic_search/query/aggregate/ask`)
+  — consider migrating wrappers to V2 later.
+- `generate_stream(timeline=[(start,end)])` → instant playable
+  `play.videodb.io/...m3u8` URL. Confirmed working.
+- Rule-based moment extractor found 3 objections in the segment (plausible:
+  it's mostly a video deposition played in court — sparse objections).
+  Ruling detection (sustained/overruled) needs a wider context window or the
+  judge is off-mic in deposition playback; revisit on a live-courtroom
+  segment like the Heard cross.
+- Transcript segments come back as short phrase-level chunks — anchor+window
+  approach works well with them.
+
 ## Footage notes
 
 - 2026-07-25: Depp v. Heard chosen as primary corpus (see SOURCES.md).

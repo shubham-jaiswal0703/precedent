@@ -19,7 +19,9 @@
       ],
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994",
       "duration": 4965.0,
-      "indexes": {}
+      "indexes": {
+        "spoken_word": "default"
+      }
     }
   }
 }

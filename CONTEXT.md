@@ -55,6 +55,18 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
   deepsearch (retrieval architecture), skills repo (new-SDK reference docs),
   rts-intruder-detection (React UI skeleton), PromptClip (reel prototype).
 
+- 2026-07-26: Core pipeline built and validated end-to-end against live
+  VideoDB: ingest (per-case collections + catalog), spoken-word indexing,
+  semantic/keyword/scene search wrappers (normalized PlayableMoment), instant
+  clip URLs, rule-based legal-moment extractor (objections found in real
+  footage), contradiction finder (claims → cross-search → LLM judge →
+  side-by-side clips), teaching-reel builder (Timeline add_inline + text
+  overlays). First corpus video: Kate James testimony (83 min) indexed in
+  `depp-v-heard` collection.
+- 2026-07-26: BLOCKED on GitHub push: no local `gh` auth for
+  shubham-jaiswal0703 (only LastHumanCoder/shivDroid/lastHumanCoder-again).
+  Needs `gh auth login` as shubham, or repo created + collaborator added.
+
 ## Next steps (build order)
 
 1. `ingest` + catalog + `indexing` wrappers — one trial segment searchable end-to-end
