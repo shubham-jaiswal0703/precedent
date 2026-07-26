@@ -11,6 +11,26 @@
     "federal-appellate": {
       "name": "Federal Appellate: Oral Arguments",
       "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa"
+    },
+    "trial-in-re-roundup-products-liability-litigation-part": {
+      "name": "In re Roundup Products Liability Litigation (Part 6)",
+      "collection_id": "c-e3fd257c-14ca-4be8-b64b-2a7a55be107c"
+    },
+    "trial-3-09-cv-00010-jeg": {
+      "name": "IAS- Manning v. Jones (Part 11)",
+      "collection_id": "c-ea78e7b2-8d7f-47b1-9b64-3d8c4af905ba"
+    },
+    "trial-ne-teresa-malone-et-al-vs-kantner-ingredients-et": {
+      "name": "NE- Teresa Malone, et al. vs. Kantner Ingredients, et al. (Part 10)",
+      "collection_id": "c-bdee4692-33a0-4995-b668-9813becbf9a8"
+    },
+    "trial-3-24-cv-06468-crb": {
+      "name": "Beckford et al v. The Children's Group, Inc",
+      "collection_id": "c-cbf4a94c-9d67-48ae-91b2-41b6ed0ef0b1"
+    },
+    "trial-2-12-cv-02268": {
+      "name": "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 10)",
+      "collection_id": "c-4bde6eb3-c2a9-44e3-9ad4-40a1cbd22fbb"
     }
   },
   "sessions": {
@@ -28,7 +48,8 @@
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994",
       "duration": 4965.0,
       "indexes": {
-        "spoken_word": "default"
+        "spoken_word": "default",
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
       }
     },
     "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c": {
@@ -45,7 +66,8 @@
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994",
       "duration": 3550.0,
       "indexes": {
-        "spoken_word": "default"
+        "spoken_word": "default",
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
       }
     },
     "m-z-019f9a93-51f0-7681-8484-11748ad4db6c": {
@@ -62,7 +84,8 @@
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994",
       "duration": 1131.0,
       "indexes": {
-        "spoken_word": "default"
+        "spoken_word": "default",
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image"
       }
     },
     "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e": {
@@ -712,6 +735,65 @@
       "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa",
       "duration": 2240.0,
       "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bf9-0b7d-7140-a8aa-3c4c82159f6b": {
+      "video_id": "m-z-019f9bf9-0b7d-7140-a8aa-3c4c82159f6b",
+      "case_id": "trial-3-24-cv-06468-crb",
+      "title": "Beckford et al v. The Children's Group, Inc",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts.cdn.piksel.tech/mm/flvmedia/3697/h/w/l/hwl756q1_p102834u_h264_1628K.mp4?cid=3697&aid=4057513&afid=8616852&apid=1032989&programid=5826023",
+      "date": "2026-03-27",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-cbf4a94c-9d67-48ae-91b2-41b6ed0ef0b1",
+      "duration": 935.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1774636485/4057513.jpg?w=1280&h=720",
+        "judge": "Charles R. Breyer",
+        "docket": "3:24-cv-06468-CRB",
+        "proceeding": "",
+        "courthouse": "Phillip Burton Federal Building"
+      }
+    },
+    "m-z-019f9bfb-2820-7520-bcbb-a1d9f4f05fa2": {
+      "video_id": "m-z-019f9bfb-2820-7520-bcbb-a1d9f4f05fa2",
+      "case_id": "trial-in-re-roundup-products-liability-litigation-part",
+      "title": "In re Roundup Products Liability Litigation (Part 3)",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/l/9/0/l90yi7bc_cf2cp130_h264_564K.mp4?cid=3697&aid=3534154&afid=7471784&apid=1032989&programid=4481465",
+      "date": "2018-03-05",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-e3fd257c-14ca-4be8-b64b-2a7a55be107c",
+      "duration": 2320.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1520882271/3534154.jpg?w=1280&h=720",
+        "judge": "Vince Chhabria",
+        "docket": "",
+        "proceeding": "hearing",
+        "courthouse": "Phillip Burton Federal Building",
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9c00-4731-77d0-b94f-cc781918de05": {
+      "video_id": "m-z-019f9c00-4731-77d0-b94f-cc781918de05",
+      "case_id": "trial-2-12-cv-02268",
+      "title": "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 1)",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/q/7/j/q7jp8oh2_rr79tqgg_h264_298K.mp4?cid=3697&aid=2434089&afid=4735987&apid=1032989&programid=4051575",
+      "date": "2014-11-17",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-4bde6eb3-c2a9-44e3-9ad4-40a1cbd22fbb",
+      "duration": 2646.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1489623788/2434089.jpg?w=1280&h=720",
+        "judge": "S. Thomas Anderson",
+        "docket": "2:12-cv-02268",
+        "proceeding": "",
+        "courthouse": "Odell Horton Federal Building",
         "spoken_word": "default"
       }
     }

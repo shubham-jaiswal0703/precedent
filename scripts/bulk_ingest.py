@@ -21,13 +21,16 @@ from precedent.ingest import batch
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("source", choices=["oyez", "courtlistener"])
+    p.add_argument("source", choices=["oyez", "courtlistener", "cameras"])
     p.add_argument("--terms", default="2022", help="comma-separated Oyez terms")
     p.add_argument("--per-term", type=int, default=8)
     p.add_argument("--limit", type=int, default=10, help="CourtListener recordings")
     p.add_argument("--court", default=None, help="CourtListener court id, e.g. ca9")
     p.add_argument("--workers", type=int, default=3)
     p.add_argument("--no-index", action="store_true", help="upload only, skip transcription")
+    p.add_argument("--match", default=None, help="cameras: only cases whose title contains this")
+    p.add_argument("--parts", type=int, default=4, help="cameras: sessions per case")
+    p.add_argument("--scan", type=int, default=300, help="cameras: programs to scan")
     p.add_argument("--dry-run", action="store_true")
     args = p.parse_args()
 
@@ -55,6 +58,31 @@ def main() -> None:
         print(f"Ingesting up to {args.per_term} arguments/term for terms: {', '.join(terms)}")
         batch.ingest_terms(terms, per_term=args.per_term, workers=args.workers,
                            index=not args.no_index, on_result=report)
+    elif args.source == "cameras":
+        from precedent.ingest.cameras import group_by_case, ingest_program, iter_programs
+
+        programs = [x for x in iter_programs(limit=args.scan) if x.smil and x.duration > 900]
+        if args.match:
+            programs = [x for x in programs if args.match.lower() in x.title.lower()]
+        grouped = group_by_case(programs)
+        ordered = sorted(grouped.items(), key=lambda kv: -sum(p.duration for p in kv[1]))
+        picked = []
+        for slug, parts in ordered[: args.limit]:
+            picked.extend(parts[: args.parts])
+        if args.dry_run:
+            for x in picked:
+                print(f"   {x.duration/60:6.0f}m  {x.date or '?':10s} {x.proceeding or '-':11s} {x.title[:56]}")
+            total = sum(x.duration for x in picked)
+            print(f"\n{len(picked)} sessions, {total/3600:.1f} h, ~${total/60*0.01:.2f} transcription")
+            return
+        print(f"Ingesting {len(picked)} trial sessions from Cameras in Courts")
+        for x in picked:
+            try:
+                entry = ingest_program(x, index=not args.no_index)
+                report(batch.BatchResult(x.title[:60], entry.video_id, entry.duration) if entry
+                       else batch.BatchResult(x.title[:60], error="skipped (already ingested or no mp4)"))
+            except Exception as exc:
+                report(batch.BatchResult(x.title[:60], error=str(exc)[:120]))
     else:
         if args.dry_run:
             for r in batch.courtlistener_recordings(args.limit, args.court):

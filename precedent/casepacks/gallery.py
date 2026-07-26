@@ -9,6 +9,7 @@ from collections import Counter
 from typing import Dict, List, Optional
 
 from ..catalog import SessionEntry, _load as load_catalog, sessions_for_case
+from ..media import case_cover, session_thumbnail
 from ..moments.attribution import speakers_in_session
 from ..moments.extractor import cached_moments
 
@@ -91,10 +92,12 @@ def case_cards() -> List[dict]:
                               if not p["name"].isupper() and len(p["name"]) > 2)
             except Exception:
                 continue
+        kind = _kind(case_id, sessions)
         cards.append({
             "case_id": case_id,
             "name": case["name"],
-            "kind": _kind(case_id, sessions),
+            "kind": kind,
+            "cover": case_cover(case_id, case["name"], kind),
             "sessions": len(sessions),
             "hours": round(sum(s.duration or 0 for s in sessions) / 3600, 1),
             "moments": sum(counts.values()),
@@ -145,14 +148,18 @@ def case_detail(case_id: str, per_section: int = 4) -> dict:
         except Exception:
             continue
 
+    kind = _kind(case_id, sessions)
     return {
         "case_id": case_id,
         "name": case["name"],
-        "kind": _kind(case_id, sessions),
+        "kind": kind,
+        "cover": case_cover(case_id, case["name"], kind),
         "hours": round(sum(s.duration or 0 for s in sessions) / 3600, 1),
         "sessions": [{
             "video_id": s.video_id, "title": s.title, "session_type": s.session_type,
             "duration": s.duration, "date": s.date, "source_url": s.source_url,
+            "thumbnail": session_thumbnail(s.video_id),
+            "judge": s.indexes.get("judge", ""), "docket": s.indexes.get("docket", ""),
         } for s in sessions],
         "participants": participants[:24],
         "sections": sections,

@@ -1,0 +1,61 @@
+[
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 20.57,
+    "end": 50.89,
+    "moment_type": "cross_examination_marker",
+    "text": "script on cross examination. - I pledged the entirety - of the",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 33.17,
+    "end": 63.77,
+    "moment_type": "sidebar",
+    "text": "and Crime sidebar podcast, where we take a deep dive into the",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 258.27,
+    "end": 288.67,
+    "moment_type": "objection",
+    "text": "will? - Objection. Leading - and relevance. - Overruled. A lot. -",
+    "attrs": {
+      "ground": "leading",
+      "ruling": "overruled"
+    }
+  },
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 260.75,
+    "end": 291.47,
+    "moment_type": "ruling_overruled",
+    "text": "relevance. - Overruled. A lot. - She had eaten - Johnny's weed",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 627.93,
+    "end": 658.21,
+    "moment_type": "cross_examination_marker",
+    "text": "to the cross examination that everyone's been waiting for by Camille Vasquez,",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 1096.03,
+    "end": 1126.43,
+    "moment_type": "cross_examination_marker",
+    "text": "penthouse. - Cross examination will continue - Tuesday. - That's it for",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+    "start": 1101.72,
+    "end": 1132.32,
+    "moment_type": "sidebar",
+    "text": "and Crime Sidebar Podcast. I'm Angenette Levy, and thanks so much for",
+    "attrs": {}
+  }
+]
