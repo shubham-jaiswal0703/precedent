@@ -1,4 +1,4 @@
-"""Teaching reels — stitch moments from across the archive into one stream."""
+"""Teaching reels: stitch moments from across the archive into one stream."""
 from typing import List, Optional
 
 from videodb.asset import TextAsset, VideoAsset

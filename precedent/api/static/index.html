@@ -3,68 +3,172 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Precedent — Playable Testimony</title>
+<title>Precedent</title>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
 <style>
-  :root { --ink:#1a1712; --paper:#f6f2ea; --accent:#8a1f1f; --line:#d8d0c0; }
+  :root {
+    --ink:#191614; --ink-soft:#5f574c; --paper:#f7f4ee; --card:#fffdf9;
+    --line:#ddd5c6; --accent:#8a1f1f; --accent-soft:#f2e3d8; --hit:#f7e08f;
+    --radius:3px;
+  }
   * { box-sizing:border-box; margin:0; }
-  body { font-family: Georgia, 'Times New Roman', serif; background:var(--paper); color:var(--ink); }
-  header { padding:28px 32px 18px; border-bottom:3px double var(--ink); display:flex; align-items:baseline; gap:16px; }
-  header h1 { font-size:28px; letter-spacing:.5px; }
-  header span { color:#6b6353; font-style:italic; }
-  nav { display:flex; gap:4px; padding:0 32px; border-bottom:1px solid var(--line); background:#efe9dd; }
-  nav button { font:inherit; padding:10px 18px; border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; }
-  nav button.active { border-bottom-color:var(--accent); font-weight:bold; }
-  main { padding:24px 32px; max-width:1100px; margin:0 auto; }
-  .searchbar { display:flex; gap:10px; margin-bottom:20px; }
-  .searchbar input { flex:1; font:inherit; font-size:17px; padding:12px 14px; border:1px solid var(--line); background:#fff; }
-  .searchbar button, .pill { font:inherit; padding:12px 20px; border:1px solid var(--ink); background:var(--ink); color:var(--paper); cursor:pointer; }
-  .hint { color:#6b6353; font-style:italic; margin-bottom:16px; }
-  .card { background:#fff; border:1px solid var(--line); padding:16px; margin-bottom:14px; }
-  .card .meta { font-size:13px; color:#6b6353; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
-  .card blockquote { border-left:3px solid var(--accent); padding-left:12px; font-style:italic; margin:8px 0; }
-  .badge { display:inline-block; font-size:12px; padding:2px 8px; border:1px solid var(--accent); color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-right:6px; }
-  video { width:100%; max-height:360px; background:#000; margin-top:10px; }
-  .split { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-  .split h4 { margin-bottom:6px; }
-  .loading { padding:30px; text-align:center; font-style:italic; color:#6b6353; }
-  .tabpane { display:none; } .tabpane.show { display:block; }
-  .transcript { margin-top:10px; padding:12px; background:#faf8f3; border:1px solid var(--line); line-height:2; font-size:15px; max-height:150px; overflow-y:auto; }
+  body {
+    font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+    background:var(--paper); color:var(--ink); line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a { color:var(--accent); }
+  button, select, input { font:inherit; }
+
+  header {
+    padding:22px 40px 16px; border-bottom:2px solid var(--ink);
+    display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;
+  }
+  header h1 { font-size:26px; letter-spacing:2.5px; font-weight:600; }
+  header .tag { color:var(--ink-soft); font-style:italic; font-size:15px; }
+  nav { display:flex; gap:2px; padding:0 40px; background:#efe9de; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  nav button {
+    padding:11px 20px; border:none; background:none; cursor:pointer;
+    border-bottom:3px solid transparent; color:var(--ink-soft); letter-spacing:.3px;
+  }
+  nav button:hover { color:var(--ink); }
+  nav button.active { border-bottom-color:var(--accent); color:var(--ink); font-weight:600; }
+  main { padding:28px 40px 80px; max-width:1180px; margin:0 auto; }
+  .view { display:none; } .view.show { display:block; }
+
+  h2 { font-size:22px; font-weight:600; margin-bottom:4px; }
+  h3 { font-size:17px; font-weight:600; margin-bottom:8px; }
+  .sub { color:var(--ink-soft); font-style:italic; margin-bottom:22px; }
+  .muted { color:var(--ink-soft); font-size:14px; }
+
+  /* Library */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:18px; }
+  .casecard {
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; cursor:pointer; transition:transform .12s, box-shadow .12s;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .casecard:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(25,22,20,.10); border-color:var(--ink-soft); }
+  .casecard .kind {
+    font-size:11px; letter-spacing:1.6px; text-transform:uppercase; color:var(--accent);
+  }
+  .casecard h3 { font-size:18px; line-height:1.3; margin:0; }
+  .stats { display:flex; gap:14px; font-size:13px; color:var(--ink-soft); flex-wrap:wrap; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .chip {
+    font-size:11.5px; letter-spacing:.6px; text-transform:uppercase;
+    border:1px solid var(--line); background:#faf6ef; padding:2px 8px; border-radius:20px; color:var(--ink-soft);
+  }
+  .chip b { color:var(--accent); font-weight:600; }
+  .people { font-size:13px; color:var(--ink-soft); }
+
+  /* Case detail */
+  .backlink { background:none; border:none; color:var(--accent); cursor:pointer; padding:0; margin-bottom:14px; }
+  .askbar { display:flex; gap:10px; margin:16px 0 10px; }
+  .askbar input { flex:1; padding:12px 14px; border:1px solid var(--line); background:#fff; border-radius:var(--radius); }
+  .btn {
+    padding:12px 22px; border:1px solid var(--ink); background:var(--ink); color:var(--paper);
+    cursor:pointer; border-radius:var(--radius); letter-spacing:.4px;
+  }
+  .btn:hover { background:#000; }
+  .btn.ghost { background:none; color:var(--ink); }
+  .suggest { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .suggest button {
+    border:1px dashed var(--line); background:#faf6ef; color:var(--accent);
+    padding:6px 12px; border-radius:20px; cursor:pointer; font-size:14px;
+  }
+  .suggest button:hover { border-style:solid; background:var(--accent-soft); }
+  .answer {
+    background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent);
+    padding:18px 20px; margin-bottom:18px; border-radius:var(--radius);
+  }
+  .answer p { margin-bottom:10px; }
+  .answer cite { color:var(--accent); font-style:normal; font-weight:600; cursor:pointer; }
+  .section { border-top:1px solid var(--line); padding:14px 0; }
+  .section > summary { cursor:pointer; font-weight:600; list-style:none; display:flex; justify-content:space-between; }
+  .section > summary::-webkit-details-marker { display:none; }
+  .section > summary .count { color:var(--ink-soft); font-weight:400; font-size:14px; }
+
+  /* Moments */
+  .card { background:var(--card); border:1px solid var(--line); padding:16px 18px; margin:12px 0; border-radius:var(--radius); }
+  .meta { font-size:12px; letter-spacing:1.1px; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px; }
+  .who { font-weight:600; margin-right:8px; }
+  .badge {
+    display:inline-block; font-size:11.5px; letter-spacing:.7px; text-transform:uppercase;
+    border:1px solid var(--accent); color:var(--accent); padding:1px 8px; margin-right:6px; border-radius:20px;
+  }
+  blockquote { border-left:3px solid var(--accent-soft); padding-left:14px; font-style:italic; margin:10px 0; color:#2c2723; }
+  video { width:100%; max-height:340px; background:#000; margin-top:10px; border-radius:var(--radius); }
+  .transcript {
+    margin-top:10px; padding:12px 14px; background:#faf7f1; border:1px solid var(--line);
+    line-height:2.05; font-size:15px; max-height:160px; overflow-y:auto; border-radius:var(--radius);
+  }
   .transcript w { cursor:pointer; padding:1px 2px; border-radius:2px; }
-  .transcript w:hover { background:#e6ded0; }
-  .transcript w.hit { background:#f5e08c; font-weight:bold; box-shadow:0 1px 0 var(--accent); }
+  .transcript w:hover { background:var(--accent-soft); }
+  .transcript w.hit { background:var(--hit); font-weight:600; }
   .transcript w.at { background:var(--ink); color:var(--paper); }
-  .rolechip { font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#6b6353; border:1px dashed var(--line); padding:1px 6px; margin-left:6px; }
-  .controls { display:flex; gap:14px; align-items:center; margin-bottom:14px; font-size:14px; color:#6b6353; }
-  .controls label { cursor:pointer; }
-  .caption { font-size:13px; color:#6b6353; margin-top:6px; font-style:italic; }
-  .interp { padding:10px 14px; margin-bottom:16px; background:#efe9dd; border-left:4px solid var(--accent); font-size:15px; }
-  .interp .caption { display:block; margin-top:4px; }
-  .examples { margin-bottom:16px; font-size:14px; }
-  .examples a { color:var(--accent); cursor:pointer; margin-right:14px; text-decoration:underline; }
-  .who { display:inline-block; font-weight:bold; font-size:15px; margin-right:8px; }
-  .who::before { content:"🎙 "; }
+  .caption { font-size:13px; color:var(--ink-soft); font-style:italic; margin-top:8px; }
+
+  /* Search */
+  .searchbar { display:flex; gap:10px; margin-bottom:14px; }
+  .searchbar input { flex:1; font-size:17px; padding:13px 15px; border:1px solid var(--line); background:#fff; border-radius:var(--radius); }
+  .controls { display:flex; gap:18px; align-items:center; flex-wrap:wrap; font-size:14px; color:var(--ink-soft); margin-bottom:12px; }
+  .controls select { padding:6px 8px; border:1px solid var(--line); background:#fff; border-radius:var(--radius); }
+  .examples { margin-bottom:16px; font-size:14px; color:var(--ink-soft); }
+  .examples button { background:none; border:none; color:var(--accent); cursor:pointer; text-decoration:underline; margin-right:14px; padding:0; }
+  .interp {
+    padding:12px 16px; margin-bottom:18px; background:#efe9de;
+    border-left:4px solid var(--accent); border-radius:var(--radius);
+  }
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:720px) { .split { grid-template-columns:1fr; } main, header, nav { padding-left:18px; padding-right:18px; } }
+  .loading { padding:34px; text-align:center; font-style:italic; color:var(--ink-soft); }
+  .empty { padding:24px; background:var(--card); border:1px dashed var(--line); color:var(--ink-soft); font-style:italic; }
 </style>
 </head>
 <body>
-<header><h1>PRECEDENT</h1><span>Playable testimony — students used to read this in a book; now they watch the moment.</span></header>
+<header>
+  <h1>PRECEDENT</h1>
+  <span class="tag">Students used to read this in a book. Now they watch the moment.</span>
+</header>
 <nav>
-  <button data-tab="ask" class="active">Ask the Archive</button>
-  <button data-tab="objections">Objection Log</button>
-  <button data-tab="contradictions">Contradictions</button>
-  <button data-tab="reel">Teaching Reel</button>
-  <button data-tab="drop">Analyze a Link</button>
+  <button data-view="library" class="active">Library</button>
+  <button data-view="search">Search</button>
+  <button data-view="contradictions">Contradictions</button>
+  <button data-view="reel">Teaching Reel</button>
+  <button data-view="drop">Add a Link</button>
 </nav>
 <main>
-  <section id="ask" class="tabpane show">
+  <section id="library" class="view show">
+    <h2>Case library</h2>
+    <p class="sub">Open a case to see its participants, its recommended sections, and to ask about how it was argued.</p>
+    <div id="cases" class="loading">Loading the library...</div>
+  </section>
+
+  <section id="casedetail" class="view">
+    <button class="backlink" onclick="showView('library')">Back to the library</button>
+    <div id="caseheader"></div>
+    <div class="askbar">
+      <input id="askq" placeholder="Ask about this case. For example: why did counsel concede that point?">
+      <button class="btn" onclick="runDiscuss()">Ask</button>
+    </div>
+    <div id="suggest" class="suggest"></div>
+    <div id="discussout"></div>
+    <h3>Recommended sections</h3>
+    <p class="muted" style="margin-bottom:10px;">Grouped by what happens in the record. Every entry plays.</p>
+    <div id="sections"></div>
+  </section>
+
+  <section id="search" class="view">
+    <h2>Ask the archive</h2>
     <div class="searchbar">
-      <input id="q" placeholder='Ask like a professor — "Where is the witness confronted with her deposition?"'>
-      <button onclick="runSearch()">Search</button>
+      <input id="q" placeholder="Ask like a professor. For example: show me every sustained objection.">
+      <button class="btn" onclick="runSearch()">Search</button>
     </div>
     <div class="controls">
-      <label>Archive: <select id="archive"></select></label>
+      <label>Archive <select id="archive"></select></label>
       <label><input type="checkbox" id="precise" checked> Narrow to the exact words</label>
-      <label>Spoken by:
+      <label>Spoken by
         <select id="role">
           <option value="">anyone</option>
           <option value="witness">the witness</option>
@@ -74,99 +178,83 @@
       </label>
     </div>
     <div class="examples" id="examples"></div>
-    <div class="hint">Objections, rulings, and rule numbers are answered from the structured legal-moment index; everything else falls back to semantic search narrowed to the exact sentences. Click any transcript word to jump there.</div>
+    <p class="sub">Objections, rulings, and rule numbers come from the structured moment index. Anything else falls back to semantic search, narrowed to the sentences that answer the question. Click a transcript word to jump there.</p>
     <div id="results"></div>
   </section>
-  <section id="objections" class="tabpane">
-    <div class="hint">Rule-extracted objection log with grounds and rulings, from the case pack.</div>
-    <div id="objlog" class="loading">Loading case pack…</div>
+
+  <section id="contradictions" class="view">
+    <h2>Contradictions</h2>
+    <p class="sub">The same witness on different days. Claims are cross matched between sessions, judged, and played side by side.</p>
+    <div id="contra" class="loading">Loading...</div>
   </section>
-  <section id="contradictions" class="tabpane">
-    <div class="hint">Same witness, different day: claims cross-matched between sessions and judged. Clips play side by side.</div>
-    <div id="contra" class="loading">Loading…</div>
-  </section>
-  <section id="reel" class="tabpane">
+
+  <section id="reel" class="view">
+    <h2>Teaching reel</h2>
     <div class="searchbar">
-      <input id="reelq" placeholder='Teaching reel topic — "objections during cross-examination"'>
-      <button onclick="runReel()">Build reel</button>
+      <input id="reelq" placeholder="Reel topic. For example: objections during cross examination.">
+      <button class="btn" onclick="runReel()">Build reel</button>
     </div>
-    <div class="hint">Stitches matching moments from across the archive into one compilation stream.</div>
+    <p class="sub">Stitches matching moments from across the archive into one compilation you can play or download.</p>
     <div id="reelout"></div>
   </section>
-  <section id="drop" class="tabpane">
+
+  <section id="drop" class="view">
+    <h2>Add a link</h2>
     <div class="searchbar">
-      <input id="dropurl" placeholder="Paste a YouTube URL of any trial, hearing, or oral argument">
-      <button onclick="runDrop()">Analyze</button>
+      <input id="dropurl" placeholder="Paste a YouTube URL of a trial, hearing, or oral argument">
+      <button class="btn" onclick="runDrop()">Analyze</button>
     </div>
-    <div class="hint">We ingest it, transcribe it, and index it — then you can search it like the rest of the library.</div>
+    <p class="sub">We ingest it, transcribe it, and index it. Then it is searchable like the rest of the library.</p>
     <div id="dropout"></div>
   </section>
 </main>
-<script>
-let CASE = "depp-v-heard";
-const $ = (s) => document.querySelector(s);
 
-// Query suggestions differ by archive: trials have objections, appellate
-// arguments have justices pressing advocates.
+<script>
+let CASE = null;
+let CURRENT = null;
+const $ = (s) => document.querySelector(s);
+const ROLE_NAMES = { witness:"witness", examiner:"attorney", judge:"the court",
+                     narrator:"broadcast voiceover", scotus_justice:"justice", attorney:"advocate" };
+
 const EXAMPLES = {
-  trial: [["show me every sustained objection", "every sustained objection"],
-          ["objection hearsay", "hearsay objections"],
-          ["FRE 611 leading question", "FRE 611 leading"],
-          ["cross-examination", "cross-examination"],
-          ['"no further questions"', '"no further questions"']],
-  appellate: [["how did Gorsuch press the advocate", "Gorsuch questioning"],
-              ["Kagan hypothetical", "Kagan hypotheticals"],
-              ["standard of review argument", "standard of review"],
-              ["may it please the court", "opening lines"],
-              ['"what is your best case"', '"your best case"']],
+  trial: [["show me every sustained objection","every sustained objection"],
+          ["objection hearsay","hearsay objections"],
+          ["FRE 611 leading question","FRE 611 leading"],
+          ["impeachment with a prior statement","impeachment"],
+          ['"no further questions"','"no further questions"']],
+  appellate: [["hypothetical from the bench","hypotheticals"],
+              ["standard of review argument","standard of review"],
+              ["how did Gorsuch press the advocate","Gorsuch questioning"],
+              ["where did counsel concede","concessions"],
+              ['"may it please the court"','"may it please the court"']],
 };
 
-async function loadArchives() {
-  const cases = await (await fetch("/api/cases")).json();
-  const sel = $("#archive");
-  sel.innerHTML = "";
-  cases.forEach(c => {
-    const hours = c.sessions.reduce((a, s) => a + (s.duration || 0), 0) / 3600;
-    const opt = document.createElement("option");
-    opt.value = c.case_id;
-    opt.textContent = `${c.name} — ${c.sessions.length} session${c.sessions.length === 1 ? "" : "s"}, ${hours.toFixed(1)} h`;
-    sel.appendChild(opt);
-  });
-  if (cases.length) { CASE = cases[0].case_id; sel.value = CASE; }
-  sel.onchange = () => { CASE = sel.value; objLoaded = contraLoaded = false; renderExamples(); };
-  renderExamples();
+function ts(s) {
+  s = Math.floor(s || 0);
+  const h = Math.floor(s/3600), m = Math.floor(s%3600/60), sec = s%60;
+  return h ? `${h}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`
+           : `${m}:${String(sec).padStart(2,"0")}`;
 }
 
-function renderExamples() {
-  const kind = CASE.includes("scotus") || CASE.includes("appellate") ? "appellate" : "trial";
-  $("#examples").innerHTML = "Try: " + EXAMPLES[kind]
-    .map(([q, label]) => `<a onclick='ask(${JSON.stringify(q)})'>${label}</a>`).join(" ");
+function showView(name) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("show"));
+  $("#" + name).classList.add("show");
+  document.querySelectorAll("nav button").forEach(b =>
+    b.classList.toggle("active", b.dataset.view === name));
+  if (name === "contradictions") loadContradictions();
 }
-
-document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
-  document.querySelectorAll("nav button").forEach(x => x.classList.remove("active"));
-  document.querySelectorAll(".tabpane").forEach(x => x.classList.remove("show"));
-  b.classList.add("active");
-  document.getElementById(b.dataset.tab).classList.add("show");
-  if (b.dataset.tab === "objections") loadObjections();
-  if (b.dataset.tab === "contradictions") loadContradictions();
-});
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => showView(b.dataset.view));
 
 function player(url) {
   const v = document.createElement("video");
   v.controls = true; v.preload = "none";
-  if (v.canPlayType("application/vnd.apple.mpegurl")) { v.src = url; }
+  if (v.canPlayType("application/vnd.apple.mpegurl")) v.src = url;
   else if (window.Hls) { const h = new Hls(); h.loadSource(url); h.attachMedia(v); }
   return v;
 }
 
-function ts(s) { s = Math.floor(s); return `${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`; }
-
-const ROLE_NAMES = { witness: "witness", examiner: "attorney", judge: "the court", narrator: "broadcast voiceover", other: "unidentified" };
-
-// Word-level transcript: matched words highlighted, click a word to seek there.
 function transcriptPanel(highlight, clipStart, video) {
-  const words = highlight.words || [];
+  const words = (highlight && highlight.words) || [];
   if (!words.length) return null;
   const panel = document.createElement("div");
   panel.className = "transcript";
@@ -180,7 +268,6 @@ function transcriptPanel(highlight, clipStart, video) {
     panel.appendChild(el);
   });
   if (video) {
-    // Follow along: mark the word currently being spoken.
     video.addEventListener("timeupdate", () => {
       const now = clipStart + video.currentTime;
       let current = null;
@@ -196,103 +283,190 @@ function transcriptPanel(highlight, clipStart, video) {
 
 function momentCard(m, extraBadges = []) {
   const card = document.createElement("div"); card.className = "card";
-  const h = (m.attrs && m.attrs.highlight) || {};
-  const att = (m.attrs && m.attrs.attribution) || {};
+  const attrs = m.attrs || {};
+  const h = attrs.highlight || {};
+  const att = attrs.attribution || {};
   const badges = [...extraBadges];
+  if (attrs.ground) badges.push(String(attrs.ground).replace(/_/g," "));
+  if (attrs.ruling) badges.push(attrs.ruling);
   if (att.source !== "oyez") {
-    (m.attrs?.roles_present || []).forEach(r => { if (ROLE_NAMES[r] && r !== "other") badges.push(ROLE_NAMES[r]); });
+    (attrs.roles_present || []).forEach(r => { if (ROLE_NAMES[r] && r !== "other") badges.push(ROLE_NAMES[r]); });
   }
-  const dur = (m.end - m.start).toFixed(0);
-  // Named speakers (Oyez) are the headline; inferred roles ride as badges.
-  const who = att.label ? `<span class="who">${att.label}</span>` : "";
-  card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)}–${ts(m.end)} · ${dur}s</div>
-    ${who}${badges.map(b => `<span class="badge">${b}</span>`).join("")}
-    <blockquote>${(h.quote || m.text || "").slice(0, 320)}</blockquote>`;
+  const dur = Math.round((m.end - m.start));
+  card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)} to ${ts(m.end)} · ${dur}s</div>
+    ${att.label ? `<span class="who">${att.label}</span>` : ""}
+    ${badges.map(b => `<span class="badge">${b}</span>`).join("")}
+    <blockquote>${(h.quote || m.text || "").slice(0,340)}</blockquote>`;
   let video = null;
   if (m.stream_url) { video = player(m.stream_url); card.appendChild(video); }
+  else {
+    const load = document.createElement("button");
+    load.className = "btn ghost"; load.textContent = "Load clip";
+    load.onclick = async () => {
+      load.textContent = "Loading...";
+      const r = await fetch(`/api/clip?video_id=${m.video_id}&start=${m.start}&end=${m.end}`);
+      if (r.ok) { const { stream_url } = await r.json(); load.replaceWith(player(stream_url)); }
+      else load.textContent = "Clip unavailable";
+    };
+    card.appendChild(load);
+  }
   const panel = transcriptPanel(h, m.start, video);
   if (panel) {
     card.appendChild(panel);
     const note = document.createElement("div");
     note.className = "caption";
     note.textContent = (h.matched_terms || []).length
-      ? `Highlighted: ${h.matched_terms.join(", ")} — click any word to jump there.`
+      ? `Highlighted: ${h.matched_terms.join(", ")}. Click any word to jump there.`
       : "Click any word to jump there.";
     card.appendChild(note);
   }
   return card;
 }
 
-async function runSearch() {
-  const out = $("#results"); out.innerHTML = '<div class="loading">Searching the archive, then narrowing to the exact words…</div>';
-  const params = new URLSearchParams({ case: CASE, q: $("#q").value, precise: $("#precise").checked });
-  if ($("#role").value) params.set("role", $("#role").value);
-  const r = await fetch(`/api/search?${params}`);
+/* ---------- Library ---------- */
+async function loadLibrary() {
+  const out = $("#cases");
+  const cases = await (await fetch("/api/gallery")).json();
+  out.classList.remove("loading");
+  out.className = "grid";
+  out.innerHTML = "";
+  cases.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "casecard";
+    card.onclick = () => openCase(c.case_id);
+    card.innerHTML = `
+      <span class="kind">${c.kind === "appellate" ? "Appellate argument" : c.kind === "trial" ? "Trial record" : "Mixed record"}</span>
+      <h3>${c.name}</h3>
+      <div class="stats">
+        <span>${c.sessions} session${c.sessions === 1 ? "" : "s"}</span>
+        <span>${c.hours} hours</span>
+        <span>${c.moments} indexed moments</span>
+      </div>
+      <div class="chips">${(c.highlights || []).map(h => `<span class="chip">${h.label} <b>${h.count}</b></span>`).join("")}</div>
+      ${c.people && c.people.length ? `<div class="people">${c.people.slice(0,4).join(", ")}</div>` : ""}`;
+    out.appendChild(card);
+  });
+  if (!cases.length) out.innerHTML = '<div class="empty">No cases ingested yet.</div>';
+}
+
+async function openCase(caseId) {
+  CASE = caseId;
+  showView("casedetail");
+  $("#caseheader").innerHTML = '<div class="loading">Opening the case...</div>';
+  $("#sections").innerHTML = ""; $("#discussout").innerHTML = ""; $("#suggest").innerHTML = "";
+  const c = await (await fetch(`/api/case/${caseId}`)).json();
+  CURRENT = c;
+  const speakers = (c.participants || []).filter(p => p.seconds).slice(0,8);
+  $("#caseheader").innerHTML = `<h2>${c.name}</h2>
+    <p class="sub">${c.sessions.length} session${c.sessions.length === 1 ? "" : "s"}, ${c.hours} hours,
+      ${c.sections.reduce((a,s) => a + s.total, 0)} indexed moments.</p>
+    ${speakers.length ? `<div class="chips" style="margin-bottom:12px;">${speakers.map(p =>
+      `<span class="chip">${p.name} <b>${Math.round(p.seconds/60)}m</b></span>`).join("")}</div>` : ""}`;
+  $("#suggest").innerHTML = (c.suggested_questions || [])
+    .map(q => `<button onclick='askCase(${JSON.stringify(q)})'>${q}</button>`).join("");
+
+  const sections = $("#sections");
+  sections.innerHTML = "";
+  c.sections.forEach(s => {
+    const det = document.createElement("details");
+    det.className = "section";
+    det.innerHTML = `<summary>${s.label}<span class="count">${s.total} in the record</span></summary>`;
+    det.ontoggle = () => {
+      if (!det.open || det.dataset.filled) return;
+      det.dataset.filled = "1";
+      s.moments.forEach(m => det.appendChild(momentCard({ ...m, session_title: m.session })));
+    };
+    sections.appendChild(det);
+  });
+}
+
+function askCase(q) { $("#askq").value = q; runDiscuss(); }
+
+async function runDiscuss() {
+  const q = $("#askq").value.trim();
+  if (!q || !CASE) return;
+  const out = $("#discussout");
+  out.innerHTML = '<div class="loading">Reading the record...</div>';
+  const r = await fetch(`/api/discuss?case=${encodeURIComponent(CASE)}&q=${encodeURIComponent(q)}`);
+  if (!r.ok) { out.innerHTML = '<div class="empty">Could not answer that.</div>'; return; }
   const data = await r.json();
+  out.innerHTML = "";
+  const box = document.createElement("div");
+  box.className = "answer";
+  const paragraphs = data.answer.split(/\n\n+/).map(p =>
+    `<p>${p.replace(/\[(\d+)\]/g, '<cite data-n="$1">[$1]</cite>')}</p>`).join("");
+  box.innerHTML = paragraphs;
+  out.appendChild(box);
+  const cites = document.createElement("div");
+  out.appendChild(cites);
+  (data.citations || []).forEach((m, i) => {
+    const card = momentCard(m, [`citation ${i+1}`]);
+    card.id = `cite-${i+1}`;
+    cites.appendChild(card);
+  });
+  box.querySelectorAll("cite").forEach(el => {
+    el.onclick = () => {
+      const target = $(`#cite-${el.dataset.n}`);
+      if (target) target.scrollIntoView({ behavior:"smooth", block:"center" });
+    };
+  });
+}
+$("#askq").addEventListener("keydown", e => e.key === "Enter" && runDiscuss());
+
+/* ---------- Search ---------- */
+async function loadArchives() {
+  const cases = await (await fetch("/api/cases")).json();
+  const sel = $("#archive");
+  sel.innerHTML = "";
+  cases.forEach(c => {
+    const hours = c.sessions.reduce((a,s) => a + (s.duration || 0), 0) / 3600;
+    const opt = document.createElement("option");
+    opt.value = c.case_id;
+    opt.textContent = `${c.name} (${c.sessions.length} sessions, ${hours.toFixed(1)} h)`;
+    sel.appendChild(opt);
+  });
+  if (cases.length && !CASE) CASE = cases[0].case_id;
+  sel.value = CASE || (cases[0] && cases[0].case_id);
+  sel.onchange = () => { CASE = sel.value; renderExamples(); };
+  renderExamples();
+}
+
+function renderExamples() {
+  const kind = (CASE || "").match(/scotus|appellate/) ? "appellate" : "trial";
+  $("#examples").innerHTML = "Try: " + EXAMPLES[kind]
+    .map(([q,label]) => `<button onclick='ask(${JSON.stringify(q)})'>${label}</button>`).join(" ");
+}
+function ask(q) { showView("search"); $("#q").value = q; runSearch(); }
+
+async function runSearch() {
+  const out = $("#results");
+  const archive = $("#archive").value || CASE;
+  out.innerHTML = '<div class="loading">Searching the archive, then narrowing to the exact words...</div>';
+  const params = new URLSearchParams({ case: archive, q: $("#q").value, precise: $("#precise").checked });
+  if ($("#role").value) params.set("role", $("#role").value);
+  const data = await (await fetch(`/api/search?${params}`)).json();
   const items = data.results || [];
   out.innerHTML = "";
   const banner = document.createElement("div");
   banner.className = "interp";
-  const chips = Object.entries(data.filters || {}).map(([k, v]) => `<span class="badge">${k}: ${v}</span>`).join(" ");
+  const chips = Object.entries(data.filters || {})
+    .map(([k,v]) => `<span class="badge">${k}: ${v}</span>`).join(" ");
   banner.innerHTML = `<b>Read as:</b> ${data.interpretation || ""} ${chips}
-    <span class="caption">${items.length} moment${items.length === 1 ? "" : "s"}</span>`;
+    <div class="caption">${items.length} moment${items.length === 1 ? "" : "s"}</div>`;
   out.appendChild(banner);
-  if (!items.length) { out.innerHTML += '<div class="loading">No moments found.</div>'; return; }
-  items.forEach(m => {
-    const badges = [];
-    if (m.attrs?.ground) badges.push(m.attrs.ground.replace(/_/g, " "));
-    if (m.attrs?.ruling) badges.push(m.attrs.ruling);
-    if (m.score) badges.push(`score ${m.score.toFixed(2)}`);
-    out.appendChild(momentCard(m, badges));
-  });
+  if (!items.length) { out.insertAdjacentHTML("beforeend", '<div class="empty">No moments found.</div>'); return; }
+  items.forEach(m => out.appendChild(momentCard(m, m.score ? [`score ${m.score.toFixed(2)}`] : [])));
 }
-
-async function runDrop() {
-  const out = $("#dropout");
-  const url = $("#dropurl").value.trim();
-  if (!url) return;
-  out.innerHTML = '<div class="loading">Uploading…</div>';
-  const r = await fetch(`/api/analyze?url=${encodeURIComponent(url)}&title=${encodeURIComponent("Dropped: " + url.slice(-11))}`, { method: "POST" });
-  const { job_id } = await r.json();
-  const poll = setInterval(async () => {
-    const s = await (await fetch(`/api/analyze/${job_id}`)).json();
-    if (s.state === "ready") {
-      clearInterval(poll);
-      out.innerHTML = `<div class="card"><div class="meta">Indexed · ${Math.round((s.duration || 0) / 60)} min</div>
-        <blockquote>Ready to search. Switch the archive to “Dropped links” to query it.</blockquote></div>`;
-    } else if (s.state === "failed") {
-      clearInterval(poll);
-      out.innerHTML = `<div class="card"><div class="meta">Failed</div><blockquote>${s.error}</blockquote></div>`;
-    } else {
-      out.innerHTML = `<div class="loading">${s.state}… (transcription takes a couple of minutes)</div>`;
-    }
-  }, 4000);
-}
-function ask(q) { $("#q").value = q; runSearch(); }
-loadArchives();
 $("#q").addEventListener("keydown", e => e.key === "Enter" && runSearch());
 $("#reelq").addEventListener("keydown", e => e.key === "Enter" && runReel());
 
-let objLoaded = false;
-async function loadObjections() {
-  if (objLoaded) return; objLoaded = true;
-  const r = await fetch(`/api/casepack/${CASE}`);
-  const pack = await r.json();
-  const out = $("#objlog"); out.classList.remove("loading"); out.innerHTML = "";
-  pack.objection_log.forEach(e => {
-    const badges = [];
-    if (e.ground) badges.push(e.ground);
-    if (e.ruling) badges.push(e.ruling);
-    out.appendChild(momentCard(e, badges));
-  });
-}
-
+/* ---------- Contradictions ---------- */
 let contraLoaded = false;
 async function loadContradictions() {
   if (contraLoaded) return; contraLoaded = true;
   const out = $("#contra");
-  const r = await fetch(`/api/contradictions/${CASE}`);
-  if (!r.ok) { out.textContent = "No precomputed contradictions yet — run scripts/find_contradictions.py"; return; }
+  const r = await fetch(`/api/contradictions/depp-v-heard`);
+  if (!r.ok) { out.className = "empty"; out.textContent = "No precomputed contradictions yet. Run scripts/find_contradictions.py"; return; }
   const items = await r.json();
   out.classList.remove("loading"); out.innerHTML = "";
   items.forEach(c => {
@@ -302,7 +476,8 @@ async function loadContradictions() {
     const split = document.createElement("div"); split.className = "split";
     [["A", c.moment_a, c.clip_a], ["B", c.moment_b, c.clip_b]].forEach(([label, m, clip]) => {
       const col = document.createElement("div");
-      col.innerHTML = `<h4>${label}: ${m.session_title} · ${ts(m.start)}</h4><blockquote>${(m.text || "").slice(0, 200)}</blockquote>`;
+      col.innerHTML = `<div class="meta">${label}: ${m.session_title} · ${ts(m.start)}</div>
+        <blockquote>${(m.text || "").slice(0,220)}</blockquote>`;
       if (clip) col.appendChild(player(clip));
       split.appendChild(col);
     });
@@ -310,14 +485,44 @@ async function loadContradictions() {
   });
 }
 
+/* ---------- Reel ---------- */
 async function runReel() {
-  const out = $("#reelout"); out.innerHTML = '<div class="loading">Cutting the reel — stitching moments from across the archive…</div>';
-  const r = await fetch(`/api/reel?case=${CASE}&q=${encodeURIComponent($("#reelq").value)}`);
-  if (!r.ok) { out.innerHTML = '<div class="loading">No moments matched.</div>'; return; }
+  const out = $("#reelout");
+  const archive = $("#archive").value || CASE;
+  out.innerHTML = '<div class="loading">Cutting the reel, stitching moments from across the archive...</div>';
+  const r = await fetch(`/api/reel?case=${encodeURIComponent(archive)}&q=${encodeURIComponent($("#reelq").value)}`);
+  if (!r.ok) { out.innerHTML = '<div class="empty">No moments matched.</div>'; return; }
   const data = await r.json();
   out.innerHTML = `<div class="card"><div class="meta">${data.count} moments compiled</div></div>`;
   out.firstChild.appendChild(player(data.stream_url));
 }
+
+/* ---------- Add a link ---------- */
+async function runDrop() {
+  const out = $("#dropout");
+  const url = $("#dropurl").value.trim();
+  if (!url) return;
+  out.innerHTML = '<div class="loading">Uploading...</div>';
+  const r = await fetch(`/api/analyze?url=${encodeURIComponent(url)}&title=${encodeURIComponent("Dropped: " + url.slice(-11))}`, { method:"POST" });
+  const { job_id } = await r.json();
+  const poll = setInterval(async () => {
+    const s = await (await fetch(`/api/analyze/${job_id}`)).json();
+    if (s.state === "ready") {
+      clearInterval(poll);
+      out.innerHTML = `<div class="card"><div class="meta">Indexed, ${Math.round((s.duration||0)/60)} minutes</div>
+        <blockquote>Ready to search. Pick "Dropped links" in the Search tab.</blockquote></div>`;
+      loadArchives(); loadLibrary();
+    } else if (s.state === "failed") {
+      clearInterval(poll);
+      out.innerHTML = `<div class="card"><div class="meta">Failed</div><blockquote>${s.error}</blockquote></div>`;
+    } else {
+      out.innerHTML = `<div class="loading">${s.state}... transcription takes a couple of minutes.</div>`;
+    }
+  }, 4000);
+}
+
+loadLibrary();
+loadArchives();
 </script>
 </body>
 </html>

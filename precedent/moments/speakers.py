@@ -1,4 +1,4 @@
-"""Speaker roles — who is talking: judge, examiner, witness.
+"""Speaker roles: who is talking: judge, examiner, witness.
 
 VideoDB's word-level transcript carries diarization labels ("A", "B", ...).
 Those letters mean nothing to a law student, but courtroom speech is
@@ -146,7 +146,7 @@ def profile_speakers(turns: List[Turn]) -> Dict[str, SpeakerProfile]:
             profiles[sp].role = ROLE_JUDGE
         break
 
-    # Examiners: attorneys ask questions — there are usually several.
+    # Examiners: attorneys ask questions: there are usually several.
     for sp in open_speakers():
         if profiles[sp].question_ratio >= 0.4 or stats[sp]["objections"] >= 2:
             profiles[sp].role = ROLE_EXAMINER

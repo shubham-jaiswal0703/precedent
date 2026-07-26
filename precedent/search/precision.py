@@ -1,8 +1,8 @@
-"""Search precision — tighten a matched region to the words that matter.
+"""Search precision: tighten a matched region to the words that matter.
 
 VideoDB returns shots whose windows are wider than the answer. A law student
 searching "impeachment with a prior inconsistent statement" wants the ten
-seconds where it happens, with the words on screen — not a 90-second block.
+seconds where it happens, with the words on screen: not a 90-second block.
 
 This module:
   * pulls sentence- and word-level transcript for a shot window,
@@ -18,6 +18,8 @@ from videodb import Segmenter
 
 from ..catalog import get_session
 from ..config import get_connection
+
+MIN_SPAN_SECONDS = 12.0  # a clip shorter than this cannot teach anything
 
 STOPWORDS = {
     "a", "an", "and", "are", "as", "at", "be", "by", "did", "do", "does", "for",
@@ -203,6 +205,12 @@ def refine(
 
     span_start = float(sentences[lo]["start"])
     span_end = min(float(sentences[hi]["end"]), span_start + max_seconds)
+    # A single short sentence can be under a second long, which is unwatchable.
+    # Grow around the match until it is worth pressing play on.
+    if span_end - span_start < MIN_SPAN_SECONDS:
+        deficit = MIN_SPAN_SECONDS - (span_end - span_start)
+        span_start = max(0.0, span_start - deficit / 2)
+        span_end = span_end + deficit / 2
     quote = " ".join((sentences[i].get("text") or "").strip() for i in range(lo, hi + 1))
 
     words = fetch_words(video_id, span_start, span_end)
@@ -262,7 +270,7 @@ def refine_many(
         refined.append(moment)
 
     # If any moment contains the words the user actually typed, the ones that
-    # don't are noise — keep them only when nothing matched at all.
+    # don't are noise: keep them only when nothing matched at all.
     matched = [m for m in refined if m.attrs.get("core_hits", 0) > 0]
     ranked = matched if (drop_unmatched and matched) else refined
     ranked.sort(

@@ -1,4 +1,4 @@
-"""Oyez ingest — US Supreme Court oral arguments with named speakers.
+"""Oyez ingest: US Supreme Court oral arguments with named speakers.
 
 Oyez publishes each argument as a public MP3 plus a time-aligned transcript
 where every turn names its speaker and their role ("scotus_justice",
@@ -113,7 +113,7 @@ def ingest_argument(
     term: str,
     docket: str,
     case_id: str = "scotus-oral-arguments",
-    case_name: str = "US Supreme Court — Oral Arguments",
+    case_name: str = "US Supreme Court: Oral Arguments",
     skip_existing: bool = True,
 ) -> Optional[SessionEntry]:
     """Upload one SCOTUS argument to VideoDB and catalog its speakers."""
@@ -133,7 +133,7 @@ def ingest_argument(
     entry = SessionEntry(
         video_id=media.id,
         case_id=case_id,
-        title=f"{argument.case_name} — oral argument",
+        title=f"{argument.case_name}: oral argument",
         session_type="oral_argument",
         source_url=argument.audio_url,
         date=argument.argued,

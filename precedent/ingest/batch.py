@@ -1,10 +1,10 @@
-"""Bulk corpus building — turn the library from a demo into an archive.
+"""Bulk corpus building: turn the library from a demo into an archive.
 
 Two bulk sources (see SOURCES.md):
-  * Oyez — SCOTUS arguments with named-speaker aligned transcripts. We order a
+  * Oyez: SCOTUS arguments with named-speaker aligned transcripts. We order a
     term by Oyez's own view_count, which is a decent proxy for "the cases law
     students actually study".
-  * CourtListener — 100k+ federal/state appellate argument recordings.
+  * CourtListener: 100k+ federal/state appellate argument recordings.
 
 Ingest is I/O-bound (upload, then wait on transcription), so we run a small
 thread pool and report per-item outcomes rather than failing the whole batch.
@@ -61,7 +61,7 @@ def ingest_terms(
     per_term: int = 8,
     workers: int = 3,
     case_id: str = "scotus-oral-arguments",
-    case_name: str = "US Supreme Court — Oral Arguments",
+    case_name: str = "US Supreme Court: Oral Arguments",
     index: bool = True,
     on_result: Optional[Callable[[BatchResult], None]] = None,
 ) -> List[BatchResult]:
@@ -109,16 +109,30 @@ def ingest_terms(
 
 # -------------------------------------------------------- CourtListener batch
 
+CL_STORAGE = "https://storage.courtlistener.com"
+
+
+def media_url(record: dict) -> str:
+    """Best fetchable MP3 for a recording.
+
+    Court websites (ca11.uscourts.gov and friends) refuse VideoDB's fetcher, so
+    prefer CourtListener's own mirror and keep the court URL as a fallback.
+    """
+    local = record.get("local_path_mp3")
+    if local:
+        return f"{CL_STORAGE}/{local.lstrip('/')}"
+    return record.get("download_url") or ""
+
+
 def courtlistener_recordings(limit: int = 20, court: Optional[str] = None) -> List[dict]:
     """Recent oral-argument recordings with a usable MP3 URL."""
-    url = f"{CL_API}/audio/?page_size={min(limit * 2, 100)}&order_by=-date_created"
+    url = f"{CL_API}/audio/?page_size={min(limit * 3, 100)}&order_by=-date_created"
     if court:
         url += f"&docket__court={court}"
     payload = _get(url)
     out = []
     for r in payload.get("results", []):
-        media = r.get("download_url") or ""
-        if media.lower().endswith(".mp3") and (r.get("duration") or 0) > 300:
+        if media_url(r).lower().endswith(".mp3") and (r.get("duration") or 0) > 300:
             out.append(r)
         if len(out) >= limit:
             break
@@ -129,25 +143,29 @@ def ingest_courtlistener(
     limit: int = 10,
     court: Optional[str] = None,
     case_id: str = "federal-appellate",
-    case_name: str = "Federal Appellate — Oral Arguments",
+    case_name: str = "Federal Appellate: Oral Arguments",
     workers: int = 3,
     index: bool = True,
     on_result: Optional[Callable[[BatchResult], None]] = None,
 ) -> List[BatchResult]:
     coll = get_or_create_case_collection(case_id, case_name)
     seen = _already_ingested(case_id)
-    records = [r for r in courtlistener_recordings(limit * 2, court) if r["download_url"] not in seen][:limit]
+    records = [r for r in courtlistener_recordings(limit * 2, court) if media_url(r) not in seen][:limit]
 
     def work(record: dict) -> BatchResult:
         name = record.get("case_name") or f"CL {record.get('id')}"
         try:
-            media = coll.upload(url=record["download_url"], name=name)
+            media = coll.upload(url=media_url(record), name=name)
+            # VideoDB sometimes classifies an MP3 as an Audio asset ("a-z-..."),
+            # which the video search and transcript APIs will not accept.
+            if not str(media.id).startswith("m-"):
+                return BatchResult(name, error=f"uploaded as audio asset ({media.id}), not indexable")
             entry = SessionEntry(
                 video_id=media.id,
                 case_id=case_id,
                 title=name,
                 session_type="oral_argument",
-                source_url=record["download_url"],
+                source_url=media_url(record),
                 date=(record.get("date_created") or "")[:10],
                 witnesses=[],
                 collection_id=coll.id,

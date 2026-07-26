@@ -1,4 +1,4 @@
-"""Indexing wrappers — spoken word + courtroom-events scene index.
+"""Indexing wrappers: spoken word + courtroom-events scene index.
 
 Thin layer over the VideoDB SDK so the rest of the codebase never calls the
 SDK's indexing surface directly (lets us migrate legacy -> new API in one

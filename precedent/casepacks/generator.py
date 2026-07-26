@@ -1,4 +1,4 @@
-"""Case packs — a playable casebook chapter per trial.
+"""Case packs: a playable casebook chapter per trial.
 
 Structured JSON: sessions, witnesses, objection log (with rulings/grounds),
 key exchanges, every entry linked to a playable clip.

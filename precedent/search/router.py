@@ -1,4 +1,4 @@
-"""Query router — read the question like a law professor, then pick the index.
+"""Query router: read the question like a law professor, then pick the index.
 
 Half of what a law student asks is a *filter*, not a similarity search:
 "every sustained hearsay objection", "FRE 403 arguments", "the cross-examination
@@ -60,23 +60,23 @@ GROUNDS: Dict[str, Sequence[str]] = {
 
 # Federal Rules of Evidence -> the objection ground actually spoken in court.
 FRE_RULES: Dict[str, Tuple[str, str]] = {
-    "402": ("relevance", "FRE 402 — relevance"),
-    "403": ("prejudice", "FRE 403 — unfair prejudice / 403 balancing"),
-    "404": ("character", "FRE 404 — character and prior bad acts"),
-    "602": ("speculation", "FRE 602 — lack of personal knowledge"),
-    "608": ("character", "FRE 608 — character for truthfulness"),
-    "609": ("character", "FRE 609 — impeachment by conviction"),
-    "611": ("leading", "FRE 611 — leading questions / mode of examination"),
-    "612": ("foundation", "FRE 612 — refreshing recollection"),
-    "613": ("hearsay", "FRE 613 — witness's prior statement"),
-    "701": ("speculation", "FRE 701 — improper lay opinion"),
-    "702": ("foundation", "FRE 702 — expert testimony / Daubert"),
-    "801": ("hearsay", "FRE 801 — hearsay definition and exemptions"),
-    "802": ("hearsay", "FRE 802 — rule against hearsay"),
-    "803": ("hearsay", "FRE 803 — hearsay exceptions"),
-    "804": ("hearsay", "FRE 804 — declarant unavailable"),
-    "901": ("authentication", "FRE 901 — authenticating evidence"),
-    "1002": ("best_evidence", "FRE 1002 — best evidence rule"),
+    "402": ("relevance", "FRE 402: relevance"),
+    "403": ("prejudice", "FRE 403: unfair prejudice / 403 balancing"),
+    "404": ("character", "FRE 404: character and prior bad acts"),
+    "602": ("speculation", "FRE 602: lack of personal knowledge"),
+    "608": ("character", "FRE 608: character for truthfulness"),
+    "609": ("character", "FRE 609: impeachment by conviction"),
+    "611": ("leading", "FRE 611: leading questions / mode of examination"),
+    "612": ("foundation", "FRE 612: refreshing recollection"),
+    "613": ("hearsay", "FRE 613: witness's prior statement"),
+    "701": ("speculation", "FRE 701: improper lay opinion"),
+    "702": ("foundation", "FRE 702: expert testimony / Daubert"),
+    "801": ("hearsay", "FRE 801: hearsay definition and exemptions"),
+    "802": ("hearsay", "FRE 802: rule against hearsay"),
+    "803": ("hearsay", "FRE 803: hearsay exceptions"),
+    "804": ("hearsay", "FRE 804: declarant unavailable"),
+    "901": ("authentication", "FRE 901: authenticating evidence"),
+    "1002": ("best_evidence", "FRE 1002: best evidence rule"),
 }
 
 # Moment types the extractor already labels, by how students ask for them.
@@ -91,6 +91,20 @@ MOMENT_PHRASES: Dict[str, Sequence[str]] = {
     "verdict": ("verdict", "jury finds"),
     "exhibit": ("exhibit", "publish", "marked for identification"),
     "motion_to_strike": ("move to strike", "motion to strike", "strike that"),
+    "impeachment_prior_statement": ("impeach", "impeachment", "prior statement",
+                                    "prior inconsistent", "inconsistent statement",
+                                    "confronted with"),
+    "refreshing_recollection": ("refresh", "refreshing recollection"),
+    "expert_qualification": ("qualify the expert", "expert qualification", "daubert",
+                             "tender the witness"),
+    "hypothetical_from_bench": ("hypothetical", "hypotheticals"),
+    "standard_of_review": ("standard of review", "de novo", "abuse of discretion"),
+    "concession": ("concede", "concession", "conceded"),
+    "refusal_to_concede": ("refuse to concede", "refused to concede"),
+    "stare_decisis_argument": ("stare decisis", "overrule precedent", "reliance interests"),
+    "best_case_question": ("best case", "best authority"),
+    "argument_opening": ("may it please the court", "opening of argument"),
+    "rebuttal": ("rebuttal",),
 }
 
 RULING_WORDS = {"sustained": "sustained", "overruled": "overruled",
@@ -168,7 +182,7 @@ def _moment_to_playable(m: Moment, session_title: str, session_type: str) -> Pla
 
 
 def _structured_search(case_id: str, plan: QueryPlan, limit: int) -> List[PlayableMoment]:
-    """Filter the legal-moment layer — no vector search involved."""
+    """Filter the legal-moment layer: no vector search involved."""
     found: List[PlayableMoment] = []
     for session in sessions_for_case(case_id):
         for m in extract_moments(session.video_id):
@@ -220,9 +234,9 @@ def search(
 
     if plan.intent in (INTENT_OBJECTION, INTENT_RULE, INTENT_MOMENT):
         moments = _structured_search(case_id, plan, limit)
-        if not moments:  # nothing labeled — fall back rather than answer nothing
+        if not moments:  # nothing labeled: fall back rather than answer nothing
             moments = semantic_search(case_id, query, limit=limit, speaker_role=role)
-            plan.explanation += " — none labeled, showing closest spoken matches"
+            plan.explanation += ": none labeled, showing closest spoken matches"
     elif plan.intent == INTENT_VERBATIM:
         moments = keyword_search(case_id, plan.phrase)[:limit]
     elif plan.intent == INTENT_SPEAKER:

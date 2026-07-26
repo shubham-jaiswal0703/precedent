@@ -30,7 +30,7 @@ def moments_by_type(case_id: str, moment_type: str, limit: int):
                     text=m.text,
                     session_title=session.title,
                     session_type=session.session_type,
-                    attrs={"label": f"{moment_type.replace('_', ' ').title()} — {session.title}", **m.attrs},
+                    attrs={"label": f"{moment_type.replace('_', ' ').title()}: {session.title}", **m.attrs},
                 )
             )
     return collected[:limit]

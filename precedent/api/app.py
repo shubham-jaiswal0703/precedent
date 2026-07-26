@@ -1,4 +1,4 @@
-"""Precedent API — professor questions in, playable moments out."""
+"""Precedent API: professor questions in, playable moments out."""
 import json
 from pathlib import Path
 from typing import Dict, Optional
@@ -8,9 +8,11 @@ from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from ..casepacks.gallery import case_cards, case_detail
 from ..casepacks.generator import generate_case_pack
 from ..catalog import _load as load_catalog, sessions_for_case
 from ..config import DATA_DIR, PROJECT_ROOT
+from ..discuss import discuss
 from ..reels.builder import build_reel
 from ..search import engine, router
 
@@ -82,6 +84,41 @@ def search(
     return {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
 
 
+@app.get("/api/gallery")
+def gallery():
+    """Browsable shelf of cases in the library."""
+    return case_cards()
+
+
+@app.get("/api/case/{case_id}")
+def case(case_id: str, per_section: int = 4):
+    """One case opened up: sessions, participants, recommended sections."""
+    try:
+        return case_detail(case_id, per_section=per_section)
+    except ValueError as exc:
+        raise HTTPException(404, str(exc))
+
+
+@app.get("/api/discuss")
+def discuss_case(case: str, q: str, limit: int = 5):
+    """Ask about a case; every claim carries a playable citation."""
+    result = discuss(case, q, limit=limit)
+    return {
+        "question": result.question,
+        "answer": result.answer,
+        "citations": [m.__dict__ for m in result.citations],
+    }
+
+
+@app.get("/api/clip")
+def clip(video_id: str, start: float, end: float):
+    """A playable stream for an arbitrary span (used by section browsing)."""
+    try:
+        return {"stream_url": engine.clip_url(video_id, start, end)}
+    except Exception as exc:
+        raise HTTPException(400, str(exc))
+
+
 @app.get("/api/casepack/{case_id}")
 def casepack(case_id: str, regenerate: bool = False):
     path = DATA_DIR / "casepacks" / f"{case_id}.json"
@@ -143,7 +180,7 @@ def analyze(
     case: str = "dropped-links",
     case_name: str = "Dropped links",
 ):
-    """Drop in any YouTube/media URL — we ingest, transcribe, and index it."""
+    """Drop in any YouTube/media URL: we ingest, transcribe, and index it."""
     job_id = uuid4().hex[:12]
     JOBS[job_id] = {"state": "queued", "url": url}
     background.add_task(_ingest_and_index, job_id, url, title, case, case_name)

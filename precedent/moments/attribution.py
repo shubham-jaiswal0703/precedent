@@ -1,4 +1,4 @@
-"""Attribution — put a name on every moment.
+"""Attribution: put a name on every moment.
 
 Two sources of truth, in order of preference:
   1. Oyez's own speaker timeline (real names and roles: "Neil Gorsuch",
@@ -34,7 +34,7 @@ class Attribution:
         if self.source == "oyez" and self.named:
             if len(self.named) == 1:
                 return self.named[0]
-            return f"{self.named[0]} — {self.named[1]}"
+            return f"{self.named[0]}: {self.named[1]}"
         if self.roles:
             pretty = [ROLE_NAMES_BY_ROLE.get(r, r) for r in self.roles if r != "other"]
             return " · ".join(pretty) if pretty else ""

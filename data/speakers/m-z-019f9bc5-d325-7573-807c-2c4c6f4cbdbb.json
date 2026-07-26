@@ -1,0 +1,1611 @@
+{
+  "source": "oyez",
+  "case_name": "Babcock v. Kijakazi",
+  "docket": "20-480",
+  "term": "2021",
+  "turns": [
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 0.18,
+      "end": 6.025,
+      "text": "We'll hear argument next in Case 20-480, Babcock versus Kijakazi. Mr. Katyal."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 6.025,
+      "end": 138.06000005,
+      "text": "Thank you, Mr. Chief Justice, and may it please the Court: I'd like to begin with the statutory text. Section 415(a)(7)(A) is found at petition appendix page 69a, and it excludes from the windfall elimination provision \"a payment based wholly on service as a member of a uniformed service as defined in section 410(m).\" David Babcock, who served as a dual-status technician in the National Guard for 33 years, qualifies. Indeed, 32 U.S.C. 709 requires technicians like him to literally \"wear the uniform of the armed services, be a member of the National Guard, and hold the military grade specified by the Secretary.\" And Babcock did. He wore the U.S. Army uniform day in, day out, teaching people how to fly Black Hawk helicopters and the like. Babcock engaged in service. He was a dual-status tech. He's undoubtedly a member of a uniformed service. Indeed, the Section 410(m) expressly says National Guard folks qualify. The government says Babcock was a civilian. Even if this were true, it would be irrelevant. The key statute, 415, doesn't use a civil-versus-military dividing line. It simply asks was the service uniformed. The government attempts to say that Babcock's service was not as wholly a member of the uniformed service. But the best reading of the statute, even before one gets to the veterans canon, rejects that. There is no status language in 415. The government would convert the word \"as\" into a status test trying to discern what hat someone was wearing at a given point in time. Congress certainly could have made such a choice, and, indeed, it has in many other statutes, but it did nothing like that here. So we have three basic arguments. One, the statute doesn't look to civilian status. It looks to uniformed service. Second, even if civilian status mattered, this would meet it. Dual-status tech service is irreducibly military. And, third, if there's any ambiguity, the veterans canon would suggest reading it in favor of Mr. Babcock."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 138.06000005,
+      "end": 165.375,
+      "text": "Counsel, if -- just a simple factual question. If he -- if Petitioner was receiving his -- was exclusively uniformed service, then why is he receiving a civilian pension and a military pension?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 165.375,
+      "end": 182.95,
+      "text": "Yeah, that's just the way the statute works. And I -- Justice Thomas, it's very much like something that's common ground between both the government and us, which is that inactive service members who didn't pay into the system would receive both, that that's what Congress certainly had in mind in the uniformed service exception."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 182.95,
+      "end": 228.64,
+      "text": "That's not exactly -- part of it's civilian and part of it is military. If your argument is right, it would seem that it would be all military. That makes sense if you're talking about NOAA or you're talking about the Coast Guard. It's all -- it -- it -- it's -- it's consistent with what you're saying, that the service was uniformed service, as opposed to part civilian, since he's wearing more than one hat. It's dual -- it is a dual position, so part civilian, part military. And I don't understand how you can have that and now argue that it's all military."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 228.64,
+      "end": 242.89,
+      "text": "Well, we're -- we're saying, Your Honor, that it is -- it's all uniformed service. That's the language of 410(m). And so it does certainly have some civilian overtones. Civilian versus uniformed service are not mutually exclusive categories."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 242.89,
+      "end": 247.14,
+      "text": "Is -- is there any other -- is there any other service where that's the case?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 247.14,
+      "end": 247.84,
+      "text": "Well, we do think --"
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 247.84,
+      "end": 248.66,
+      "text": "Other than this?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 248.66,
+      "end": 251.3,
+      "text": "Well, NOAA and the Public Health Service are both civil --"
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 251.3,
+      "end": 252.87,
+      "text": "But they're designated by statute, though --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 252.87,
+      "end": 253.05,
+      "text": "Correct."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 253.05,
+      "end": 253.465,
+      "text": "-- right?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 253.465,
+      "end": 254.3,
+      "text": "Correct. And just --"
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 254.3,
+      "end": 257.76,
+      "text": "And -- and your -- and -- and -- and Petitioner is not?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 257.76,
+      "end": 291.14,
+      "text": "No, Justice Thomas, it is designated by statute just as much. So the National Guard is enumerated in -- Congress specified in the uniformed service exception certain services that were defined as uniformed, and that's 410(m). And when you look at 410(m) and the cross-reference, it says that NOAA and Public Health Services are certainly included, but so too is the National Guard of the United States. Now, Justice Thomas, you're absolutely right, there is no other category besides dual-status technicians that fall within our argument about 410(m)."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 291.14,
+      "end": 298.85999995,
+      "text": "But Petitioner is not acting as a National Guard -- as a member of the National Guard of the United States all the time."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 298.85999995,
+      "end": 383.715,
+      "text": "So our argument is that he is all the time and that -- and that Congress in 410(m) didn't draw any distinction. Now, absolutely, Justice Thomas, my friend on the other side has made that argument before this Court for the first time, that there's some distinction between the National Guard of the United States and the National Guard in general. And as I was saying to you in my -- my first answer to you, the problem with that is that it would ultimately -- first of all, that's not the way the government administers the statute. At page 24 of their brief, they admit that it covers inactive duty folks. And if this is the National Guard of the United States and that's the only thing swept up in the uniformed service exception, the problem with that is then Congress didn't reach the one category that was common ground that we both agree was covered by the uniformed service exception. That's why I think this late-breaking theory by the Solicitor General 27 years after the statute has passed I don't think really works. It also doesn't work because the statutes say that once you're a member of the National Guard, you're automatically concurrently enlisted in the National Guard of the United States. And, here, that's really true. As I was saying, Babcock is required, as with all dual-status technicians, to wear the uniform, a United States uniform. So he wears the United States Army -- it's emblazoned on his uniform --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 383.715,
+      "end": 384.85,
+      "text": "Well, counsel, I don't think --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 384.85,
+      "end": 385.53,
+      "text": "-- when he goes to work every day."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 385.53,
+      "end": 391.19,
+      "text": "-- I don't think the fact that -- I don't think, when they say \"the uniformed service,\" they -- they mean does he wear a uniform or not. I mean --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 391.19,
+      "end": 391.38,
+      "text": "Correct."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 391.38,
+      "end": 442.94,
+      "text": "-- I appreciate he -- he wears the uniform because of his National Guard service. But he gets two checks, right, two checks a month or however often? One is for his National Guard service, the -- I don't know whether it's a weekend a month or however much it is, and then another check for his 9-to-5 civilian job. The former is based wholly on his uniformed service, working in -- in the uniformed service. But the other is based wholly on his civilian job. Now the one is subject -- subject to the exemption from the windfall exception if that's -- if that's right. But the other isn't because it's certainly not based wholly on his service in the National Guard. It's based on his civilian service."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 442.94,
+      "end": 592.21,
+      "text": "So, Mr. Chief Justice, we do think that the other is one that falls squarely within the uniformed service exception; that is, you're absolutely right, the statute doesn't ask are you literally wearing a uniform at any time. It asks, are you a member of a service that is a uniformed service? And then the statute tells us exactly what is a uniformed service in Title 42, and it includes the National Guard, in contrast to, as Justice Thomas was asking about, Title 5, which, for purposes of other things, like bookkeeping, calls them civilian. So I don't think the fact that they are civilian answers the fundamental question, which is, is Babcock serving as a member of a uniformed service at the time? Now my friend on the other side says, well, that's a different hat because that is the hat National Guard, the state National Guard. But, as I say, if that's the test, then it would mean inactive duty folks who stand very much like Mr. Babcock don't get the -- they wouldn't be able to be eligible for the uniformed service exception either because they are the same -- they fall in the same exact category. They're people who didn't pay into the system before 1988. Congress undoubtedly said for those folks, absolutely, they should get it. And the reason for this, and it sounds a little arcane, but I think the reason why this all exists is people like Babcock or others joined the -- joined federal employment with a certain set of expectations, and one of those expectations was they would get a windfall if they fell within this. Congress later changed that in 1983 and adopted a broad windfall elimination provision, one that sweeps very large, 1.9 million people are encompassed by that. But, in 1994, they said: Well, if you're serving in uniform, if your service is wholly there, then you should get an exemption, the uniformed service exemption. And so that's what it's about. And so it's certainly about inactive service folks who didn't pay into the system but see their paycheck slashed decades after they started their employment. They don't really remember whether they paid into the system or not. Congress said we want to get rid of that. And as our reply brief at page 14 says, once Congress decided to get into that question, then it stands to reason that folks like dual-status technicians like Mr. Babcock are just like those inactive service folks. They're people who didn't pay into the system but see their paycheck slashed decades later, and these are people who are truly, through and through, military to the extent that that was even the test in terms of the way they performed their --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 592.21,
+      "end": 597.43,
+      "text": "Well, I -- I don't see how you can say through and through military when their job title is dual-status."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 597.43,
+      "end": 597.56,
+      "text": "Well --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 597.56,
+      "end": 598.765,
+      "text": "I mean, what are the two statuses --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 598.765,
+      "end": 599.01,
+      "text": "Well --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 599.01,
+      "end": 599.14,
+      "text": "-- stati?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 599.14,
+      "end": 602.9,
+      "text": "-- it's -- it's military and civilian to be sure."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 602.9,
+      "end": 603.335,
+      "text": "Yeah, sure."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 603.335,
+      "end": 603.55,
+      "text": "But --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 603.55,
+      "end": 630.045,
+      "text": "So the -- their pension payments are not based wholly on the military service. They get a pension based on their military service, and that works the way you want the whole thing to work in terms of accepting the application of the windfall exception. But I don't see -- or I think you -- well, how -- how does the other part of it -- not the -- not the whole thing. I understand you want to look at the whole thing and say the whole thing is based on --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 630.045,
+      "end": 630.55,
+      "text": "So --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 630.55,
+      "end": 631.53,
+      "text": "-- military service."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 631.53,
+      "end": 631.81,
+      "text": "-- so two things."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 631.81,
+      "end": 637.065,
+      "text": "It seems to me the whole system separates out the two to the extent that they call it a position dual."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 637.065,
+      "end": 677.815,
+      "text": "So two things, Mr. Chief Justice. First, the title is not just dual-status tech. It's -- it's -- and you can see it at U.S. -- at 32 U.S.C. 709(b), which is petition appendix page 64a, and it's military technician dual-status. And then, at 10 U.S.C. 10216, it calls them military technicians and military 24 whopping times. So I think Congress has said, to the extent that you even looked at this military/civil line, I think they're calling them more military if anything. Now the second point is we don't think that the words of the statute have some sort of purity test that you've got to be all military all the time. You know, the --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 677.815,
+      "end": 686.28,
+      "text": "Well, you don't have to be all military all the time, but maybe you do when they say the payment has to be based wholly on service as a member of a uniformed service."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 686.28,
+      "end": 826.12,
+      "text": "I agree that's one way to read it. I just don't think it's the best way. And so, you know, let me walk you through the way that we understand \"wholly,\" which is it's a very severe test, as our reply brief at page 10 says. What it says is that if there's even a drop of money that comes -- that not from uniformed service, then you don't get the exception the way -- the uniformed service exception. So Congress in 1983 passed a broad provision, the windfall elimination provision, which says \"if any part or whole of the money comes from non-covered service, then you're in the windfall elimination provision.\" That's what they said. That's a sweeping broad provision that affects 1.9 million Americans each year. And then Congress said, we're going to enact a narrow exception only for those who are wholly in uniformed service, people who have basically spent their career doing that. And so the word \"wholly\" has a lot of meaning. It's integral to our -- to our reading of the statute because, without it, it means that you can have just a little bit of money from uniformed service and then you're entirely out of this broad windfall elimination provision. So it's not the case that we're not giving \"wholly\" work. We're giving it a lot of work. Indeed, it's integral to the way we read the statute. To my friend's reading and, Mr. Chief Justice, I think your reading, suggests that \"wholly\" would modify the word \"service,\" not \"payment.\" And I think that's not what Congress had in mind. Congress certainly has in other statutes focused on the status or something like that, but it hasn't here. And that's why our brief linguistically walks you through that at page 29, saying \"wholly\" would have to be two words down in the statute in order for this to apply. And so we think it's a -- not to -- we do think it's the best reading of the statute to really -- to understand this. I think the government itself at page 22 of their brief admits that \"wholly\" modifies the word \"payment,\" not \"service.\" And so, when you read the statute, you simply ask whether or not the service is as a member of a uniformed service. And, here, when someone like Mr. Babcock or dual-status technicians are performing their duties, they're literally having to wear the uniform, having to be a military rank, having to comply with all sorts of fitness requirements that --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 826.12,
+      "end": 826.335,
+      "text": "Mr. Katyal --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 826.335,
+      "end": 827.23,
+      "text": "-- us civilians don't --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 827.23,
+      "end": 849.89,
+      "text": "-- what if a private employer said, I'm very patriotic, I really like employing members of the National Guard and all of these same requirements that you're articulating, said I want you to wear your uniform to work, I want you to maintain a certain rank, I want you to maintain a certain fitness level, but Mr. Babcock is doing the same job that he's doing, you know, teaching pilot flight school, but he's doing it for a private employer."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 849.89,
+      "end": 850.05,
+      "text": "Yeah."
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 850.05,
+      "end": 851.89,
+      "text": "Would that be service as a member --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 851.89,
+      "end": 852.44,
+      "text": "It wouldn't."
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 852.44,
+      "end": 852.87,
+      "text": "-- of the National Guard?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 852.87,
+      "end": 860.61,
+      "text": "So -- so two things, Justice Barrett. First is, of course, if a private employer did anything at this point in time, it's all covered employment. So --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 860.61,
+      "end": 860.79,
+      "text": "Well --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 860.79,
+      "end": 861.34,
+      "text": "-- this case really --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 861.34,
+      "end": 861.86,
+      "text": "-- imagine not."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 861.86,
+      "end": 880.16,
+      "text": "Right. I just want to make sure that, you know, focus on it's impossible for these kinds of hypotheticals to arise. And then, second, we definitely don't think that a private employer can somehow supplement and define what is a National Guard duty. Those are enumerated by statute in 709 and 10216."
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 880.16,
+      "end": 888.03,
+      "text": "But why would that matter? You know, why does it matter if they're two employers rather than one? Is it just the fact that he works for the government?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 888.03,
+      "end": 907.21,
+      "text": "It's -- it's not two employers rather than one. We're just asking -- when you ask what is service as a member of a uniformed service, I think that can only be done by someone who is a member of a uniformed service. Now, if the hypothetical is the employer makes those people become, say, National Guard members or something like that, our point --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 907.21,
+      "end": 908.21,
+      "text": "That is the hypothetical."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 908.21,
+      "end": 929.525,
+      "text": "Yeah. Then our point would be, in that circumstance, they -- they'd still have -- that they'd have to be performing the duties that National Guard folks do enumerated by statute, not other duties. If they're doing other things, they're just not -- they're not service -- their role -- they're not -- their service is not as a member of a uniformed service."
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 929.525,
+      "end": 941.94,
+      "text": "How about if they're delivering food to the National Guard? It's a private company with all of the prerequisites that Justice Breyer had said and they're delivering mess, food."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 941.94,
+      "end": 983.98,
+      "text": "I think you'd look to the way Congress has characterized the duty, if there's any clue, like, here, there is the -- you know, to the extent you want to focus on military, something like that. And the reason for that, Justice Sotomayor, is what is civilian and what looks military is actually really hard. Take your example of food. A culinary specialist is a chief petty officer in the U.S. Army. It is thoroughly a military position. But it's cooking food. And so I do think that the way to -- to deal with this -- and this only affects, obviously, a narrow set of people -- is to ask, what did Congress have in mind in the roles that it was enumerating? Here, Congress had roles in mind like the one that Mr. Babcock does, teaching people how to fly military helicopters."
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 983.98,
+      "end": 985.835,
+      "text": "Where do you get all of that from the language?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 985.835,
+      "end": 986.45,
+      "text": "We get it --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 986.45,
+      "end": 987.74,
+      "text": "Tell me where you -- you --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 987.74,
+      "end": 988.75,
+      "text": "We -- we get it from --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 988.75,
+      "end": 991.68,
+      "text": "-- where the language gives us those two requirements --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 991.68,
+      "end": 992.16,
+      "text": "It --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 992.16,
+      "end": 1001.69,
+      "text": "-- first, that -- that your job has to require you to be a -- be a member, and, secondly, that it be one of these specified jobs?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1001.69,
+      "end": 1002.89,
+      "text": "Yeah. So I think the -- the language --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1002.89,
+      "end": 1004.51,
+      "text": "Just read the language to me and tell me where."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1004.51,
+      "end": 1026.86,
+      "text": "Right. So the language of the statute is \"service as a member of a uniformed service.\" So we think that has three components to it. One, you got to be a member, you know, and, here, of course, membership in the National Guard is required. Second, that you got to perform the statutory duties that are enumerated by the -- by the statute, as opposed to Justice Barrett's hypothetical, like, adding some other duties --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1026.86,
+      "end": 1027.49,
+      "text": "So a cook is --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1027.49,
+      "end": 1028.87,
+      "text": "-- that a private employer does."
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1028.87,
+      "end": 1032.065,
+      "text": "-- a cook is -- is listed. So what else?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1032.065,
+      "end": 1039.65,
+      "text": "Yeah. And then -- and then, lastly, you know, whether it's for a uniformed service or not, and that's defined by the statute, as I was saying to the Chief Justice, in 410(f)."
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1039.65,
+      "end": 1044.09,
+      "text": "So how do you exclude the -- the chef, that he's in the Army, he's a officer --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1044.09,
+      "end": 1044.77,
+      "text": "So I do think --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1044.77,
+      "end": 1045.48,
+      "text": "-- a petty officer?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1045.48,
+      "end": 1083.23,
+      "text": "Right. I do think, if the Congress -- if Congress has defined that as a kind -- as -- as -- as an enumerated duty of the National Guard, then that person would qualify. Here, there are enumerated duties of the National Guard found in 709 and 10216, and as our brief explains, dual-status technicians are integral to the performance of those duties. You know, that's been said time and again by different people, members of the military, you know, civilian officers, even the government's own briefs to this Court in an admittedly different context, the Ferris context, calls them irreducibly military."
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 1083.23,
+      "end": 1089.42,
+      "text": "Well, Mr. Katyal, is training pilots to fly Black Hawk helicopters one of those enumerated duties?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1089.42,
+      "end": 1147.64,
+      "text": "We do think it falls directly within -- within the enumerations of 709, which is organizing, administering, instructing, or training the National Guard and -- or armed services and the like. So, yes, we think it does fall that way. We don't think you have to get into any of that here because Congress did use a pretty simple test, simple language that affects relatively few people. To the extent there's any doubt about this, we would suggest you apply the veterans canon. As Justice Alito's unanimous opinion for the Court in Shinseki said back in 2011, if there's any ambiguity, read it in favor of veterans. And so we think that that would answer it. And then I think, you know, my friend on the other side suggests that there's somehow some sort of civilian bar in the statute, and I think this is implicit in the Chief Justice's question to me as well. But the relevant statutory language doesn't say that. It just says uniformed service."
+    },
+    {
+      "speaker": "Elena Kagan",
+      "role": "scotus_justice",
+      "start": 1147.64,
+      "end": 1170.62,
+      "text": "Well, the way the Chief Justice read the language, I think, and this is the way I read the language too, is that we can sort of make this simpler by saying a payment based wholly on military service. Do you think that that's right? Is there a difference? If I say a payment based wholly on military service, is that the same as or different than this statutory language?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1170.62,
+      "end": 1182.205,
+      "text": "I -- I think it may be the same. It'll obviously depend on how you read \"wholly.\" We don't think you should read \"wholly\" the way that they read it to essentially say that there's -- \"wholly\" will modify \"service,\" which I think could be done in a --"
+    },
+    {
+      "speaker": "Elena Kagan",
+      "role": "scotus_justice",
+      "start": 1182.205,
+      "end": 1189.44,
+      "text": "Well, \"a payment based wholly on military service\" means that the payment has to be for entirely military service."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1189.44,
+      "end": 1220.85,
+      "text": "Exactly. So, if -- if -- if that's the way you read it, Justice Kagan, we don't disagree. So people like Babcock, who have spent their whole career in the dual-status technician role and get a payment for that, that's a circumstance in which they fall within the exception. If we contrast that to a modified Mr. Babcock, someone who spent half of his time, say, working at the Department of Transportation in non-covered employment and half of his time working as a dual-status tech, that person would not be eligible for the uniformed service exception."
+    },
+    {
+      "speaker": "Elena Kagan",
+      "role": "scotus_justice",
+      "start": 1220.85,
+      "end": 1221.58,
+      "text": "So, if I understand --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1221.58,
+      "end": 1222.05,
+      "text": "He falls without it."
+    },
+    {
+      "speaker": "Elena Kagan",
+      "role": "scotus_justice",
+      "start": 1222.05,
+      "end": 1234.47,
+      "text": "-- what you're saying in terms of the way you read this stat -- statute, the only thing at issue is, when he receives his paycheck, is it entirely for military service, or might it be for other things as well?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1234.47,
+      "end": 1237.17,
+      "text": "Is it entirely for uniformed service. That's the -- that's the one --"
+    },
+    {
+      "speaker": "Elena Kagan",
+      "role": "scotus_justice",
+      "start": 1237.17,
+      "end": 1242.01,
+      "text": "Oh. Now you're changing it, because I asked you is it the same as for military service."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1242.01,
+      "end": 1295.07,
+      "text": "Oh, I'm so sorry, I meant -- I didn't hear the last part then. So, yeah, so we do think there's a difference between uniformed service and military service. And Congress gave you an express textual indication of that by enumerating the Public Health Service and NOAA as two examples. Those are people who are not military. The government, you know, dances around this in their brief, but they certainly don't call them military because that would be preposterous. Instead, what people like NOAA and Public Health Services folks are are uniformed service, and that's why Congress used that specific phrase. They could have used -- picked up any other military test, as our brief says. There are all sorts of military pay stub tests throughout, including about the National Guard, like 709(b) and so on, but not this one. And so, here, Congress just simply asked: Is the service as a member of a uniformed service? And to answer that question, you look to what is a uniformed service --"
+    },
+    {
+      "speaker": "Elena Kagan",
+      "role": "scotus_justice",
+      "start": 1295.07,
+      "end": 1303.54,
+      "text": "So are you saying, well, we -- we concede that the payment is not entirely for military service, but it's all for uniformed service?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1303.54,
+      "end": 1324.245,
+      "text": "We -- we don't concede it. We do think, if you went there, this is irreducibly military at the end of the day, but -- but we don't think you have to get there. That is not the language of the statute. We think we meet the government's test, but we don't think the government's test is right. We think it's a simpler test affecting a very small number of people but, obviously, people to whom this amount of money is really important."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1324.245,
+      "end": 1331.5,
+      "text": "But isn't it that -- I mean, is there anything wrong with my reading the legislative history? Is there anything wrong where the statute's ambiguous?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1331.5,
+      "end": 1331.69,
+      "text": "So --"
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1331.69,
+      "end": 1370.175,
+      "text": "If I turn to a House report, which was so common and still is, where someone who works on the staff explains what they mean, and that explanation is run by all the senators, and either they or their staff sign off on it, and, here, no one objected. And what they seem to say, when I read House Report 103-506, whatever it is, at 67, I read it, and it seems to say that these smaller group of people who are actually in military reserve between 1956 or whatever the years were, they're the ones we're trying to help, not anybody else."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1370.175,
+      "end": 1397.44,
+      "text": "So -- so, Justice Breyer, we certainly don't have any problem with you looking at legislative history. Some of your colleagues might, but we certainly don't. And -- and we think, if you look at it, you draw exactly the opposite conclusion because Congress did say -- you're absolutely right, Congress said military pensions focused on inactive service members and the like in the -- excuse me -- the legislative history says that, but Congress didn't use those words. They used far broader words, service --"
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1397.44,
+      "end": 1400.91,
+      "text": "So you're saying the person who wrote the legislative history got it wrong?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1400.91,
+      "end": 1401.32,
+      "text": "I --"
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1401.32,
+      "end": 1407.42,
+      "text": "That the person who wrote that report didn't actually read the statute and didn't really know what the statute said?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1407.42,
+      "end": 1410.89,
+      "text": "Justice Breyer, there's nothing in there that excludes dual-status technicians --"
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1410.89,
+      "end": 1411.77,
+      "text": "It says for a small --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1411.77,
+      "end": 1412.56,
+      "text": "-- from the legislative history."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1412.56,
+      "end": 1414.8,
+      "text": "-- closed group of people who receive military pay --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1414.8,
+      "end": 1415.01,
+      "text": "Correct."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1415.01,
+      "end": 1415.5,
+      "text": "-- based on your reading."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1415.5,
+      "end": 1418.23,
+      "text": "-- and we agree it is a small group of people either way, whether dual-status techs --"
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1418.23,
+      "end": 1424.2,
+      "text": "Based at least in part on non-covered military reserve duty after 1956 and before 1988 --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1424.2,
+      "end": 1425.16,
+      "text": "Correct."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1425.16,
+      "end": 1427.32,
+      "text": "-- which I admit I don't understand --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1427.32,
+      "end": 1427.78,
+      "text": "Correct."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1427.78,
+      "end": 1428.23,
+      "text": "-- but I'll try. Right."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1428.23,
+      "end": 1454.42,
+      "text": "That is -- we agree that that is the heart of what the statute is about. Our only point is the language Congress ultimately settled on doesn't have any of those terms in it. And once you start reading it the government's way, you're then into the problem of, wait, Congress then didn't do anything. It didn't cover even inactive duty folks, which is, as you were saying, the paradigmatic case of what they wanted to cover. Questions?"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1454.42,
+      "end": 1458.95,
+      "text": "Mr. Katyal, when -- when Mr. Babcock was working, did he get one paycheck or two?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1458.95,
+      "end": 1462.11,
+      "text": "So he got -- when he was working in --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1462.11,
+      "end": 1462.95,
+      "text": "Just regular --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1462.95,
+      "end": 1464.34,
+      "text": "-- as an -- as an active --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1464.34,
+      "end": 1465.3,
+      "text": "I assume he's retired now."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1465.3,
+      "end": 1470.83,
+      "text": "Yeah, so he got one paycheck for his National Guard service. When he went into active duty for his --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1470.83,
+      "end": 1479.96,
+      "text": "No, no, no. One paycheck for his National Guard service. Did he get one paycheck for his 9-to-5 job and one paycheck for the National Guard job?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1479.96,
+      "end": 1485.66,
+      "text": "I -- I will let you -- I just want to make sure of what the record says. I'll get that for you on rebuttal."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1485.66,
+      "end": 1489.945,
+      "text": "But he does get two separate checks for pension, right?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1489.945,
+      "end": 1490.725,
+      "text": "Correct."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1490.725,
+      "end": 1493.85,
+      "text": "One for his 9-to-5 job and one for his National Guard job?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1493.85,
+      "end": 1514.89,
+      "text": "Correct. And the way that the statute works, it goes payment system by payment system. So it asks whether the CSRS payments are all wholly as a member of a uniformed service or not. And then, if he has, for example, state and local pension, that's a whole separate system and a separate calculation under the windfall elimination provision. You don't aggregate them together."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1514.89,
+      "end": 1533.81,
+      "text": "Just to be clear, I'm asking when he's working, does -- at the end of the month, does he have -- this is my National Guard check for the time I spent working as a National Guardsman, military status, right? But he had this separate -- you will fight the \"separate\" maybe -- but he also had the 9-to-5 job --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1533.81,
+      "end": 1534.185,
+      "text": "Oh."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1534.185,
+      "end": 1536.17,
+      "text": "-- because that's what made him dual-status."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1536.17,
+      "end": 1550.32,
+      "text": "Oh, yeah. No, I don't think he gets a separate paycheck for that. I think that's all one paycheck. It's just -- I think that his military service, to the extent he's on active duty or something like that, the -- that is a separate paycheck. So I think those are the two paychecks. I will confirm this in the record --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1550.32,
+      "end": 1550.53,
+      "text": "Well, I --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1550.53,
+      "end": 1551.0,
+      "text": "-- and get back to you."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1551.0,
+      "end": 1563.325,
+      "text": "-- you say to the extent he's on active duty. Is it to the extent he's not -- the National Guard has not been called up, but he's in the National Guard for specific periods, right?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1563.325,
+      "end": 1563.9,
+      "text": "Correct."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1563.9,
+      "end": 1574.74,
+      "text": "Okay. So you're going to let me know if he gets a -- got a separate paycheck for his 9-to-5 job and a separate paycheck for the time he was doing National Guard work?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1574.74,
+      "end": 1588.98,
+      "text": "Yeah, I -- I'm pretty sure it's all the same thing because, you know, literally, every time he's going to work, he's wearing the uniform and performing his National Guard dual-status technician duties. I don't think there is any separate paycheck, but I just want to double-check what's in the record."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1588.98,
+      "end": 1591.92,
+      "text": "Okay. Thank you. Justice Thomas?"
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 1591.92,
+      "end": 1612.97,
+      "text": "Yes, counsel, just an -- a question as an aside. What would have been the difference in the treatment of Petitioner if he had exercised the option in the 1980s to switch from CSRS to FERS?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1612.97,
+      "end": 1637.105,
+      "text": "Yeah. So, one, if he -- if he elected to be in FERS, then he would be in covered employment, and then he'd be outside of the windfall elimination provision because it doesn't encompass at least for those going-forward years non-covered employment. It only applies to non-covered employment. So, once you're in the language of FERS in covered employment, you're outside of the windfall elimination provision."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 1637.105,
+      "end": 1644.135,
+      "text": "So he exercised an option that put him in the current position that he's in?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1644.135,
+      "end": 1660.72,
+      "text": "Correct, and he -- you know, as he says at -- this is petition appendix page 44a -- when he joined the service, he thought he was entitled to a certain stream of benefits. They then changed it on him, and, yes, he had the option to convert, but conversion had all sorts of problems inherent to it."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 1660.72,
+      "end": 1664.65,
+      "text": "Yeah, but that was true in the '80s for every federal employee."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1664.65,
+      "end": 1687.35,
+      "text": "Correct. And what Congress in 1994, Justice Thomas, said was uniformed service folks are going to get a benefit that other federal employees don't get. We want to benefit them in a certain way because they're seeing their paychecks slashed, as are, of course, civilian employees, but they wanted to do something -- you know, they wanted to do something for uniformed service folks that was different and special."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 1687.35,
+      "end": 1687.96,
+      "text": "Thank you."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1687.96,
+      "end": 1688.835,
+      "text": "Justice Breyer?"
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 1688.835,
+      "end": 1690.125,
+      "text": "No, thank you."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1690.125,
+      "end": 1694.06,
+      "text": "Justice Alito? No? Justice Sotomayor, anything further?"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1694.06,
+      "end": 1711.81,
+      "text": "I -- I -- on this two -- two checks, he got a check for his 9-to-5 job for the State National Guard, and he got a separate check for his inactive duty military service? When he got called up for his two weeks or weekend duty for the Army National Guard, he got a separate check, correct?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1711.81,
+      "end": 1712.87,
+      "text": "Correct. I'm pretty sure."
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1712.87,
+      "end": 1721.51,
+      "text": "And so he's being paid two pensions now, one by his 9-to-5 job and he does get a military pension as well?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1721.51,
+      "end": 1723.77,
+      "text": "That is correct. That is what the uniformed --"
+    },
+    {
+      "speaker": "Sonia Sotomayor",
+      "role": "scotus_justice",
+      "start": 1723.77,
+      "end": 1726.62,
+      "text": "So that's the answer to Justice -- the Chief's question."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 1726.62,
+      "end": 1730.455,
+      "text": "I'm pretty sure it is. I just want to see what's in the record, absolutely, yes."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 1730.455,
+      "end": 1753.2350002,
+      "text": "Justice Kagan? Justice Barrett? No? Thank you, counsel. Ms. Reaves."
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 1753.2350002,
+      "end": 2013.83,
+      "text": "Mr. Chief Justice, and may it please the Court: When a dual-status technician retires, he receives two separate streams of payments, and the application of the uniformed services exception depends on the basis for each set of payments that he receives. First, he receives Civil Service Retirement System payments from the Office of Personnel Management for the work that he performs in his full-time civilian role as a technician. Those payments do not trigger the uniformed services exception because they are based on his civilian employment. A technician also receives a second stream of payments which are military retirement payments from the Defense Finance and Accounting Service for his part-time military service, that is, his inactive duty training and drills and his active duty service in the National Guard. Those military retirement payments do trigger the uniformed service exception because they are based wholly on service in a qualifying National Guard capacity. And Petitioner and other dual-status technicians like him, when they were in the role, received two separate paychecks with two separate leave and earnings statements. One was a paycheck for their 9-to-5 technician work, and the other was the paycheck for all their inactive and active duty service. Congress also repeatedly categorized technician service as outside -- as civilian service, not uniformed service. First, Congress did not include dual-status technicians within the definition of a member of a uniformed service that is cross-referenced in the uniformed services exception. Second, in Section 10216 of Title 10, one of the two primary provisions that governs dual-status technicians, Congress describes technicians as civilian four separate times. And, third, in Title 5, Congress defined technician employment as falling within the civilian service of the government and ensured that technicians would receive civilian retirement payments for their civilian employment. I think I'd start then by discussing a couple of points that my friend on the other side made, and the first is whether an individual knows what type of status they're in at any given point in time. And it's actually quite clear what status a technician is at any point. During his 9-to-5 job, a technician is doing work in the technician role, and in that role, he has a variety of benefits that he doesn't have while he's working in his National Guard role, and that includes the fact that he can join a union. He can file complaints with the EEOC and MSPB. He can receive compensatory time off and worker's compensation. And he's compensated under the federal GS system. That's different from his National Guard service which he performs on weekends or if he's called up to active duty. Now my friend on the other side has suggested that if you are -- were to accept the government's position in this case, inactive duty service, such as training and drills, wouldn't trigger the uniformed services exception. And that's wrong because of a specific provision that deems such service as federal for the purpose of federal funding. And that provision is 10 U.S.C. 12602(a), which provides that for the purposes of laws providing benefits for members of the Army National Guard of the United States, military training, duty, or other service performed by a member of the Army National Guard of the United States in his status as a member of the Army National Guard, for which he's entitled to pay from the United States, shall be considered military training, duty, or other service in the federal service. So let me unpack that a little bit. What that means is that when an individual is in his state status, which usually happens when he's doing inactive training and drills, because of this provision, he's paid by the federal government as a general matter, and that does, in fact, trigger the uniformed services exception because that payment is payment for qualifying service. Now dual-status technician service is different because Congress has categorized that service as outside the uniformed service and the payments for that service as civilian in nature."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2013.83,
+      "end": 2089.89,
+      "text": "Counsel, as -- as I understand your -- your colleague on the other side, and I may not, but, as I understand it as best I can in this area, we -- we all understand that National Guardsmen serve in at least two capacities, and one of them is denominated by the government for purposes of its own HR administration as civilian. And -- and so, fine, he served as a civilian when he was working as a technician. That was -- that's how you classified it. But just looking at the language of the statute -- and I think this is the argument in its simplest terms as I understand it -- was -- were the payments based -- were they made wholly on service in the capacity of -- as -- as a member of the uniformed service, and the answer he would give is yes because, while you denominate it civilian for certain purposes, you also said it could only be performed by someone who is a member of a uniformed service. So the work may be civilian for a bunch of other purposes, but it can only be performed by someone who is serving in the capacity of a National Guardsman. What's wrong with that argument?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2089.89,
+      "end": 2106.43,
+      "text": "I think there are a few things that are wrong with that argument. One is that a precondition to hold a given role doesn't render service in that role and payments for service in that role wholly for service in the capacity of the prerequisite."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2106.43,
+      "end": 2123.005,
+      "text": "Well, why -- now let me stop you there. Why not? Because, if the work, civilian work, whatever you -- whatever words you want to put around it, can only be performed, has to be wholly performed by someone who is a member of the National Guard, why doesn't that take care of the word \"wholly\" for you?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2123.005,
+      "end": 2131.29,
+      "text": "So I think it writes out the word \"as\" and the fact that we're in agreement, I think, that \"as\" means in the capacity of."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2131.29,
+      "end": 2131.56,
+      "text": "Mm-hmm."
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2131.56,
+      "end": 2133.38,
+      "text": "And the fact that Congress --"
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2133.38,
+      "end": 2148.245,
+      "text": "Okay. All right. So, if we're moving from \"wholly\" now, we're putting that aside, okay, so we're not arguing on \"wholly,\" we're going to \"as,\" all right, and \"as\" is a very important word in this case. I got that. \"In the capacity of\" is, I think, how that -- you would argue it is."
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2148.245,
+      "end": 2148.535,
+      "text": "Yes."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2148.535,
+      "end": 2158.245,
+      "text": "Why isn't the civilian work being performed in the capacity of, by someone who has to be a National Guardsman?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2158.245,
+      "end": 2166.915,
+      "text": "So I think \"in the capacity of\" and \"by someone that has to be\" are two different terms. And I -- I guess maybe an analogy would be helpful here."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2166.915,
+      "end": 2185.22,
+      "text": "But the work is civilian work being performed as, okay, wholly as a National Guardsman. Why -- why can't both be true, in other words? I know it's -- it's -- it's a lot to hold in one's head at the same time that one can be both civilian and performing work as a National Guardsman, but what's -- what's wrong with that?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2185.22,
+      "end": 2198.48,
+      "text": "So they -- they can't be because Congress has said they can't be. Congress has said that an individual -- that there's something called National Guard service, and we pay individuals military pay and give them military pensions as a result of that."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2198.48,
+      "end": 2205.04,
+      "text": "That's all over in Title 10, though. Here we are in Title 42. And what do you do just on -- in Title 42 itself?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2205.04,
+      "end": 2229.295,
+      "text": "So I think, in Title 42 itself, we looked at what is uniformed service and we see that a member of a uniformed service is not a technician. And we know that when Congress wanted to include an individual who doesn't really look normal to us who don't have expertise in this area, like a member of the PHS Corps or the NOAA Corps, it explicitly included them within that definition of uniformed service, and it didn't do that with technicians."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2229.295,
+      "end": 2232.83,
+      "text": "So are we blowing past \"as\" now and now we're on to \"uniformed service\"?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2232.83,
+      "end": 2258.8,
+      "text": "We're not blowing past anything. I think the best reading of the statute is looking at the entire phrase and giving meaning to the definition of \"member of a uniformed service\" which doesn't include technician service, giving meaning to \"as\" and the fact that service needs to be performed in that capacity, and giving meaning to \"wholly\" and the fact that payments themselves have to be entirely or completely based on qualifying service. And we know that --"
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2258.8,
+      "end": 2289.92500005,
+      "text": "All right. Let me -- let me try it one more time and then I -- and I'll promise I'll stop because I'm beating a horse that's pretty dead, I think. Payments based wholly on service, okay, civilian service, based wholly on civilian service performed in the capacity of a National Guardsman. I think that's the reading, okay? I -- I think that's it as best I got it, and I may be completely off base, Mr. Katyal will tell me, but what's -- what's -- what's wrong with that? Why can't we hold these two things in our head at the same time?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2289.92500005,
+      "end": 2373.26,
+      "text": "I think because of the definition of \"uniformed service,\" and I don't think we can just look at the Title 42 definition because Title 10 is one of the two provisions that creates dual-status technicians and it refers to their service as civilian four separate times. Now my friend on the other side has noted that they're referred to as military technicians multiple times, but that just refers to whom they -- for whom they work. It doesn't refer to the nature of their service. So I think that we can't just read this in a bubble. And when Congress enacted that -- this, it was enacting it against a backdrop of the fact that National Guard members do have different types of service and that National Guard members for the most part are part-time service members. And I think it's helpful to compare the service that a dual-status technician renders with two other types of service that the National Guard has. One is active guard reserve, and those are individuals who hold a full-time military role, and all of their pay for their 9-to-5 job receives the benefits of the uniformed services exception. And the National Guard also employs civilian employees who aren't members of the National Guard, and all of these individuals may perform service that seems to us to be very important to the National Guard and integral to its functioning, but what matters for the purposes of the uniformed services exception is how Congress chose to define the service. And Congress chose to --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 2373.26,
+      "end": 2373.35,
+      "text": "Well --"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2373.35,
+      "end": 2373.8,
+      "text": "-- define this --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 2373.8,
+      "end": 2374.17,
+      "text": "-- Ms. Reaves --"
+    },
+    {
+      "speaker": "Samuel A. Alito, Jr.",
+      "role": "scotus_justice",
+      "start": 2374.17,
+      "end": 2374.955,
+      "text": "What is the --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 2374.955,
+      "end": 2387.01,
+      "text": "-- what about Mr. Katyal's point that there is a statutory list of duties performed by people like Mr. Babcock and that that list can be read to include Mr. Babcock's training, you know, of pilots?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2387.01,
+      "end": 2446.1,
+      "text": "So it's -- it's certain -- so the -- the description he was referring to is in 32 U.S.C. 709, which describes what dual-status technicians do on a day-to-day basis, and that includes organizing, administering, and instructing the National Guard. And that is certainly what he did during his 9-to-5 technician job. We aren't debating that in any way. But that -- even though that's important to the National Guard, integral to its functioning, that was his 9-to-5 civilian service, and that's separate from his weekend training and guard -- training and reserve service. So I don't think the fact that Congress decided to list off their roles here tells us anything about whether that service is in the capacity of a member of a National Guard. It's also important to note that Congress also has wholly civilian employees of the National Guard who aren't members of the National Guard and don't have that prerequisite. They can also be trainers, like Mr. Babcock was."
+    },
+    {
+      "speaker": "Samuel A. Alito, Jr.",
+      "role": "scotus_justice",
+      "start": 2446.1,
+      "end": 2464.375,
+      "text": "What is the purpose of this dual-status setup? Why -- why would it not have been sufficient for these employees to be simply civilian federal employees? If they want to be on -- in the National Guard on the side, fine, they can be in the National Guard?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2464.375,
+      "end": 2507.78,
+      "text": "So I can't answer that question as to any individual technician because there are tens of thousands of them and they do have very different roles. It might be a different answer for Mr. Babcock. The individual who was the plaintiff in Martin, the Eleventh Circuit case on this issue, was a personnel clerk, so he did paperwork but still had to be a National Guard member. But I can tell you why we got here and maybe some of the benefits of it. As to the why, this is really a holdover of how states had structured the system before. So, in 1916, Congress authorized states to hire military caretakers, who were the predecessors of dual-status technicians, and states developed a practice where most of these individuals had to be members of the National Guard."
+    },
+    {
+      "speaker": "Samuel A. Alito, Jr.",
+      "role": "scotus_justice",
+      "start": 2507.78,
+      "end": 2526.41,
+      "text": "Well, is it -- is this just a historical accident, or is there some benefit to the federal government or to the National Guard from having these people in a dual status as opposed to a -- an overlapping status as opposed to completely discrete statuses?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2526.41,
+      "end": 2689.185,
+      "text": "So I think the benefits are that it definitely helps the National Guard with enrollment because these civilian jobs are very attractive with all the benefits that they have. And it also does help the National Guard from the perspective of cohesion and unit readiness. These individuals, you know, do get called up with their National Guard units and do inactive training and drills with them. I don't think any of that really tells us anything about how to answer the question presented here just because, as I previously discussed, what we have to look at is the status itself as Congress has defined it and the payment, type of payments that Congress has provided for that, not whether it looks military or looks essential to us. I think my friend -- let's talk for a moment about \"wholly\" and what kind of work that term is doing here. We read \"wholly\" as an adverb that modifies the adjectival phrase that begins with \"based on\" and that phrase in turn modifies \"payment.\" I think we're all in agreement on that reading, and what that means is that we have to look at the nature of this particular payment here. And I think even if the Court were to accept my friend on the other side's functional approach, which says that this looks like National Guard service, so we should treat these payments as it for being payments that trigger the uniformed services exception, that doesn't work because \"wholly\" indicates that even if you're taking that functional approach, which we don't think you should, the payments are not wholly based on that. An individual member of the National Guard who's not a technician cannot receive the CSRS pay -- Civil Service Retirement System payments that Petitioner received. He can't hold that technician role. And I think, because of that, \"wholly\" does do work under our reading. And the problem with my friend on the other side's reading of \"wholly\" is it actually is reading \"wholly\" as \"in whole or in part.\" Petitioner suggests that if -- if there was a CSRS payment that was partially based on military service and partially based on non-military service, that could somehow be apportioned out and only the part based on military service would trigger the uniformed services exception. But that's actually completely against the text of the uniformed services exception. And if this Court were to find that dual-status technician payments trigger the uniformed services exception, it would be the only situation in which a CSRS payment could be entirely based on military service and would be subject to the uniformed services exception. If the Court has no further questions?"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2689.185,
+      "end": 2692.09,
+      "text": "Further questions? Justice Thomas?"
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 2692.09,
+      "end": 2704.45500005,
+      "text": "I have one. I have just a minor question. The -- how -- how -- how big a problem is this now that CSRS no longer exists?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2704.45500005,
+      "end": 2759.37,
+      "text": "I can give you a partial answer as to the number of individuals that this will impact. So this will only impact individuals who are in the dual-status technician role before 1984 and are still receiving CSRS payments or are eligible to receive them and are not yet receiving them. And because of data-keeping limitations, I only have the number of dual-status technicians who retired after 2004 or are eligible to retire, and that's about 53,000 National Guard dual-status technicians. This case will also impact a smaller number of Air Force and Navy -- Air Force and Army technicians. Those forces have dual-status technicians like these. It's a much smaller number because the force authorizations for those have been smaller. So that -- that's unfortunately all that I can provide for you, but it -- it's a fairly small group of individuals that this case will possibly impact."
+    },
+    {
+      "speaker": "Clarence Thomas",
+      "role": "scotus_justice",
+      "start": 2759.37,
+      "end": 2760.455,
+      "text": "Thank you."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2760.455,
+      "end": 2768.28999995,
+      "text": "Justice Breyer? Justice Alito, anything for you? Justice Sotomayor? Justice Kagan?"
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2768.28999995,
+      "end": 2781.46,
+      "text": "One quick question. So we agree this only impacts folks who are still receiving CSRS benefits that they would have been eligible for before 1984?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2781.46,
+      "end": 2782.9,
+      "text": "Based on service before 1984 --"
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2782.9,
+      "end": 2783.155,
+      "text": "1984, yeah."
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2783.155,
+      "end": 2784.44,
+      "text": "-- or service that began before 1984 --"
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2784.44,
+      "end": 2784.7,
+      "text": "Right. Yeah."
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2784.7,
+      "end": 2785.49,
+      "text": "-- and continued."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2785.49,
+      "end": 2793.865,
+      "text": "All right. And then, secondly, if -- if -- if no man alive can figure this out, does the veterans canon have any role to play here?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2793.865,
+      "end": 2839.98,
+      "text": "So, obviously, I disagree with your premise there. I think that there are a lot of textual clues in the statute and in related statutes that indicate that our reading is the better one, but I don't think the veterans canon has any play here for a couple of reasons. The first is that the group of individuals that this would benefit Congress has defined as not being veterans, and that's because technician service itself doesn't create any sort of veterans preference. It doesn't give someone veterans benefits. It's only the National Guard service that someone renders that can possibly give technicians veterans preference, so I don't think this would be a -- that would be an appropriate place to apply the veterans canon because the veterans canon is usually applied to statutory schemes that themselves are intended to benefit veterans."
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2839.98,
+      "end": 2842.61,
+      "text": "Military, not uniformed service, we're back to that?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2842.61,
+      "end": 2851.71,
+      "text": "I don't think it's back to that because I -- because I would dis- -- I disagree that technician service is uniformed service. Technician service isn't within the definition of \"uniformed service.\""
+    },
+    {
+      "speaker": "Neil Gorsuch",
+      "role": "scotus_justice",
+      "start": 2851.71,
+      "end": 2854.58,
+      "text": "Sorry, I didn't mean to go back there. Thank you. Thank you, counsel."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2854.58,
+      "end": 2855.345,
+      "text": "Justice Kavanaugh?"
+    },
+    {
+      "speaker": "Brett M. Kavanaugh",
+      "role": "scotus_justice",
+      "start": 2855.345,
+      "end": 2871.615,
+      "text": "You -- you -- you agree, however, that there is a veterans canon that would apply when statutes are ambiguous generally. You'd say it doesn't apply here both because it's not ambiguous and because it's not really veterans as we normally think about it?"
+    },
+    {
+      "speaker": "Nicole F. Reaves",
+      "role": "attorney",
+      "start": 2871.615,
+      "end": 2877.57,
+      "text": "Yes, we are not contesting the availability of the veterans canon to resolve grievous ambiguity."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2877.57,
+      "end": 2882.11,
+      "text": "Justice Barrett? Thank you, counsel. Rebuttal, Mr. Katyal?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 2882.11,
+      "end": 2964.13,
+      "text": "Thank you, Mr. Chief Justice. Three points. First, as Justice Gorsuch was indicating, we do think that the plain text controls here. There are two key features of our argument. First, Section 415 looks to service, not status, and, in particular, uniformed status -- service. And, second, Congress has specifically defined National Guard service as uniformed service and dual-status technician service in particular as part of that and has labeled it military. Second, Mr. Chief Justice, he got one paycheck for his DST service, his dual-status service. That was -- that's petition appendix page 42a. That is, to be sure, a civilian paycheck under Title 5. Our point is civilian pay -- where your paycheck comes from doesn't matter for purposes of 415. 415 doesn't ask that. And, indeed, as Justice Gorsuch was saying, it's not mutually exclusive. You can have a civilian paycheck but still be serving -- your service may still be performed as a member of a uniformed service. There is no pay stub test. Congress has used pay stub tests even with respect to the National Guard, as our reply brief points out. Here, they didn't do anything like that. They used the words \"service as a member of a uniformed service.\" They didn't try and embrace a paycheck test or anything like that."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2964.13,
+      "end": 2977.135,
+      "text": "Mr. Katyal, I'm sorry to interrupt your rebuttal, but I'm not -- I want to make sure I've got this right. He -- did he receive one paycheck for his civilian status duty and one for his National Guard duty?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 2977.135,
+      "end": 2996.695,
+      "text": "No, one paycheck for it all; that is, his job is all part of one thing. So, as he shows up to work as a dual-status technician, he falls within all the requirements of 709, wearing the uniform, all that stuff. He doesn't have some separate hat he's wearing for purposes of 415. He's just -- he's getting one paycheck --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2996.695,
+      "end": 2997.01,
+      "text": "Is it --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 2997.01,
+      "end": 2997.71,
+      "text": "-- and it is civilian."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 2997.71,
+      "end": 2998.76,
+      "text": "-- is it allocated separately?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 2998.76,
+      "end": 3009.94,
+      "text": "Only to the extent, as I was saying before, he is in active duty or something like that. But, otherwise, he's getting one paycheck. It is a civilian paycheck, but that's not the way -- that's not what the test is."
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 3009.94,
+      "end": 3012.99,
+      "text": "What about weekend service when he goes for training and drills?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3012.99,
+      "end": 3016.57,
+      "text": "And the weekend stuff also comes in the military DFAS payments as well."
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 3016.57,
+      "end": 3024.84,
+      "text": "So that's the separate -- like, we could say it's two separate paychecks insofar as you're talking about his weekend National Guard service that you might do even if you were in private employment?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3024.84,
+      "end": 3025.16,
+      "text": "To the --"
+    },
+    {
+      "speaker": "Amy Coney Barrett",
+      "role": "scotus_justice",
+      "start": 3025.16,
+      "end": 3025.61,
+      "text": "And then the 9-to-5?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3025.61,
+      "end": 3031.78,
+      "text": "Yeah, to the extent he was doing any of that, any -- any weekends or something like that, that's military and separate. Now my friend on the --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 3031.78,
+      "end": 3035.11,
+      "text": "Wait, wait. But that's military and separate. Does he get paid for that?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3035.11,
+      "end": 3037.835,
+      "text": "He does get paid for that, just -- absolutely."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 3037.835,
+      "end": 3040.74,
+      "text": "Is that different than the pay he gets for his 9-to-5 job?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3040.74,
+      "end": 3042.16,
+      "text": "It is because that's Title 5 --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 3042.16,
+      "end": 3042.74,
+      "text": "Are there two checks?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3042.74,
+      "end": 3045.33,
+      "text": "He does get two paychecks for --"
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 3045.33,
+      "end": 3045.7,
+      "text": "Okay."
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3045.7,
+      "end": 3077.27,
+      "text": "Not -- not for his dual-status service but anything else. So then my friend on the other side said that there's a statute that she's just pointed out, 12602, which says that -- that -- she says it fills the gap and allows him to cover National Guard of the United States. That's not an argument they've made before in 27 years, but I don't think that that statute actually works. Indeed, it's inconsistent with their own view of the word \"wholly\" because their own view of \"wholly\" is that Title -- because they say Title 5 is responsible for these civilian payments."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 3077.27,
+      "end": 3102.59,
+      "text": "Is this a -- let me get back to this thing. He -- Person A, Monday, Tuesday, Wednesday, works as a technician, nothing really -- at the Army base but does nothing that a civilian doesn't do there. Then, on Thursday, he does a special National Guard duty, and on Friday, they're nationalized, so he has a federal thing. He gets one paycheck for that week, is that right?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3102.59,
+      "end": 3107.16,
+      "text": "He gets -- if he's nationalized, he would get a separate military pay stub in a separate military paycheck."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 3107.16,
+      "end": 3110.55,
+      "text": "Okay. So, for Monday, Tuesday, Wednesday, Thursday, he gets one paycheck?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3110.55,
+      "end": 3111.1,
+      "text": "Correct."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 3111.1,
+      "end": 3116.925,
+      "text": "And now -- okay. How do they deduct the Social Security for that? Do they -- do they -- and it goes to two systems, doesn't it?"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3116.925,
+      "end": 3118.44,
+      "text": "It does go to two systems, Your Honor."
+    },
+    {
+      "speaker": "Stephen G. Breyer",
+      "role": "scotus_justice",
+      "start": 3118.44,
+      "end": 3124.86,
+      "text": "All right. So do they -- do they -- how do they do it? They deduct two amounts, one for the one day of Thursday and another for the --"
+    },
+    {
+      "speaker": "Neal Kumar Katyal",
+      "role": "attorney",
+      "start": 3124.86,
+      "end": 3193.995,
+      "text": "No. It's system by system. And that's the way the windfall elimination provision works. So you only look to -- and I was saying this in my opening -- you only look to, for example, the CSRS payments here. There's only one stream of CSRS payments. They're all wholly -- wholly uniformed services. So that's why we think he falls within it. Now, if there's any ambiguity in this, we would suggest that the veterans canon does apply. And the government doesn't argue, Justice Kavanaugh, that they are not -- that Mr. Babcock and other dual-status technicians aren't veterans. Pointedly, the last paragraph of their brief says the reverse, that they are veterans. And so, if there is any ambiguity, we would suggest that you read it that way. And I think it would be a very dangerous thing to fall on the 12602 argument that my friend has just raised because it's inconsistent with what they say \"wholly\" means. And also, indeed, it very well may boomerang on them because it says you're -- if you're \"entitled to pay\" from the federal government, then that counts as federal service. Well, undoubtedly, Babcock is entitled to pay for his federal service, for his dual-status technician service Monday through Wednesday. That makes him part of the uniformed service exception."
+    },
+    {
+      "speaker": "John G. Roberts, Jr.",
+      "role": "scotus_justice",
+      "start": 3193.995,
+      "end": 0.0,
+      "text": "Thank you, counsel. The case is submitted."
+    }
+  ]
+}

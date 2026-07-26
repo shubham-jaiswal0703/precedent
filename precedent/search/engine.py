@@ -1,4 +1,4 @@
-"""Search engine — professor questions in, playable moments out.
+"""Search engine: professor questions in, playable moments out.
 
 Every result path normalizes to PlayableMoment so the API/UI/reel layers
 never touch raw SDK objects.

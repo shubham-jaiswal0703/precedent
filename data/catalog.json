@@ -5,8 +5,12 @@
       "collection_id": "c-af36130c-c72d-4902-a33d-b09f6925e994"
     },
     "scotus-oral-arguments": {
-      "name": "US Supreme Court \u2014 Oral Arguments",
+      "name": "US Supreme Court: Oral Arguments",
       "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29"
+    },
+    "federal-appellate": {
+      "name": "Federal Appellate: Oral Arguments",
+      "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa"
     }
   },
   "sessions": {
@@ -64,7 +68,7 @@
     "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e": {
       "video_id": "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e",
       "case_id": "scotus-oral-arguments",
-      "title": "303 Creative LLC v. Elenis \u2014 oral argument",
+      "title": "303 Creative LLC v. Elenis: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-476/21-476_20221205-argument.delivery.mp3",
       "date": "",
@@ -83,7 +87,7 @@
     "m-z-019f9bac-27a8-79a3-8104-7338b4adbc09": {
       "video_id": "m-z-019f9bac-27a8-79a3-8104-7338b4adbc09",
       "case_id": "scotus-oral-arguments",
-      "title": "Dobbs v. Jackson Women's Health Organization \u2014 oral argument",
+      "title": "Dobbs v. Jackson Women's Health Organization: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/19-1392/19-1392_20211201-argument.delivery.mp3",
       "date": "",
@@ -102,7 +106,7 @@
     "m-z-019f9bbc-37a9-7bc3-9330-3715b8e116db": {
       "video_id": "m-z-019f9bbc-37a9-7bc3-9330-3715b8e116db",
       "case_id": "scotus-oral-arguments",
-      "title": "Axon Enterprise, Inc. v. Federal Trade Commission \u2014 oral argument",
+      "title": "Axon Enterprise, Inc. v. Federal Trade Commission: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-86/21-86_20221107-argument.delivery.mp3",
       "date": "",
@@ -120,7 +124,7 @@
     "m-z-019f9bbc-4490-7a82-bad7-9622ae18c491": {
       "video_id": "m-z-019f9bbc-4490-7a82-bad7-9622ae18c491",
       "case_id": "scotus-oral-arguments",
-      "title": "Sackett v. Environmental Protection Agency \u2014 oral argument",
+      "title": "Sackett v. Environmental Protection Agency: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-454/21-454_20221003-argument.delivery.mp3",
       "date": "",
@@ -138,7 +142,7 @@
     "m-z-019f9bbc-3d8b-7230-a6c3-1b73edf3145c": {
       "video_id": "m-z-019f9bbc-3d8b-7230-a6c3-1b73edf3145c",
       "case_id": "scotus-oral-arguments",
-      "title": "Students for Fair Admissions v. President and Fellows of Harvard College \u2014 oral argument",
+      "title": "Students for Fair Admissions v. President and Fellows of Harvard College: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/20-1199/20-1199_20221031-argument.delivery.mp3",
       "date": "",
@@ -157,7 +161,7 @@
     "m-z-019f9bbf-1571-7913-84a5-2a26bc7bb2e7": {
       "video_id": "m-z-019f9bbf-1571-7913-84a5-2a26bc7bb2e7",
       "case_id": "scotus-oral-arguments",
-      "title": "Arellano v. McDonough \u2014 oral argument",
+      "title": "Arellano v. McDonough: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-432/21-432_20221004-argument.delivery.mp3",
       "date": "",
@@ -175,7 +179,7 @@
     "m-z-019f9bbf-9d65-7e63-ac91-8ae33b7825fb": {
       "video_id": "m-z-019f9bbf-9d65-7e63-ac91-8ae33b7825fb",
       "case_id": "scotus-oral-arguments",
-      "title": "National Pork Producers Council v. Ross \u2014 oral argument",
+      "title": "National Pork Producers Council v. Ross: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-468/21-468_20221011-argument.delivery.mp3",
       "date": "",
@@ -188,12 +192,14 @@
       ],
       "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
       "duration": 7928.0,
-      "indexes": {}
+      "indexes": {
+        "spoken_word": "default"
+      }
     },
     "m-z-019f9bc0-526c-71b3-935a-3f170ccd7b10": {
       "video_id": "m-z-019f9bc0-526c-71b3-935a-3f170ccd7b10",
       "case_id": "scotus-oral-arguments",
-      "title": "Cruz v. Arizona \u2014 oral argument",
+      "title": "Cruz v. Arizona: oral argument",
       "session_type": "oral_argument",
       "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-846/21-846_20221101-argument.delivery.mp3",
       "date": "",
@@ -204,6 +210,507 @@
       ],
       "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
       "duration": 3717.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc2-8a58-78f2-b1fc-5a2110559239": {
+      "video_id": "m-z-019f9bc2-8a58-78f2-b1fc-5a2110559239",
+      "case_id": "scotus-oral-arguments",
+      "title": "Andy Warhol Foundation for the Visual Arts, Inc. v. Goldsmith: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-869/21-869_20221012-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Lisa S. Blatt",
+        "Roman Martinez",
+        "Yaira Dubin"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 6149.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc2-915d-79a2-95bd-722b95f32025": {
+      "video_id": "m-z-019f9bc2-915d-79a2-95bd-722b95f32025",
+      "case_id": "scotus-oral-arguments",
+      "title": "Mallory v. Norfolk Southern Railway Co.: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-1168/21-1168_20221108-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Ashley C. Keller",
+        "Carter G. Phillips",
+        "Curtis E. Gannon"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 6494.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc3-059e-75f1-a351-883c16af7bc5": {
+      "video_id": "m-z-019f9bc3-059e-75f1-a351-883c16af7bc5",
+      "case_id": "scotus-oral-arguments",
+      "title": "Reed v. Goertz: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-442/21-442_20221011-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Judd E. Stone, II",
+        "Parker Rider-Longmaid"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3592.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc5-48a9-7a71-80f8-f0ffa89b633b": {
+      "video_id": "m-z-019f9bc5-48a9-7a71-80f8-f0ffa89b633b",
+      "case_id": "scotus-oral-arguments",
+      "title": "Wooden v. United States: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-5279/20-5279_20211004-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Allon Kedem",
+        "Erica L. Ross"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3892.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc5-d325-7573-807c-2c4c6f4cbdbb": {
+      "video_id": "m-z-019f9bc5-d325-7573-807c-2c4c6f4cbdbb",
+      "case_id": "scotus-oral-arguments",
+      "title": "Babcock v. Kijakazi: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-480/20-480_20211013-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Neal Kumar Katyal",
+        "Nicole F. Reaves"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3196.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc5-d1b4-7662-83f4-5c4013a26708": {
+      "video_id": "m-z-019f9bc5-d1b4-7662-83f4-5c4013a26708",
+      "case_id": "scotus-oral-arguments",
+      "title": "Thompson v. Clark: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-659/20-659_20211012-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Amir H. Ali",
+        "John D. Moore",
+        "Jonathan Y. Ellis"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 5382.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc7-9da7-7b32-9ca0-3e91f6d40a3c": {
+      "video_id": "m-z-019f9bc7-9da7-7b32-9ca0-3e91f6d40a3c",
+      "case_id": "scotus-oral-arguments",
+      "title": "United States v. Vaello-Madero: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-303/20-303_20211109-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Curtis E. Gannon",
+        "Hermann Ferr\u00e9"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 4365.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc8-24bc-7e40-a5cc-beee1f320b81": {
+      "video_id": "m-z-019f9bc8-24bc-7e40-a5cc-beee1f320b81",
+      "case_id": "scotus-oral-arguments",
+      "title": "United States v. Tsarnaev: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-443/20-443_20211013-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Eric J. Feigin",
+        "Ginger D. Anders"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 5674.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc8-e6a5-7ee0-b0fb-f47c0532a11d": {
+      "video_id": "m-z-019f9bc8-e6a5-7ee0-b0fb-f47c0532a11d",
+      "case_id": "scotus-oral-arguments",
+      "title": "Cameron v. EMW Women\u2019s Surgical Center: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-601/20-601_20211012-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Alexa Kolbi-Molinas",
+        "Matthew F. Kuhn"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 4389.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bc9-fde9-74a2-be32-7b229b221274": {
+      "video_id": "m-z-019f9bc9-fde9-74a2-be32-7b229b221274",
+      "case_id": "scotus-oral-arguments",
+      "title": "Brown v. Davenport: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-826/20-826_20211005-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Fadwa A. Hammoud",
+        "Tasha Bahal"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3117.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bcb-6e6d-7740-bebb-1cb58140d370": {
+      "video_id": "m-z-019f9bcb-6e6d-7740-bebb-1cb58140d370",
+      "case_id": "scotus-oral-arguments",
+      "title": "Hemphill v. New York: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-637/20-637_20211005-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Gina Mignola",
+        "Jeffrey L. Fisher"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 4217.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bcb-7edb-7791-ac90-236e49fb3fae": {
+      "video_id": "m-z-019f9bcb-7edb-7791-ac90-236e49fb3fae",
+      "case_id": "scotus-oral-arguments",
+      "title": "Houston Community College System v. Wilson: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2021/20-804/20-804_20211102-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Michael B. Kimberly",
+        "Richard A. Morris",
+        "Sopan Joshi"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 5128.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bcc-5814-7f90-9bfd-83c194c332b3": {
+      "video_id": "m-z-019f9bcc-5814-7f90-9bfd-83c194c332b3",
+      "case_id": "scotus-oral-arguments",
+      "title": "New York State Rifle & Pistol Association Inc. v. City of New York: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-280/18-280_20191202-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Jeffrey B. Wall",
+        "Paul D. Clement",
+        "Richard P. Dearing"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3744.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bce-0b31-7141-b731-6e785b22c5f7": {
+      "video_id": "m-z-019f9bce-0b31-7141-b731-6e785b22c5f7",
+      "case_id": "scotus-oral-arguments",
+      "title": "County of Maui, Hawaii v. Hawaii Wildlife Fund: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-260/18-260_20191106-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "David L. Henkin",
+        "Elbert Lin",
+        "Malcolm L. Stewart"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3756.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bce-4f41-7123-8ec1-0fc1271d6dc0": {
+      "video_id": "m-z-019f9bce-4f41-7123-8ec1-0fc1271d6dc0",
+      "case_id": "scotus-oral-arguments",
+      "title": "Rotkiske v. Klemm: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-328/18-328_20191016-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Jonathan C. Bond",
+        "Scott E. Gant",
+        "Shay Dvoretzky"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3441.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bcf-0051-7150-b7d6-40877d6f1119": {
+      "video_id": "m-z-019f9bcf-0051-7150-b7d6-40877d6f1119",
+      "case_id": "scotus-oral-arguments",
+      "title": "Peter v. NantKwest, Inc.: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-801/18-801_20191007-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Malcolm L. Stewart",
+        "Morgan Chu"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3280.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd0-827a-7473-b99b-acd4eb9e539f": {
+      "video_id": "m-z-019f9bd0-827a-7473-b99b-acd4eb9e539f",
+      "case_id": "scotus-oral-arguments",
+      "title": "Kansas v. Garcia: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/17-834/17-834_20191016-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Christopher G. Michel",
+        "Derek Schmidt",
+        "Paul W. Hughes"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3709.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd0-9691-78a1-8b08-148c9847f6bf": {
+      "video_id": "m-z-019f9bd0-9691-78a1-8b08-148c9847f6bf",
+      "case_id": "scotus-oral-arguments",
+      "title": "Mathena v. Malvo: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-217/18-217_20191016-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Danielle Spinelli",
+        "Eric J. Feigin",
+        "Toby J. Heytens"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3757.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd1-5128-7690-b11c-fac2eada0cfd": {
+      "video_id": "m-z-019f9bd1-5128-7690-b11c-fac2eada0cfd",
+      "case_id": "scotus-oral-arguments",
+      "title": "Ramos v. Louisiana: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-5924/18-5924_20191007-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Elizabeth Murrill",
+        "Jeffrey Fisher"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3707.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd2-d538-7ac1-b27e-3d877aade3f8": {
+      "video_id": "m-z-019f9bd2-d538-7ac1-b27e-3d877aade3f8",
+      "case_id": "scotus-oral-arguments",
+      "title": "Kahler v. Kansas: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-6135/18-6135_20191007-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Elizabeth B. Prelogar",
+        "Sarah Schrup",
+        "Toby Crouse"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3714.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd2-e6cf-7ed3-8f78-46ad3bfa9380": {
+      "video_id": "m-z-019f9bd2-e6cf-7ed3-8f78-46ad3bfa9380",
+      "case_id": "scotus-oral-arguments",
+      "title": "Kansas v. Glover: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-556/18-556_20191104-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Michael R. Huston",
+        "Sarah E. Harrington",
+        "Toby Crouse"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3673.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd4-120b-76d3-a795-efb492611486": {
+      "video_id": "m-z-019f9bd4-120b-76d3-a795-efb492611486",
+      "case_id": "scotus-oral-arguments",
+      "title": "Bostock v. Clayton County: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/17-1618/17-1618_20191008-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Jeffrey M. Harris",
+        "Noel J. Francisco",
+        "Pamela S. Karlan"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3712.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd4-7fb1-7121-85f9-d5779f8c118f": {
+      "video_id": "m-z-019f9bd4-7fb1-7121-85f9-d5779f8c118f",
+      "case_id": "scotus-oral-arguments",
+      "title": "Barton v. Barr: oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2019/18-725/18-725_20191104-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Adam G. Unikowsky",
+        "Frederick Liu"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3630.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd4-a81c-7832-8e90-57a66947ec26": {
+      "video_id": "m-z-019f9bd4-a81c-7832-8e90-57a66947ec26",
+      "case_id": "federal-appellate",
+      "title": "Kingsolver v. US Attorney General (CA11)",
+      "session_type": "oral_argument",
+      "source_url": "https://storage.courtlistener.com/mp3/2026/07/24/annette_kingsolver_v._u.s._attorney_general_cl.mp3",
+      "date": "2026-07-24",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa",
+      "duration": 1473.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd6-b48c-72e1-bbd9-14469842363f": {
+      "video_id": "m-z-019f9bd6-b48c-72e1-bbd9-14469842363f",
+      "case_id": "federal-appellate",
+      "title": "United States v. Scott Hollington",
+      "session_type": "oral_argument",
+      "source_url": "https://storage.courtlistener.com/mp3/2026/07/24/united_states_v._scott_hollington_cl.mp3",
+      "date": "2026-07-24",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa",
+      "duration": 1160.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd6-b520-7d62-9529-adf9d31f5348": {
+      "video_id": "m-z-019f9bd6-b520-7d62-9529-adf9d31f5348",
+      "case_id": "federal-appellate",
+      "title": "Ernest Finley, Jr. v. Thomas Albritton",
+      "session_type": "oral_argument",
+      "source_url": "https://storage.courtlistener.com/mp3/2026/07/24/ernest_finley_jr._v._thomas_albritton_cl.mp3",
+      "date": "2026-07-24",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa",
+      "duration": 1874.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd6-b4b7-7371-bcb3-af010e467bd9": {
+      "video_id": "m-z-019f9bd6-b4b7-7371-bcb3-af010e467bd9",
+      "case_id": "federal-appellate",
+      "title": "United States v. Alonso Pineda-Torres",
+      "session_type": "oral_argument",
+      "source_url": "https://storage.courtlistener.com/mp3/2026/07/24/united_states_v._alonso_pineda-torres_cl.mp3",
+      "date": "2026-07-24",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa",
+      "duration": 2017.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bd8-3b25-73a3-9c9f-5b695e2e5d33": {
+      "video_id": "m-z-019f9bd8-3b25-73a3-9c9f-5b695e2e5d33",
+      "case_id": "federal-appellate",
+      "title": "Dominick Russo, Appellants/Cross v. Secretary, U.S. Department of Commerce, Appellees/Cross",
+      "session_type": "oral_argument",
+      "source_url": "https://storage.courtlistener.com/mp3/2026/07/23/dominick_russo_appellantscross_v._secretary_u.s._department_of_cl.mp3",
+      "date": "2026-07-23",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-59d6a4bf-ac8c-47ba-8ef1-890cf512a9aa",
+      "duration": 2240.0,
       "indexes": {
         "spoken_word": "default"
       }

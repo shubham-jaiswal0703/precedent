@@ -39,7 +39,7 @@ def main() -> None:
 
     for i, m in enumerate(moments[: args.limit], 1):
         score = f" score={m.score:.2f}" if m.score is not None else ""
-        print(f"{i}. [{fmt_ts(m.start)}–{fmt_ts(m.end)}] {m.session_title}{score}")
+        print(f"{i}. [{fmt_ts(m.start)}, {fmt_ts(m.end)}] {m.session_title}{score}")
         print(f"   {m.text[:220]}")
 
     if args.clip:

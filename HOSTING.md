@@ -1,6 +1,6 @@
 # Hosting
 
-The good news: **VideoDB carries all the heavy weight** — storage, transcoding,
+The good news: **VideoDB carries all the heavy weight**: storage, transcoding,
 indexing, search, clip generation, and HLS streaming all happen on their
 infrastructure, and the browser streams video directly from
 `play.videodb.io` / `stream.videodb.io`. Our server only routes JSON. No GPU,
@@ -9,8 +9,8 @@ no video egress, no large disk. It fits on the smallest instance any host sells.
 ## Recommendation
 
 **For the hackathon and first pilots: Railway or Render.** Deploy straight from
-the GitHub repo, HTTPS and a domain included, ~$5–7/month, no infra work. Set
-`VIDEO_DB_API_KEY` as an environment variable — never commit it.
+the GitHub repo, HTTPS and a domain included, ~$5-7/month, no infra work. Set
+`VIDEO_DB_API_KEY` as an environment variable: never commit it.
 
 **If you want the setup you already know: a GCP `e2-small` VM with systemd +
 Caddy** (the same pattern as the AEO Tracker deploy). ~$13/month, full control,
@@ -18,7 +18,7 @@ easy to attach a persistent disk for the catalog.
 
 **Cloud Run is tempting but has a catch.** Scale-to-zero is ideal for demo
 traffic, but our ingest jobs run 2+ minutes and job state currently lives in an
-in-process dict — a container that scales down mid-ingest loses it. Use Cloud
+in-process dict: a container that scales down mid-ingest loses it. Use Cloud
 Run only after the two fixes below.
 
 ## Two things to fix before real multi-user hosting
@@ -28,8 +28,7 @@ Run only after the two fixes below.
    vanish or diverge. Move the catalog and moment records to Postgres (managed PG
    is one click on Railway/Render).
 2. **Long jobs run in-process.** `/api/analyze` uses FastAPI background tasks and
-   an in-memory `JOBS` dict. Replace with VideoDB's `callback_url` webhooks —
-   every long-running SDK call accepts one — so indexing survives restarts and
+   an in-memory `JOBS` dict. Replace with VideoDB's `callback_url` webhooks, every long-running SDK call accepts one: so indexing survives restarts and
    scales across instances.
 
 ## Cost shape

@@ -1,4 +1,4 @@
-"""Local case catalog — the metadata VideoDB doesn't model.
+"""Local case catalog: the metadata VideoDB doesn't model.
 
 Maps VideoDB video ids to legal context: case, session type, date, witnesses.
 JSON-file backed; small enough for a hackathon archive.

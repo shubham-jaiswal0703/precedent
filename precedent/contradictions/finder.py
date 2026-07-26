@@ -1,4 +1,4 @@
-"""Contradiction finder — the signature feature.
+"""Contradiction finder: the signature feature.
 
 Given one witness across two sessions (deposition vs trial, or day N vs M):
   1. extract factual claims from session A's transcript (LLM),
@@ -166,7 +166,7 @@ def find_contradictions(
         for shot in shots:
             verdict_raw = _llm(
                 JUDGE_PROMPT.format(
-                    label_a=label_a, text_a=f"{claim.claim} — quote: {claim.quote}",
+                    label_a=label_a, text_a=f"{claim.claim}: quote: {claim.quote}",
                     label_b=label_b, text_b=shot.text or "",
                 )
             )
