@@ -1,0 +1,9 @@
+{
+  "name": "precedent-deck",
+  "private": true,
+  "scripts": {
+    "dev": "npx hyperframes present ./composition",
+    "studio": "npx hyperframes preview ./composition",
+    "check": "cd composition && npx hyperframes check"
+  }
+}

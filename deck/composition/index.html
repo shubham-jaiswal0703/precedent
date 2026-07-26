@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* OS-bundled serifs: declared with local() so the renderer resolves them
+         instead of silently falling back. */
+      @font-face {
+        font-family: "Iowan Old Style";
+        src: local("Iowan Old Style"), local("Palatino Linotype"), local("Palatino"),
+          local("Georgia");
+      }
+      @font-face {
+        font-family: "Palatino Linotype";
+        src: local("Palatino Linotype"), local("Palatino"), local("Georgia");
+      }
+      @font-face {
+        font-family: "Palatino";
+        src: local("Palatino"), local("Georgia");
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+      body {
+        font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+      }
+
+      /* The deck reads as a case report: warm paper, one red rule, tabular numerals. */
+      .slide {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        color: #16130f;
+      }
+      .bg {
+        position: absolute;
+        inset: 0;
+        background: #f7f4ee;
+      }
+      .bg.dark {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 28%, #2e2822 0%, #14110d 100%);
+      }
+      .pad {
+        position: absolute;
+        inset: 0;
+        padding: 104px 136px;
+      }
+
+      .kicker {
+        font-size: 30px;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: #8a1f1f;
+        margin-bottom: 32px;
+      }
+      .onDark .kicker {
+        color: #b8913f;
+      }
+      h1 {
+        font-size: 132px;
+        line-height: 1.02;
+        letter-spacing: 3px;
+        font-weight: 600;
+      }
+      h2 {
+        font-size: 80px;
+        line-height: 1.14;
+        font-weight: 600;
+        max-width: 1520px;
+      }
+      h2.tight {
+        font-size: 70px;
+      }
+      .sub {
+        font-size: 42px;
+        line-height: 1.45;
+        color: #5f574c;
+        max-width: 1440px;
+        margin-top: 34px;
+      }
+      .onDark h1,
+      .onDark h2 {
+        color: #f6efe2;
+      }
+      .onDark .sub {
+        color: #c9bda9;
+      }
+
+      .rule {
+        width: 220px;
+        height: 5px;
+        background: #8a1f1f;
+        margin: 40px 0;
+      }
+      .onDark .rule {
+        background: #b8913f;
+      }
+
+      .row {
+        display: flex;
+        gap: 32px;
+        margin-top: 52px;
+      }
+      .card {
+        flex: 1;
+        background: #fffdf9;
+        border: 2px solid #d8cfbd;
+        padding: 40px 38px;
+        border-radius: 4px;
+      }
+      .card .num {
+        font-size: 28px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #8a1f1f;
+        margin-bottom: 18px;
+      }
+      .card .big {
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.1;
+        margin-bottom: 16px;
+      }
+      .card p {
+        font-size: 33px;
+        line-height: 1.45;
+        color: #5f574c;
+      }
+
+      .stats {
+        display: flex;
+        gap: 78px;
+        margin-top: 62px;
+      }
+      .stat .n {
+        font-size: 128px;
+        font-weight: 600;
+        line-height: 1;
+        color: #8a1f1f;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat .l {
+        font-size: 33px;
+        color: #5f574c;
+        margin-top: 14px;
+        letter-spacing: 1px;
+      }
+
+      .quote {
+        font-style: italic;
+        font-size: 50px;
+        line-height: 1.4;
+        border-left: 8px solid #8a1f1f;
+        padding-left: 38px;
+        max-width: 1500px;
+      }
+
+      .list {
+        margin-top: 44px;
+      }
+      .list li {
+        list-style: none;
+        font-size: 41px;
+        line-height: 1.5;
+        margin-bottom: 24px;
+        padding-left: 52px;
+        position: relative;
+      }
+      .list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 19px;
+        width: 26px;
+        height: 5px;
+        background: #8a1f1f;
+      }
+      .onDark .list li {
+        color: #eee4d3;
+      }
+      .onDark .list li::before {
+        background: #b8913f;
+      }
+
+      .foot {
+        position: absolute;
+        left: 136px;
+        bottom: 58px;
+        font-size: 26px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #5f574c;
+      }
+      .onDark .foot {
+        color: #9a8f7d;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 28px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: 2px solid #b8913f;
+        color: #b8913f;
+        padding: 6px 18px;
+        border-radius: 30px;
+        margin-right: 14px;
+      }
+      .badgeRow {
+        margin-top: 48px;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="application/hyperframes-slideshow+json">
+      {
+        "slides": [
+          {
+            "sceneId": "title",
+            "notes": "Hold one beat before speaking. Then: 'Law is taught from books, but advocacy is a performance.' Do not read the slide aloud."
+          },
+          {
+            "sceneId": "problem",
+            "notes": "The pain, in three moves. Thousands of hours are public. Nobody watches them. The gap is findability, not footage. Advance on each card.",
+            "fragments": [11.0, 14.0]
+          },
+          {
+            "sceneId": "insight",
+            "notes": "The technical thesis, and the thing judges should remember. Half of what a law student asks is a FILTER, not a similarity search. Nobody says 'Rule 611' out loud in a courtroom, so a vector search cannot find it.",
+            "fragments": [24.0, 27.5]
+          },
+          {
+            "sceneId": "demo",
+            "notes": "SWITCH TO THE BROWSER NOW. Five beats, two minutes, per DEMO.md. Come back only for the close. If the site fails, stay here and open the architecture hotspot instead.",
+            "hotspots": [
+              {
+                "id": "h-arch",
+                "label": "How does it work under the hood?",
+                "target": "architecture",
+                "region": { "x": 58, "y": 72, "w": 36, "h": 16 }
+              }
+            ]
+          },
+          {
+            "sceneId": "room",
+            "notes": "The differentiator. Transcript says what was said; a vision index says what the room did. Every observation is timestamped and clickable, so a claim about demeanour is checkable against the frame."
+          },
+          {
+            "sceneId": "corpus",
+            "notes": "Credibility, and one honest limit. All public record. Oyez ships speaker-labelled transcripts so results name the actual justice. Then say it plainly: cameras are banned in the Supreme Court, so most of the library is audio, and the interface says so rather than hiding it."
+          },
+          {
+            "sceneId": "who",
+            "notes": "Law schools are the wedge because they already buy the casebook this replaces. Litigation teams and journalists run on the same index."
+          },
+          {
+            "sceneId": "future",
+            "notes": "Where this goes. One: harden the face and expression layer until it is reliable enough to study courtroom psychology, how people actually behave under questioning and how an advocate reads a room. Two: web agents, so a student can ask about an argument that happened this week and the system goes and gets it. Say both in one breath; do not oversell either.",
+            "fragments": [86.0]
+          },
+          {
+            "sceneId": "close",
+            "notes": "Deliver the line, then stop talking. Do not add a summary after it."
+          }
+        ],
+        "slideSequences": [
+          {
+            "id": "architecture",
+            "label": "Architecture",
+            "slides": [
+              {
+                "sceneId": "arch-1",
+                "notes": "Only open this if asked, or if the live demo fails. VideoDB owns media, indexes and streaming. We own the legal taxonomy and the router."
+              },
+              {
+                "sceneId": "arch-2",
+                "notes": "The genuinely hard part: a retrieval unit has to be a pedagogically complete moment. An objection clip without the ruling teaches nothing."
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+
+    <!-- 1 -->
+    <div
+      data-composition-id="title"
+      data-start="0"
+      data-duration="6"
+      data-label="Title"
+      data-width="1920"
+      data-height="1080"
+      id="slide-title" class="slide onDark"
+    >
+      <div class="bg dark"></div>
+      <section id="clip-title" class="clip" data-start="0" data-duration="6" data-track-index="1">
+        <div class="pad">
+          <div class="kicker" id="t-kicker">Built on VideoDB</div>
+          <h1 id="t-h1">PRECEDENT</h1>
+          <div class="rule" id="t-rule"></div>
+          <div class="sub" id="t-sub">
+            Playable testimony for law schools. Courtroom archives turned into a searchable
+            library of real advocacy.
+          </div>
+        </div>
+        <div class="foot" id="t-foot">precedent-production-900c.up.railway.app</div>
+      </section>
+    </div>
+
+    <!-- 2 -->
+    <div
+      data-composition-id="problem"
+      data-start="6"
+      data-duration="10"
+      data-label="The problem"
+      data-width="1920"
+      data-height="1080"
+      id="slide-problem" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-problem" class="clip" data-start="6" data-duration="10" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">The problem</div>
+          <h2 id="p-h2">Advocacy is a performance, and we teach it from a book.</h2>
+          <div class="row">
+            <div class="card" id="p-c1">
+              <div class="num">What exists</div>
+              <div class="big">Thousands of hours</div>
+              <p>Trials, depositions and arguments are public record and already online.</p>
+            </div>
+            <div class="card" id="p-c2">
+              <div class="num">What happens</div>
+              <div class="big">Nobody watches</div>
+              <p>No one scrubs forty hours of trial to find the three minutes that matter.</p>
+            </div>
+            <div class="card" id="p-c3">
+              <div class="num">The real gap</div>
+              <div class="big">Findability</div>
+              <p>A casebook gives you the ruling. It cannot show you the cross-examination.</p>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Precedent</div>
+      </section>
+    </div>
+
+    <!-- 3 -->
+    <div
+      data-composition-id="insight"
+      data-start="16"
+      data-duration="14"
+      data-label="The insight"
+      data-width="1920"
+      data-height="1080"
+      id="slide-insight" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-insight" class="clip" data-start="16" data-duration="14" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">Why search alone fails</div>
+          <h2 class="tight" id="i-h2">
+            Half of what a law student asks is a filter, not a similarity search.
+          </h2>
+          <div class="rule"></div>
+          <div class="quote" id="i-q1">&ldquo;Show me every objection that was sustained.&rdquo;</div>
+          <div class="sub" id="i-s1" style="margin-top: 24px">
+            Nobody in a courtroom says the phrase &ldquo;sustained objection&rdquo;. This is a
+            structured index of courtroom events, filtered by how the judge ruled.
+          </div>
+          <div class="quote" id="i-q2" style="margin-top: 40px">&ldquo;FRE 611 leading question.&rdquo;</div>
+          <div class="sub" id="i-s2" style="margin-top: 24px">
+            And nobody says &ldquo;Rule 611&rdquo; out loud either. A vector search cannot find
+            what was never spoken.
+          </div>
+        </div>
+        <div class="foot">Precedent</div>
+      </section>
+    </div>
+
+    <!-- 4 -->
+    <div
+      data-composition-id="demo"
+      data-start="30"
+      data-duration="6"
+      data-label="Live demo"
+      data-width="1920"
+      data-height="1080"
+      id="slide-demo" class="slide onDark"
+    >
+      <div class="bg dark"></div>
+      <section id="clip-demo" class="clip" data-start="30" data-duration="6" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">Two minutes, live</div>
+          <h2 id="d-h2">Every answer is the moment itself, not a page citation.</h2>
+          <ul class="list" id="d-list">
+            <li>Every sustained objection, from the structured event index</li>
+            <li>FRE 611, a rule number nobody says aloud</li>
+            <li>Read the room: what the camera saw, second by second</li>
+            <li>The same witness contradicting herself ten days apart</li>
+            <li>Eight objections from eight courtrooms, stitched into one reel</li>
+          </ul>
+        </div>
+        <div class="foot">Switch to the browser</div>
+      </section>
+    </div>
+
+    <!-- 5 -->
+    <div
+      data-composition-id="room"
+      data-start="36"
+      data-duration="8"
+      data-label="Read the room"
+      data-width="1920"
+      data-height="1080"
+      id="slide-room" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-room" class="clip" data-start="36" data-duration="8" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">The part that is new</div>
+          <h2 class="tight" id="r-h2">
+            The transcript says what was said. A vision index says what the room did while it
+            was being said.
+          </h2>
+          <div class="row">
+            <div class="card" id="r-c1">
+              <div class="num">Spoken index</div>
+              <div class="big">The words</div>
+              <p>Word-level timestamps, speaker labels, and the sentence that answers the question.</p>
+            </div>
+            <div class="card" id="r-c2">
+              <div class="num">Vision index</div>
+              <div class="big">The demeanour</div>
+              <p>Expression, posture and composure, sampled every eight seconds of footage.</p>
+            </div>
+            <div class="card" id="r-c3">
+              <div class="num">Joined</div>
+              <div class="big">Checkable</div>
+              <p>Each observation is timestamped and clickable, so a claim can be verified.</p>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Precedent</div>
+      </section>
+    </div>
+
+    <!-- 6 -->
+    <div
+      data-composition-id="corpus"
+      data-start="44"
+      data-duration="8"
+      data-label="The corpus"
+      data-width="1920"
+      data-height="1080"
+      id="slide-corpus" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-corpus" class="clip" data-start="44" data-duration="8" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">The library</div>
+          <h2 id="c-h2">Forty seven hours of real proceedings, all public record.</h2>
+          <div class="stats" id="c-stats">
+            <div class="stat">
+              <div class="n">1,394</div>
+              <div class="l">indexed courtroom moments</div>
+            </div>
+            <div class="stat">
+              <div class="n">7</div>
+              <div class="l">cases across three archives</div>
+            </div>
+            <div class="stat">
+              <div class="n">990</div>
+              <div class="l">full federal trials reachable next</div>
+            </div>
+          </div>
+          <div class="sub" id="c-sub">
+            Supreme Court arguments via Oyez, which ships speaker-labelled transcripts, so a
+            result names the actual justice. Federal appellate audio via CourtListener. Complete
+            federal trials via the judiciary's own camera archive.
+          </div>
+        </div>
+        <div class="foot">All public record</div>
+      </section>
+    </div>
+
+    <!-- 7 -->
+    <div
+      data-composition-id="who"
+      data-start="52"
+      data-duration="7"
+      data-label="Who it is for"
+      data-width="1920"
+      data-height="1080"
+      id="slide-who" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-who" class="clip" data-start="52" data-duration="7" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">Who it is for</div>
+          <h2 id="w-h2">Law schools are the wedge. They already buy the casebook this replaces.</h2>
+          <div class="row">
+            <div class="card" id="w-c1">
+              <div class="num">Wedge</div>
+              <div class="big">Trial advocacy</div>
+              <p>Every course needs real examples of technique, cut by hand today.</p>
+            </div>
+            <div class="card" id="w-c2">
+              <div class="num">Expansion</div>
+              <div class="big">Litigation teams</div>
+              <p>Witness prep and judge research run on the same index of moments.</p>
+            </div>
+            <div class="card" id="w-c3">
+              <div class="num">Adjacent</div>
+              <div class="big">Journalists</div>
+              <p>Finding the moment in a public record, with a citation to the second.</p>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Precedent</div>
+      </section>
+    </div>
+
+    <!-- 8 -->
+    <div
+      data-composition-id="close"
+      data-start="59"
+      data-duration="7"
+      data-label="Close"
+      data-width="1920"
+      data-height="1080"
+      id="slide-close" class="slide onDark"
+    >
+      <div class="bg dark"></div>
+      <section id="clip-close" class="clip" data-start="59" data-duration="7" data-track-index="1">
+        <div class="pad" style="display: flex; flex-direction: column; justify-content: center">
+          <div class="kicker" id="cl-kicker">Precedent</div>
+          <h2 id="cl-h2" style="font-size: 94px; max-width: 1580px">
+            Students used to read this in a book. Now they watch the moment.
+          </h2>
+          <div class="badgeRow" id="cl-badges">
+            <span class="tag">Playable evidence</span>
+            <span class="tag">Built on VideoDB</span>
+          </div>
+        </div>
+        <div class="foot">precedent-production-900c.up.railway.app</div>
+      </section>
+    </div>
+
+    <!-- branch -->
+    <div
+      data-composition-id="arch-1"
+      data-start="66"
+      data-duration="8"
+      data-label="Architecture"
+      data-width="1920"
+      data-height="1080"
+      id="slide-arch-1" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-arch-1" class="clip" data-start="66" data-duration="8" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">Under the hood</div>
+          <h2 class="tight" id="a1-h2">VideoDB owns the media. We own the legal layer.</h2>
+          <div class="row">
+            <div class="card">
+              <div class="num">VideoDB</div>
+              <div class="big">Media and indexes</div>
+              <p>
+                Transcription with word-level timestamps, scene indexing with a custom vision
+                prompt, instant clip streaming, and the programmable editor for reels.
+              </p>
+            </div>
+            <div class="card">
+              <div class="num">Ours</div>
+              <div class="big">The legal taxonomy</div>
+              <p>
+                What counts as a courtroom moment, who is speaking, which index a question
+                belongs to, and how moments become teaching material.
+              </p>
+            </div>
+          </div>
+          <div class="sub" id="a1-sub" style="margin-top: 40px">
+            Courtroom speech is ritualised, so the language of court gives reliable anchors:
+            objection, sustained, pass the witness, may it please the court.
+          </div>
+        </div>
+        <div class="foot">Architecture</div>
+      </section>
+    </div>
+
+    <div
+      data-composition-id="arch-2"
+      data-start="74"
+      data-duration="8"
+      data-label="The hard part"
+      data-width="1920"
+      data-height="1080"
+      id="slide-arch-2" class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-arch-2" class="clip" data-start="74" data-duration="8" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">The hard part</div>
+          <h2 class="tight" id="a2-h2">A clip is only useful if it contains the whole lesson.</h2>
+          <div class="quote" id="a2-q">
+            An objection clip without the question, the ground and the ruling teaches nothing.
+          </div>
+          <ul class="list" id="a2-list">
+            <li>Boundaries: grow a match until the exchange is pedagogically complete</li>
+            <li>Routing: rule numbers and rulings are filters, not embeddings</li>
+            <li>Attribution: name the justice, and keep broadcast voiceover out of testimony</li>
+          </ul>
+        </div>
+        <div class="foot">Architecture</div>
+      </section>
+    </div>
+
+    <div
+      id="slide-future"
+      data-composition-id="future"
+      data-start="82"
+      data-duration="9"
+      data-label="What comes next"
+      data-width="1920"
+      data-height="1080"
+      class="slide"
+    >
+      <div class="bg"></div>
+      <section id="clip-future" class="clip" data-start="82" data-duration="9" data-track-index="1">
+        <div class="pad">
+          <div class="kicker">What comes next</div>
+          <h2 class="tight" id="f-h2">Two directions, and both start from the index we already have.</h2>
+          <div class="row">
+            <div class="card" id="f-c1">
+              <div class="num">Next</div>
+              <div class="big">Read the room, reliably</div>
+              <p>
+                Harden face and expression recognition until the demeanour layer is dependable
+                enough to study courtroom psychology: how witnesses behave under pressure, and
+                how an advocate reads a room while arguing in it.
+              </p>
+            </div>
+            <div class="card" id="f-c2">
+              <div class="num">Then</div>
+              <div class="big">Agents that go and find it</div>
+              <p>
+                Ask about an argument that happened this week and a web agent retrieves the
+                proceeding, ingests it, and answers from the record. The library stops being what
+                we loaded and becomes whatever was argued.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="foot">Roadmap</div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      /*
+       * One paused timeline per scene, keyed by its data-composition-id. Sharing
+       * a single instance across scene keys breaks seeking, because a GSAP
+       * timeline cannot be nested under several parents at once.
+       *
+       * enter() animates on scrub but leaves the element visible whenever the
+       * playhead sits outside the tween (immediateRender: false). A deck is
+       * navigated by seeking and parks on slide boundaries, so a plain from()
+       * would write its hidden state and render the slide blank.
+       *
+       * hold() is for fragment reveals: hide explicitly at the slide's own start
+       * time, then animate in at the fragment.
+       */
+      function enter(tl, selector, at, y) {
+        tl.from(
+          selector,
+          {
+            opacity: 0,
+            y: y === undefined ? 26 : y,
+            duration: 0.5,
+            ease: "power2.out",
+            immediateRender: false,
+          },
+          at
+        );
+      }
+
+      function hold(tl, selector, slideStart, revealAt, y) {
+        tl.set(selector, { opacity: 0, y: y === undefined ? 26 : y }, slideStart);
+        tl.to(
+          selector,
+          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+          Math.max(slideStart, revealAt - 0.45)
+        );
+      }
+
+      const tTitle = gsap.timeline({ paused: true });
+      window.__timelines["title"] = tTitle;
+      enter(tTitle, "#t-kicker", 0.1);
+      tTitle.from(
+        "#t-h1",
+        { opacity: 0, y: 40, duration: 0.7, ease: "power3.out", immediateRender: false },
+        0.35
+      );
+      tTitle.from(
+        "#t-rule",
+        {
+          scaleX: 0,
+          transformOrigin: "left center",
+          duration: 0.6,
+          ease: "power2.out",
+          immediateRender: false,
+        },
+        0.9
+      );
+      enter(tTitle, "#t-sub", 1.15);
+      enter(tTitle, "#t-foot", 1.5, 12);
+
+      // Fragments hold at 11.0 and 14.0, so cards two and three land on a click.
+      const tProblem = gsap.timeline({ paused: true });
+      window.__timelines["problem"] = tProblem;
+      enter(tProblem, "#p-h2", 6.2);
+      enter(tProblem, "#p-c1", 7.4);
+      hold(tProblem, "#p-c2", 6.05, 11.0);
+      hold(tProblem, "#p-c3", 6.05, 14.0);
+
+      // Fragments hold at 24.0 and 27.5.
+      const tInsight = gsap.timeline({ paused: true });
+      window.__timelines["insight"] = tInsight;
+      enter(tInsight, "#i-h2", 16.2);
+      enter(tInsight, "#i-q1", 17.4);
+      hold(tInsight, "#i-s1", 16.05, 24.0);
+      hold(tInsight, "#i-q2", 16.05, 27.5);
+      hold(tInsight, "#i-s2", 16.05, 27.9);
+
+      const tDemo = gsap.timeline({ paused: true });
+      window.__timelines["demo"] = tDemo;
+      enter(tDemo, "#d-h2", 30.2);
+      tDemo.from(
+        "#d-list li",
+        {
+          opacity: 0,
+          x: -22,
+          duration: 0.45,
+          stagger: 0.26,
+          ease: "power2.out",
+          immediateRender: false,
+        },
+        31.0
+      );
+
+      const tRoom = gsap.timeline({ paused: true });
+      window.__timelines["room"] = tRoom;
+      enter(tRoom, "#r-h2", 36.2);
+      tRoom.from(
+        "#r-c1, #r-c2, #r-c3",
+        {
+          opacity: 0,
+          y: 26,
+          duration: 0.5,
+          stagger: 0.3,
+          ease: "power2.out",
+          immediateRender: false,
+        },
+        37.4
+      );
+
+      const tCorpus = gsap.timeline({ paused: true });
+      window.__timelines["corpus"] = tCorpus;
+      enter(tCorpus, "#c-h2", 44.2);
+      tCorpus.from(
+        "#c-stats .stat",
+        {
+          opacity: 0,
+          y: 30,
+          duration: 0.5,
+          stagger: 0.26,
+          ease: "power2.out",
+          immediateRender: false,
+        },
+        45.2
+      );
+      enter(tCorpus, "#c-sub", 46.8);
+
+      const tWho = gsap.timeline({ paused: true });
+      window.__timelines["who"] = tWho;
+      enter(tWho, "#w-h2", 52.2);
+      tWho.from(
+        "#w-c1, #w-c2, #w-c3",
+        {
+          opacity: 0,
+          y: 26,
+          duration: 0.5,
+          stagger: 0.3,
+          ease: "power2.out",
+          immediateRender: false,
+        },
+        53.4
+      );
+
+      // Fragment holds at 86.0 so the second direction lands on a click.
+      const tFuture = gsap.timeline({ paused: true });
+      window.__timelines["future"] = tFuture;
+      enter(tFuture, "#f-h2", 82.2);
+      enter(tFuture, "#f-c1", 83.2);
+      hold(tFuture, "#f-c2", 82.05, 86.0);
+
+      const tClose = gsap.timeline({ paused: true });
+      window.__timelines["close"] = tClose;
+      enter(tClose, "#cl-kicker", 59.2);
+      tClose.from(
+        "#cl-h2",
+        { opacity: 0, y: 34, duration: 0.75, ease: "power3.out", immediateRender: false },
+        59.5
+      );
+      enter(tClose, "#cl-badges", 60.6);
+
+      const tArch1 = gsap.timeline({ paused: true });
+      window.__timelines["arch-1"] = tArch1;
+      enter(tArch1, "#a1-h2", 66.2);
+      enter(tArch1, "#a1-sub", 67.4);
+
+      const tArch2 = gsap.timeline({ paused: true });
+      window.__timelines["arch-2"] = tArch2;
+      enter(tArch2, "#a2-h2", 74.2);
+      enter(tArch2, "#a2-q", 75.0);
+      tArch2.from(
+        "#a2-list li",
+        {
+          opacity: 0,
+          x: -20,
+          duration: 0.45,
+          stagger: 0.26,
+          ease: "power2.out",
+          immediateRender: false,
+        },
+        75.8
+      );
+    </script>
+  </body>
+</html>

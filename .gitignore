@@ -15,3 +15,7 @@ node_modules/
 LEARNINGS.md
 CONTEXT.md
 HOSTING.md
+
+# Deck build artifacts
+deck/composition/snapshots/
+deck/composition/node_modules/
