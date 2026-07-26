@@ -1,5 +1,6 @@
 """Precedent API: professor questions in, playable moments out."""
 import json
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
@@ -119,7 +120,9 @@ def playbook(playbook_id: str, per_step: int = 2):
         raise HTTPException(404, str(exc))
 
 
-VERSION = "2026.07.26-4"  # bumped per deploy so /api/health proves which build is live
+# Railway injects the commit SHA on GitHub deploys, so /api/health always
+# identifies the exact build without anyone remembering to bump a string.
+VERSION = (os.environ.get("RAILWAY_GIT_COMMIT_SHA") or "dev")[:9]
 
 
 @app.get("/api/health")
@@ -452,6 +455,39 @@ def speakers(video_id: str):
          "question_ratio": p.question_ratio, "sample": p.sample}
         for sp, p in sorted(profiles.items())
     ]}
+
+
+@app.post("/api/admin/sync")
+def admin_sync(request: Request, docs: str = "catalog,thumbnails,clips,reactions,moments"):
+    """Overwrite store documents from the files shipped in this image.
+
+    With Postgres live, the database wins over the repo's data/ files, so
+    locally ingested content (new sessions, new indexes) needs an explicit
+    push into the store after a deploy. Guarded by ADMIN_KEY.
+    """
+    admin_key = os.environ.get("ADMIN_KEY", "")
+    if not admin_key or request.headers.get("x-admin-key") != admin_key:
+        raise HTTPException(403, "admin key required")
+
+    from ..config import DATA_DIR
+
+    result = {}
+    for name in [d.strip() for d in docs.split(",") if d.strip()]:
+        if name == "moments":
+            # per-video moment caches live as individual files
+            count = 0
+            for path in sorted((DATA_DIR / "moments").glob("*.json")):
+                count += 1
+            result["moments"] = f"{count} files ship in the image and are read directly"
+            continue
+        path = DATA_DIR / f"{name}.json"
+        if not path.exists():
+            result[name] = "no file in image"
+            continue
+        store.write(name, json.loads(path.read_text()))
+        result[name] = "synced"
+    store.write("gallery", case_cards())  # rebuild from the fresh catalog
+    return {"synced": result, "version": VERSION}
 
 
 @app.get("/")
