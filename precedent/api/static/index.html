@@ -202,6 +202,16 @@
     margin-top:10px; padding:10px 14px; font-size:14.5px; line-height:1.6;
     background:#f3ede2; border-left:3px solid #b08d3f; border-radius:var(--radius);
   }
+  .chapters { list-style:none; margin:12px 0 0; padding:0; border-top:1px solid var(--line); }
+  .chapters li { border-bottom:1px solid var(--line); }
+  .chapters li button {
+    display:flex; gap:12px; align-items:baseline; width:100%; text-align:left;
+    background:none; border:none; cursor:pointer; padding:9px 4px; color:var(--ink);
+  }
+  .chapters li button:hover { background:#faf6ef; }
+  .chapters li.playing button { background:var(--accent-soft); font-weight:600; }
+  .chapters .at { font-variant-numeric:tabular-nums; color:var(--accent); font-size:13px; min-width:52px; }
+  .chapters .lab { font-size:14.5px; }
   .cameraSaw b { display:block; font-size:11px; letter-spacing:1.6px; text-transform:uppercase; color:#8a6d2f; margin-bottom:3px; }
 
   /* Search */
@@ -238,6 +248,7 @@
   <button data-view="prepare" class="active">Prepare</button>
   <button data-view="library">Library</button>
   <button data-view="search">Search</button>
+  <button data-view="room">Read the Room</button>
   <button data-view="reel">Teaching Reel</button>
   <button data-view="myset">My Set <span id="setcount" class="countpill">0</span></button>
   <button data-view="drop">Add a Link</button>
@@ -296,6 +307,18 @@
     <div class="examples" id="examples"></div>
     <p class="sub">Objections, rulings, and rule numbers come from the structured moment index. Anything else falls back to semantic search, narrowed to the sentences that answer the question. Click a transcript word to jump there.</p>
     <div id="results"></div>
+  </section>
+
+  <section id="room" class="view">
+    <h2>Read the room</h2>
+    <p class="sub">The transcript says what was said. This says what the camera saw while it was being said: expressions, posture, composure.</p>
+    <div class="searchbar">
+      <input id="roomq" placeholder="For example: how did the witness react when she was accused of lying">
+      <button class="btn" onclick="runRoom()">Search</button>
+    </div>
+    <div class="examples" id="roomex"></div>
+    <div id="roomsessions" class="muted" style="margin-bottom:16px"></div>
+    <div id="roomout"></div>
   </section>
 
   <section id="reel" class="view">
@@ -410,6 +433,7 @@ function showView(name) {
     b.classList.toggle("active", b.dataset.view === name));
   if (name === "myset") renderSet();
   if (name === "drop") loadContributions();
+  if (name === "room") loadRoom();
 }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => showView(b.dataset.view));
 
@@ -647,6 +671,43 @@ async function exportSheet() {
   a.click();
   URL.revokeObjectURL(url);
   box.innerHTML = '<div class="card"><div class="meta">Downloaded</div><blockquote>Every clip with its source, timecode, transcript, and a playable link.</blockquote></div>';
+}
+
+/* ---------- Read the room ---------- */
+const ROOM_EXAMPLES = [
+  ["how did the witness react when she was accused of lying", "witness under accusation"],
+  ["what was the witness's demeanor while being confronted with her deposition", "confronted with a deposition"],
+  ["expression of the witness when the objection was sustained", "when an objection landed"],
+  ["body language during cross examination", "body language on cross"],
+];
+
+async function loadRoom() {
+  $("#roomex").innerHTML = '<div class="exhead">Try one of these</div>' +
+    ROOM_EXAMPLES.map(([q, label]) =>
+      `<button onclick='askRoom(${JSON.stringify(q)})'><b>${label}</b><span>${q}</span></button>`).join("");
+  const r = await fetch("/api/reactions/sessions");
+  if (!r.ok) return;
+  const { sessions } = await r.json();
+  $("#roomsessions").innerHTML = sessions.length
+    ? `Expression indexing covers ${sessions.length} session${sessions.length === 1 ? "" : "s"} with video: `
+      + sessions.map(x => `<b>${x.title}</b>`).join(", ")
+      + ". Supreme Court and appellate arguments are audio only, so they have no faces to read."
+    : "No sessions have expression indexing yet.";
+}
+
+function askRoom(q) { $("#roomq").value = q; runRoom(); }
+
+async function runRoom() {
+  const out = $("#roomout");
+  const q = $("#roomq").value.trim();
+  if (!q) return;
+  out.innerHTML = '<div class="loading">Reading the transcript and the frames together...</div>';
+  const r = await fetch(`/api/reactions/search?q=${encodeURIComponent(q)}&limit=5`);
+  if (!r.ok) { out.innerHTML = '<div class="empty">Nothing matched.</div>'; return; }
+  const data = await r.json();
+  if (!data.results.length) { out.innerHTML = '<div class="empty">Nothing matched in the video sessions.</div>'; return; }
+  out.innerHTML = "";
+  data.results.forEach(m => out.appendChild(momentCard(m)));
 }
 
 /* ---------- Prepare ---------- */
@@ -949,12 +1010,42 @@ async function runReel() {
   if (!r.ok) { out.innerHTML = '<div class="empty">No moments matched that anywhere in the library.</div>'; return; }
   const data = await r.json();
   const mins = Math.floor(data.total_seconds / 60), secs = Math.round(data.total_seconds % 60);
-  out.innerHTML = `<div class="card">
-      <div class="meta">${data.count} moments · ${mins}m ${secs}s${data.subtitles ? " · subtitled" : ""}</div>
+  out.innerHTML = "";
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<div class="meta">${data.count} clips · ${mins}m ${secs}s${data.subtitles ? " · subtitled" : ""}</div>
       ${data.sources && data.sources.length ? `<div class="caption">From: ${data.sources.join("; ")}</div>` : ""}
-      ${data.subtitle_note ? `<div class="caption">${data.subtitle_note}</div>` : ""}
-    </div>`;
-  out.firstChild.appendChild(player(data.stream_url));
+      ${data.subtitle_note ? `<div class="caption">${data.subtitle_note}</div>` : ""}`;
+  const video = player(data.stream_url);
+  card.appendChild(video);
+
+  // A four minute stream with no structure is unusable for teaching. Show what
+  // is in it, in order, and let a click jump straight to that clip.
+  if ((data.segments || []).length) {
+    const list = document.createElement("ol");
+    list.className = "chapters";
+    data.segments.forEach(seg => {
+      const li = document.createElement("li");
+      li.innerHTML = `<button><span class="at">${ts(seg.reel_start)}</span>
+        <span class="lab">${seg.label}</span></button>`;
+      li.querySelector("button").onclick = () => {
+        video.currentTime = seg.reel_start + 0.2;
+        video.play().catch(() => {});
+        list.querySelectorAll("li").forEach(x => x.classList.remove("playing"));
+        li.classList.add("playing");
+      };
+      list.appendChild(li);
+    });
+    video.addEventListener("timeupdate", () => {
+      const now = video.currentTime;
+      data.segments.forEach((seg, i) => {
+        const li = list.children[i];
+        if (li) li.classList.toggle("playing", now >= seg.reel_start && now < seg.reel_end);
+      });
+    });
+    card.appendChild(list);
+  }
+  out.appendChild(card);
 }
 
 async function loadReelScopes() {

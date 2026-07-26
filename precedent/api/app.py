@@ -88,6 +88,48 @@ def search(
     return {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
 
 
+@app.get("/api/reactions/sessions")
+def reaction_sessions():
+    """Which sessions have expression indexing, and which cannot have it."""
+    from ..catalog import get_session
+    from ..moments.reactions import video_ids_with_reactions
+
+    out = []
+    for video_id in video_ids_with_reactions():
+        session = get_session(video_id)
+        if session:
+            out.append({"video_id": video_id, "title": session.title,
+                        "case_id": session.case_id, "duration": session.duration})
+    return {"sessions": out}
+
+
+@app.get("/api/reactions/search")
+def reaction_search(q: str, case: Optional[str] = None, limit: int = 5):
+    """Spoken moments joined with what the camera saw, across every video session."""
+    from ..catalog import get_session
+    from ..moments.reactions import search_reactions, video_ids_with_reactions
+
+    cases = [case] if case else sorted({
+        get_session(v).case_id for v in video_ids_with_reactions() if get_session(v)
+    })
+    results: List[Any] = []
+    for case_id in cases:
+        try:
+            results.extend(search_reactions(case_id, q, limit=limit))
+        except Exception:
+            continue
+    results = [m for m in results if m.attrs.get("camera_saw")] or results
+    results.sort(key=lambda m: m.attrs.get("precision_score", 0), reverse=True)
+    results = results[:limit]
+    for m in results:
+        if not m.stream_url:
+            try:
+                m.stream_url = engine.clip_url(m.video_id, m.start, m.end)
+            except Exception:
+                pass
+    return {"query": q, "cases": cases, "results": [m.__dict__ for m in results]}
+
+
 @app.get("/api/gallery")
 def gallery(refresh: bool = False):
     """Browsable shelf of cases in the library.
@@ -226,7 +268,8 @@ def export_reel(payload: ClipSet):
         raise HTTPException(400, f"Could not build the reel: {exc}")
     return {"stream_url": result.stream_url, "count": result.count,
             "total_seconds": result.total_seconds, "subtitles": result.subtitles,
-            "subtitle_note": result.subtitle_note}
+            "subtitle_note": result.subtitle_note,
+            "segments": [s.__dict__ for s in result.segments]}
 
 
 @app.post("/api/export/sheet", response_class=PlainTextResponse)
@@ -374,6 +417,7 @@ def reel(
         "subtitle_note": result.subtitle_note,
         "sources": result.sources,
         "scope": wanted,
+        "segments": [s.__dict__ for s in result.segments],
     }
 
 

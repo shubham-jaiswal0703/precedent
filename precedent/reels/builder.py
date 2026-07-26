@@ -42,6 +42,19 @@ class ReelSpec:
 
 
 @dataclass
+class Segment:
+    """One clip inside the reel, with where it sits in the finished stream."""
+    index: int
+    label: str
+    session_title: str
+    video_id: str
+    source_start: float
+    reel_start: float
+    reel_end: float
+    text: str = ""
+
+
+@dataclass
 class ReelResult:
     stream_url: str
     count: int
@@ -49,6 +62,7 @@ class ReelResult:
     subtitles: bool = False
     subtitle_note: str = ""
     sources: List[str] = field(default_factory=list)
+    segments: List[Segment] = field(default_factory=list)
 
 
 def _label_for(moment: PlayableMoment) -> str:
@@ -75,7 +89,14 @@ def build_reel(
     title_cards: Optional[bool] = None,
     max_clip_seconds: Optional[float] = None,
 ) -> ReelResult:
-    """Compile moments into one playable teaching reel."""
+    """Compile moments into one playable teaching reel.
+
+    Everything is built on a single editor timeline: video, chapter cards, and
+    captions are separate tracks on the same composition. An earlier version
+    rebuilt the reel from scratch when captions were requested, which silently
+    dropped every chapter card, so a subtitled reel arrived as one unbroken
+    block with no visible structure.
+    """
     spec = spec or ReelSpec()
     if title_cards is not None:
         spec.title_cards = title_cards
@@ -84,50 +105,40 @@ def build_reel(
     if not moments:
         raise ValueError("No moments to compile")
 
-    conn = get_connection()
-    timeline = Timeline(conn)
+    plan: List[Segment] = []
     offset = 0.0
-    used: List[PlayableMoment] = []
-
     for moment in moments:
-        remaining = None
-        if spec.max_total_seconds is not None:
-            remaining = spec.max_total_seconds - offset
-            if remaining <= 2:
-                break
+        if spec.max_total_seconds is not None and spec.max_total_seconds - offset <= 2:
+            break
         span = min(moment.end - moment.start, spec.seconds_per_clip)
-        if remaining is not None:
-            span = min(span, remaining)
+        if spec.max_total_seconds is not None:
+            span = min(span, spec.max_total_seconds - offset)
         if span < 2:
             continue
-        end = moment.start + span
-
-        timeline.add_inline(VideoAsset(asset_id=moment.video_id, start=moment.start, end=end))
-        if spec.title_cards:
-            timeline.add_overlay(
-                offset,
-                TextAsset(text=_label_for(moment),
-                          duration=min(spec.label_seconds, span), style=CARD_STYLE),
-            )
+        plan.append(Segment(
+            index=len(plan) + 1,
+            label=_label_for(moment),
+            session_title=moment.session_title,
+            video_id=moment.video_id,
+            source_start=round(moment.start, 1),
+            reel_start=round(offset, 1),
+            reel_end=round(offset + span, 1),
+            text=((moment.attrs or {}).get("highlight", {}).get("quote") or moment.text or "")[:300],
+        ))
         offset += span
-        used.append(moment)
 
-    if not used:
+    if not plan:
         raise ValueError("Every moment was shorter than the minimum clip length")
 
-    if spec.voiceover:
-        audio_id = _voiceover_asset(conn, spec.voiceover)
-        if audio_id:
-            timeline.add_overlay(0, AudioAsset(asset_id=audio_id, disable_other_tracks=True,
-                                               fade_out_duration=1))
-
-    stream_url = timeline.generate_stream()
-
+    conn = get_connection()
     note = ""
-    if spec.subtitles:
-        captioned, note = _with_captions(conn, used, spec)
-        if captioned:
-            stream_url = captioned
+    try:
+        stream_url = _compose(conn, moments, plan, spec)
+    except Exception as exc:
+        # The editor API is newer; fall back to the proven timeline rather than
+        # failing the request, and say what was lost.
+        stream_url = _compose_legacy(conn, moments, plan, spec)
+        note = f"Built without captions ({type(exc).__name__})"
 
     if download_name:
         try:
@@ -137,12 +148,78 @@ def build_reel(
 
     return ReelResult(
         stream_url=stream_url,
-        count=len(used),
+        count=len(plan),
         total_seconds=round(offset, 1),
         subtitles=spec.subtitles and not note,
         subtitle_note=note,
-        sources=sorted({m.session_title for m in used if m.session_title}),
+        sources=sorted({s.session_title for s in plan if s.session_title}),
+        segments=plan,
     )
+
+
+def _compose(conn, moments: List[PlayableMoment], plan: List["Segment"], spec: ReelSpec) -> str:
+    """One editor timeline: video, chapter cards, and captions as three tracks."""
+    from videodb.editor import (Background, Clip, FontStyling, Position,
+                                Timeline as EditorTimeline, Track)
+    from videodb.editor import CaptionAsset, TextAsset as EditorTextAsset
+    from videodb.editor import VideoAsset as EditorVideoAsset
+
+    editor = EditorTimeline(conn)
+    video_track = Track(z_index=0)
+    editor.add_track(video_track)
+    for segment in plan:
+        video_track.add_clip(
+            segment.reel_start,
+            Clip(EditorVideoAsset(segment.video_id, start=segment.source_start),
+                 duration=segment.reel_end - segment.reel_start),
+        )
+
+    if spec.title_cards:
+        card_track = Track(z_index=1)
+        editor.add_track(card_track)
+        for segment in plan:
+            span = min(spec.label_seconds, segment.reel_end - segment.reel_start)
+            card_track.add_clip(
+                segment.reel_start,
+                Clip(
+                    EditorTextAsset(
+                        text=f"{segment.index}. {segment.label}",
+                        font=FontStyling(name="Georgia", size=30, bold=True),
+                        background=Background(color="#000000", opacity=0.62,
+                                              border_width=14.0),
+                    ),
+                    duration=span,
+                    position=Position.bottom,
+                ),
+            )
+
+    if spec.subtitles:
+        caption_track = Track(z_index=2)
+        editor.add_track(caption_track)
+        caption_track.add_clip(0, Clip(CaptionAsset(src="auto"),
+                                       duration=plan[-1].reel_end))
+    return editor.generate_stream()
+
+
+def _compose_legacy(conn, moments: List[PlayableMoment], plan: List["Segment"], spec: ReelSpec) -> str:
+    """The proven timeline: inline clips plus text overlays, no captions."""
+    timeline = Timeline(conn)
+    for segment in plan:
+        timeline.add_inline(VideoAsset(asset_id=segment.video_id, start=segment.source_start,
+                                       end=segment.source_start + (segment.reel_end - segment.reel_start)))
+        if spec.title_cards:
+            timeline.add_overlay(
+                segment.reel_start,
+                TextAsset(text=f"{segment.index}. {segment.label}",
+                          duration=min(spec.label_seconds, segment.reel_end - segment.reel_start),
+                          style=CARD_STYLE),
+            )
+    if spec.voiceover:
+        audio_id = _voiceover_asset(conn, spec.voiceover)
+        if audio_id:
+            timeline.add_overlay(0, AudioAsset(asset_id=audio_id, disable_other_tracks=True,
+                                               fade_out_duration=1))
+    return timeline.generate_stream()
 
 
 def _voiceover_asset(conn, text: str) -> str:
