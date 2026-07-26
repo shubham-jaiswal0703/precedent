@@ -198,6 +198,11 @@
   .transcript w.hit { background:var(--hit); font-weight:600; }
   .transcript w.at { background:var(--ink); color:var(--paper); }
   .caption { font-size:13px; color:var(--ink-soft); font-style:italic; margin-top:8px; }
+  .cameraSaw {
+    margin-top:10px; padding:10px 14px; font-size:14.5px; line-height:1.6;
+    background:#f3ede2; border-left:3px solid #b08d3f; border-radius:var(--radius);
+  }
+  .cameraSaw b { display:block; font-size:11px; letter-spacing:1.6px; text-transform:uppercase; color:#8a6d2f; margin-bottom:3px; }
 
   /* Search */
   .searchbar { display:flex; gap:10px; margin-bottom:14px; }
@@ -315,6 +320,7 @@
         </select>
       </label>
       <label><input type="checkbox" id="reelsubs"> Burn in subtitles</label>
+      <label><input type="checkbox" id="reelvoice"> Spoken intro</label>
     </div>
     <p class="sub">Draws from every case by default and interleaves them, so the reel compares courtrooms rather than running through one case at a time.</p>
     <div id="reelout"></div>
@@ -360,6 +366,7 @@ const EXAMPLES = {
     ["objection hearsay", "hearsay objections", "objections by the ground counsel stated"],
     ["FRE 611 leading question", "FRE 611 leading", "a rule number, which nobody says aloud"],
     ["impeachment with a prior statement", "impeachment", "the cross-examination move itself"],
+    ["how did the witness react when confronted with her deposition", "witness reactions", "joins the transcript with what the camera saw"],
     ["move to strike", "motions to strike", "what counsel does after winning an objection"],
     ["sidebar", "sidebars", "argument taken out of the jury's hearing"],
     ['"no further questions"', 'exact phrase', "quoted text is matched verbatim"],
@@ -492,6 +499,12 @@ function momentCard(m, extraBadges = []) {
       }
     };
     card.appendChild(holder);
+  }
+  if (m.attrs && m.attrs.camera_saw) {
+    const seen = document.createElement("div");
+    seen.className = "cameraSaw";
+    seen.innerHTML = `<b>What the camera saw</b> ${m.attrs.camera_saw}`;
+    card.appendChild(seen);
   }
   const panel = transcriptPanel(h, m.start, video);
   if (panel) {
@@ -780,7 +793,7 @@ async function loadCaseContradictions(caseId) {
   const wrap = document.createElement("details");
   wrap.className = "section";
   wrap.innerHTML = `<summary>Contradictions in this witness's testimony<span class="count">${items.length} pairs</span></summary>`;
-  items.forEach(c => {
+  items.forEach((c, idx) => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `<span class="badge">${c.verdict}</span><b>${c.witness}</b>
@@ -795,6 +808,17 @@ async function loadCaseContradictions(caseId) {
       split.appendChild(col);
     });
     card.appendChild(split);
+    const exp = document.createElement("button");
+    exp.className = "btn ghost";
+    exp.style.marginTop = "10px";
+    exp.textContent = "Render as one side-by-side clip";
+    exp.onclick = async () => {
+      exp.disabled = true; exp.textContent = "Rendering...";
+      const r = await fetch(`/api/contradiction-clip/${caseId}/${idx}`);
+      if (r.ok) { const { stream_url } = await r.json(); exp.replaceWith(player(stream_url)); }
+      else { exp.textContent = "Could not render"; }
+    };
+    card.appendChild(exp);
     wrap.appendChild(card);
   });
   holder.appendChild(wrap);
@@ -915,6 +939,7 @@ async function runReel() {
     limit: $("#reelcount").value || 8,
     seconds_per_clip: $("#reelsecs").value || 30,
     subtitles: $("#reelsubs").checked,
+    voiceover: $("#reelvoice").checked,
   });
   if ($("#reelscope").value) params.set("case", $("#reelscope").value);
   if ($("#reelcap").value) params.set("max_total_seconds", $("#reelcap").value);

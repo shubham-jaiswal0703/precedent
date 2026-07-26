@@ -67,7 +67,8 @@
       "duration": 3550.0,
       "indexes": {
         "spoken_word": "default",
-        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image",
+        "reactions": "f3c96ddf30924eb3"
       }
     },
     "m-z-019f9a93-51f0-7681-8484-11748ad4db6c": {
@@ -85,7 +86,8 @@
       "duration": 1131.0,
       "indexes": {
         "spoken_word": "default",
-        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image"
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image",
+        "reactions": "ef238de4cfe28823"
       }
     },
     "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e": {
@@ -774,7 +776,8 @@
         "docket": "",
         "proceeding": "hearing",
         "courthouse": "Phillip Burton Federal Building",
-        "spoken_word": "default"
+        "spoken_word": "default",
+        "reactions": "2d1e48292b3bd8b4"
       }
     },
     "m-z-019f9c00-4731-77d0-b94f-cc781918de05": {

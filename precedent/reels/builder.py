@@ -10,8 +10,21 @@ long the whole thing runs, because a reel has to fit the slot in a class.
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from videodb.asset import TextAsset, VideoAsset
+from videodb import TextStyle
+from videodb.asset import AudioAsset, TextAsset, VideoAsset
 from videodb.timeline import Timeline
+
+# A chapter card should look deliberate, not like debug text on a video.
+CARD_STYLE = TextStyle(
+    fontsize=34,
+    fontcolor="white",
+    font="Georgia",
+    box=True,
+    boxcolor="black@0.65",
+    boxborderw="18",
+    y_align="text",
+    text_align="C",
+)
 
 from ..config import get_connection
 from ..search.engine import PlayableMoment
@@ -25,6 +38,7 @@ class ReelSpec:
     title_cards: bool = True
     subtitles: bool = False
     label_seconds: float = 3.5
+    voiceover: str = ""  # spoken intro text, read over the opening clip
 
 
 @dataclass
@@ -92,13 +106,20 @@ def build_reel(
         if spec.title_cards:
             timeline.add_overlay(
                 offset,
-                TextAsset(text=_label_for(moment), duration=min(spec.label_seconds, span)),
+                TextAsset(text=_label_for(moment),
+                          duration=min(spec.label_seconds, span), style=CARD_STYLE),
             )
         offset += span
         used.append(moment)
 
     if not used:
         raise ValueError("Every moment was shorter than the minimum clip length")
+
+    if spec.voiceover:
+        audio_id = _voiceover_asset(conn, spec.voiceover)
+        if audio_id:
+            timeline.add_overlay(0, AudioAsset(asset_id=audio_id, disable_other_tracks=True,
+                                               fade_out_duration=1))
 
     stream_url = timeline.generate_stream()
 
@@ -122,6 +143,43 @@ def build_reel(
         subtitle_note=note,
         sources=sorted({m.session_title for m in used if m.session_title}),
     )
+
+
+def _voiceover_asset(conn, text: str) -> str:
+    """Generate a short TTS intro. A reel without one is fine, so never raise."""
+    try:
+        coll = conn.get_collection()
+        audio = coll.generate_voice(text=text[:400])
+        return getattr(audio, "id", "") or ""
+    except Exception:
+        return ""
+
+
+def side_by_side(conn, left, right, seconds: float = 45.0) -> str:
+    """Render a contradiction pair as one clip, both statements on screen.
+
+    Two video tracks on the editor timeline, each scaled to half width. This is
+    the exportable version of the split-screen the browser shows.
+    """
+    from videodb.editor import Clip, Position, Timeline as EditorTimeline, Track
+    from videodb.editor import VideoAsset as EditorVideoAsset
+
+    editor = EditorTimeline(conn)
+    duration_left = min(seconds, left.end - left.start)
+    duration_right = min(seconds, right.end - right.start)
+    span = max(duration_left, duration_right)
+
+    left_track = Track(z_index=0)
+    editor.add_track(left_track)
+    left_track.add_clip(0, Clip(EditorVideoAsset(left.video_id, start=left.start),
+                                duration=span, scale=0.5, position=Position.left))
+    right_track = Track(z_index=1)
+    editor.add_track(right_track)
+    # volume lives on the asset, not the clip; mute the right side so the two
+    # statements do not talk over each other
+    right_track.add_clip(0, Clip(EditorVideoAsset(right.video_id, start=right.start, volume=0),
+                                 duration=span, scale=0.5, position=Position.right))
+    return editor.generate_stream()
 
 
 def _with_captions(conn, moments: List[PlayableMoment], spec: ReelSpec):

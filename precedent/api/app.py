@@ -258,6 +258,30 @@ def export_sheet(payload: ClipSet):
     return "\n".join(lines)
 
 
+@app.get("/api/contradiction-clip/{case_id}/{index}")
+def contradiction_clip(case_id: str, index: int):
+    """Render one contradiction pair as a single side-by-side clip."""
+    path = DATA_DIR / "contradictions" / f"{case_id}.json"
+    if not path.exists():
+        raise HTTPException(404, "No contradictions for this case")
+    items = json.loads(path.read_text())
+    if index < 0 or index >= len(items):
+        raise HTTPException(404, "No such pair")
+    pair = items[index]
+
+    from types import SimpleNamespace
+
+    from ..config import get_connection
+    from ..reels.builder import side_by_side
+
+    left = SimpleNamespace(**{k: pair["moment_a"][k] for k in ("video_id", "start", "end")})
+    right = SimpleNamespace(**{k: pair["moment_b"][k] for k in ("video_id", "start", "end")})
+    try:
+        return {"stream_url": side_by_side(get_connection(), left, right)}
+    except Exception as exc:
+        raise HTTPException(400, f"Could not render side by side: {exc}")
+
+
 @app.get("/api/casepack/{case_id}")
 def casepack(case_id: str, regenerate: bool = False):
     path = DATA_DIR / "casepacks" / f"{case_id}.json"
@@ -291,6 +315,7 @@ def reel(
     max_total_seconds: Optional[float] = None,
     subtitles: bool = False,
     title_cards: bool = True,
+    voiceover: bool = False,
 ):
     """Build a teaching reel across the library.
 
@@ -328,8 +353,12 @@ def reel(
             if bucket and len(ordered) < limit:
                 ordered.append(bucket.pop(0))
 
+    intro = ""
+    if voiceover:
+        intro = (f"A Precedent teaching reel on {q}. "
+                 f"{min(limit, len(ordered))} moments from the record.")
     spec = ReelSpec(seconds_per_clip=seconds_per_clip, max_total_seconds=max_total_seconds,
-                    title_cards=title_cards, subtitles=subtitles)
+                    title_cards=title_cards, subtitles=subtitles, voiceover=intro)
     try:
         result = build_reel(ordered, spec=spec)
     except ValueError as exc:

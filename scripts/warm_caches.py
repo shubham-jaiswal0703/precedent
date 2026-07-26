@@ -36,6 +36,14 @@ def main() -> None:
                 pass
             print(f"   {len(moments):4d} moments  {'cover' if thumb else 'audio'}  "
                   f"{session.title[:46]}  ({time.time()-t0:.0f}s)")
+    from precedent.moments.reactions import scenes, video_ids_with_reactions
+
+    for vid in video_ids_with_reactions():
+        try:
+            print(f"reactions {vid[:22]}... {len(scenes(vid, refresh=True))} scene notes")
+        except Exception as exc:
+            print(f"reactions {vid[:22]}... failed: {type(exc).__name__}")
+
     from precedent.playbooks import PLAYBOOKS, build
 
     for book in PLAYBOOKS:

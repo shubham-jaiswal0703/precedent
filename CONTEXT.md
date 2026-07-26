@@ -136,6 +136,21 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
     /api/health reports storage=postgres and webhooks=true. Deploys go out with
     `railway up` because automatic deploys from main are still not enabled.
 
+- 2026-07-26 (session 5): Vision layer shipped. Three video sessions carry a
+  "reactions" scene index (8s sampling, courtroom-demeanor vision prompt,
+  ~$3 total): Heard cross, Heard rebuttal, Roundup part 3. New find_reaction
+  intent joins spoken moments with what the camera saw; moment cards show a
+  "What the camera saw" panel. Gate test confirmed the vision model reads real
+  expressions at broadcast resolution and says explicitly when faces are
+  unreadable. Reels gained styled chapter cards, an optional TTS spoken intro
+  (generate_voice), and contradiction pairs can render as one side-by-side
+  clip via the editor timeline (volume lives on the asset, not the Clip).
+  RTStream verified: connects and creates a live scene index; VOD test streams
+  end and produce zero scenes, so scripts/live_demo.py exists for a real
+  camera feed (rtsp.me) and the pitch, not the main demo. Auto-deploy from
+  main is finally on (service source had never been connected to the repo;
+  fixed via railway service source connect).
+
 ## Scope decision (2026-07-26)
 
 Corpus scale is deliberately capped. This is a hackathon demo, and more clips

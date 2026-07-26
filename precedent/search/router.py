@@ -27,6 +27,7 @@ INTENT_MOMENT = "find_moment"
 INTENT_RULE = "find_by_rule"
 INTENT_VERBATIM = "find_verbatim"
 INTENT_SPEAKER = "find_by_speaker"
+INTENT_REACTION = "find_reaction"
 INTENT_SEMANTIC = "find_semantic"
 
 # Named speakers worth recognising in a query without hitting the corpus first.
@@ -130,6 +131,13 @@ def plan_query(query: str) -> QueryPlan:
 
     ruling = next((canonical for word, canonical in RULING_WORDS.items() if re.search(rf"\b{word}\b", q)), None)
     ground = next((name for name, cues in GROUNDS.items() if any(cue in q for cue in cues)), None)
+
+    if re.search(r"\breact(?:ion|ed|s)?\b|\bexpression\b|\bdemeanou?r\b|\bbody language\b|"
+                 r"\bfacial\b|\bhow did .{0,30}\blook\b|\bcomposure\b", q):
+        return QueryPlan(INTENT_REACTION,
+                         "Reactions: spoken moments joined with what the camera saw",
+                         residual=re.sub(r"\b(react(?:ion|ed|s)?|expression|demeanou?r|body language|facial|composure)\b",
+                                         " ", q).strip() or query)
 
     quoted = re.search(r'"([^"]{4,})"', query)
     if quoted:
@@ -244,6 +252,13 @@ def search(
         moments = keyword_search(case_id, plan.phrase)[:limit]
     elif plan.intent == INTENT_SPEAKER:
         moments = _speaker_search(case_id, plan, limit)
+    elif plan.intent == INTENT_REACTION:
+        from ..moments.reactions import search_reactions
+
+        moments = search_reactions(case_id, plan.residual or query, limit=limit)
+        if not moments:  # the case may have no video sessions at all
+            moments = semantic_search(case_id, query, limit=limit)
+            plan.explanation += " — no video with readable faces in this case, showing spoken matches"
     else:
         moments = semantic_search(case_id, query, limit=limit, speaker_role=role)
 
