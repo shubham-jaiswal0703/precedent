@@ -205,7 +205,15 @@
   .controls { display:flex; gap:18px; align-items:center; flex-wrap:wrap; font-size:14px; color:var(--ink-soft); margin-bottom:12px; }
   .controls select { padding:6px 8px; border:1px solid var(--line); background:#fff; border-radius:var(--radius); }
   .examples { margin-bottom:16px; font-size:14px; color:var(--ink-soft); }
-  .examples button { background:none; border:none; color:var(--accent); cursor:pointer; text-decoration:underline; margin-right:14px; padding:0; }
+  .examples { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:8px; margin-bottom:18px; }
+  .exhead { grid-column:1/-1; font-size:13px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink-soft); }
+  .examples button {
+    text-align:left; background:var(--card); border:1px solid var(--line); cursor:pointer;
+    padding:9px 12px; border-radius:var(--radius); color:var(--ink);
+  }
+  .examples button:hover { border-color:var(--accent); background:#faf6ef; }
+  .examples button b { display:block; color:var(--accent); font-weight:600; margin-bottom:2px; }
+  .examples button span { font-size:13px; color:var(--ink-soft); }
   .interp {
     padding:12px 16px; margin-bottom:18px; background:#efe9de;
     border-left:4px solid var(--accent); border-radius:var(--radius);
@@ -225,7 +233,6 @@
   <button data-view="prepare" class="active">Prepare</button>
   <button data-view="library">Library</button>
   <button data-view="search">Search</button>
-  <button data-view="contradictions">Contradictions</button>
   <button data-view="reel">Teaching Reel</button>
   <button data-view="myset">My Set <span id="setcount" class="countpill">0</span></button>
   <button data-view="drop">Add a Link</button>
@@ -257,6 +264,7 @@
     </div>
     <div id="suggest" class="suggest"></div>
     <div id="discussout"></div>
+    <div id="casecontra"></div>
     <h3>Recommended sections</h3>
     <p class="muted" style="margin-bottom:10px;">Grouped by what happens in the record. Every entry plays.</p>
     <div id="sections"></div>
@@ -285,19 +293,30 @@
     <div id="results"></div>
   </section>
 
-  <section id="contradictions" class="view">
-    <h2>Contradictions</h2>
-    <p class="sub">The same witness on different days. Claims are cross matched between sessions, judged, and played side by side.</p>
-    <div id="contra" class="loading">Loading...</div>
-  </section>
-
   <section id="reel" class="view">
     <h2>Teaching reel</h2>
     <div class="searchbar">
-      <input id="reelq" placeholder="Reel topic. For example: objections during cross examination.">
+      <input id="reelq" placeholder="Reel topic. For example: sustained objections.">
       <button class="btn" onclick="runReel()">Build reel</button>
     </div>
-    <p class="sub">Stitches matching moments from across the archive into one compilation you can play or download.</p>
+    <div class="controls">
+      <label>Draw from
+        <select id="reelscope"><option value="">the whole library</option></select>
+      </label>
+      <label>Clips <input id="reelcount" type="number" min="2" max="20" value="8" style="width:62px"></label>
+      <label>Seconds each <input id="reelsecs" type="number" min="5" max="90" step="5" value="30" style="width:62px"></label>
+      <label>Cap total
+        <select id="reelcap">
+          <option value="">no cap</option>
+          <option value="120">2 minutes</option>
+          <option value="300">5 minutes</option>
+          <option value="600">10 minutes</option>
+          <option value="1200">20 minutes</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="reelsubs"> Burn in subtitles</label>
+    </div>
+    <p class="sub">Draws from every case by default and interleaves them, so the reel compares courtrooms rather than running through one case at a time.</p>
     <div id="reelout"></div>
   </section>
 
@@ -322,6 +341,9 @@
     </div>
     <p class="sub">We ingest it, transcribe it, and index it. Then it is searchable like the rest of the library.</p>
     <div id="dropout"></div>
+    <h3 style="margin-top:26px">Added by the community</h3>
+    <p class="muted" style="margin-bottom:12px">Every proceeding here is public record and the library is shared, so links people add show up for everyone, credited to a pseudonym.</p>
+    <div id="contributions" class="loading">Loading contributions...</div>
   </section>
 </main>
 
@@ -333,16 +355,24 @@ const ROLE_NAMES = { witness:"witness", examiner:"attorney", judge:"the court",
                      narrator:"broadcast voiceover", scotus_justice:"justice", attorney:"advocate" };
 
 const EXAMPLES = {
-  trial: [["show me every sustained objection","every sustained objection"],
-          ["objection hearsay","hearsay objections"],
-          ["FRE 611 leading question","FRE 611 leading"],
-          ["impeachment with a prior statement","impeachment"],
-          ['"no further questions"','"no further questions"']],
-  appellate: [["hypothetical from the bench","hypotheticals"],
-              ["standard of review argument","standard of review"],
-              ["how did Gorsuch press the advocate","Gorsuch questioning"],
-              ["where did counsel concede","concessions"],
-              ['"may it please the court"','"may it please the court"']],
+  trial: [
+    ["show me every sustained objection", "every sustained objection", "filters the objection log by ruling"],
+    ["objection hearsay", "hearsay objections", "objections by the ground counsel stated"],
+    ["FRE 611 leading question", "FRE 611 leading", "a rule number, which nobody says aloud"],
+    ["impeachment with a prior statement", "impeachment", "the cross-examination move itself"],
+    ["move to strike", "motions to strike", "what counsel does after winning an objection"],
+    ["sidebar", "sidebars", "argument taken out of the jury's hearing"],
+    ['"no further questions"', 'exact phrase', "quoted text is matched verbatim"],
+  ],
+  appellate: [
+    ["hypothetical from the bench", "hypotheticals", "where the court tests the limits of a rule"],
+    ["standard of review argument", "standard of review", "the frame that usually decides the appeal"],
+    ["how did Gorsuch press the advocate", "a named justice", "filters on who is actually speaking"],
+    ["where did counsel concede", "concessions", "what an advocate gave away"],
+    ["stare decisis", "stare decisis", "argument about departing from precedent"],
+    ["what is your best case", "best-case question", "the question every advocate should expect"],
+    ['"may it please the court"', 'exact phrase', "the opening ritual"],
+  ],
 };
 
 function coverHTML(cover, name) {
@@ -371,8 +401,8 @@ function showView(name) {
   $("#" + name).classList.add("show");
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("active", b.dataset.view === name));
-  if (name === "contradictions") loadContradictions();
   if (name === "myset") renderSet();
+  if (name === "drop") loadContributions();
 }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => showView(b.dataset.view));
 
@@ -723,6 +753,8 @@ async function openCase(caseId) {
   $("#suggest").innerHTML = (c.suggested_questions || [])
     .map(q => `<button onclick='askCase(${JSON.stringify(q)})'>${q}</button>`).join("");
 
+  loadCaseContradictions(caseId);
+
   const sections = $("#sections");
   sections.innerHTML = "";
   c.sections.forEach(s => {
@@ -736,6 +768,36 @@ async function openCase(caseId) {
     };
     sections.appendChild(det);
   });
+}
+
+async function loadCaseContradictions(caseId) {
+  const holder = $("#casecontra");
+  holder.innerHTML = "";
+  const r = await fetch(`/api/contradictions/${caseId}`);
+  if (!r.ok) return;  // most cases have none, and that is not an error
+  const items = await r.json();
+  if (!items.length) return;
+  const wrap = document.createElement("details");
+  wrap.className = "section";
+  wrap.innerHTML = `<summary>Contradictions in this witness's testimony<span class="count">${items.length} pairs</span></summary>`;
+  items.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<span class="badge">${c.verdict}</span><b>${c.witness}</b>
+      <blockquote>${c.reasoning}</blockquote>`;
+    const split = document.createElement("div");
+    split.className = "split";
+    [["A", c.moment_a, c.clip_a], ["B", c.moment_b, c.clip_b]].forEach(([label, m, clip]) => {
+      const col = document.createElement("div");
+      col.innerHTML = `<div class="meta">${label}: ${m.session_title} · ${ts(m.start)}</div>
+        <blockquote>${(m.text || "").slice(0, 200)}</blockquote>`;
+      if (clip) col.appendChild(player(clip, m.poster));
+      split.appendChild(col);
+    });
+    card.appendChild(split);
+    wrap.appendChild(card);
+  });
+  holder.appendChild(wrap);
 }
 
 function askCase(q) { $("#askq").value = q; runDiscuss(); }
@@ -791,8 +853,10 @@ async function loadArchives() {
 
 function renderExamples() {
   const kind = (CASE || "").match(/scotus|appellate/) ? "appellate" : "trial";
-  $("#examples").innerHTML = "Try: " + EXAMPLES[kind]
-    .map(([q,label]) => `<button onclick='ask(${JSON.stringify(q)})'>${label}</button>`).join(" ");
+  $("#examples").innerHTML = '<div class="exhead">Questions this archive can answer</div>' +
+    EXAMPLES[kind].map(([q, label, why]) =>
+      `<button onclick='ask(${JSON.stringify(q)})' title=${JSON.stringify(q)}>
+         <b>${label}</b><span>${why}</span></button>`).join("");
 }
 function ask(q) { showView("search"); $("#q").value = q; runSearch(); }
 
@@ -846,16 +910,68 @@ async function loadContradictions() {
 /* ---------- Reel ---------- */
 async function runReel() {
   const out = $("#reelout");
-  const archive = $("#archive").value || CASE;
-  out.innerHTML = '<div class="loading">Cutting the reel, stitching moments from across the archive...</div>';
-  const r = await fetch(`/api/reel?case=${encodeURIComponent(archive)}&q=${encodeURIComponent($("#reelq").value)}`);
-  if (!r.ok) { out.innerHTML = '<div class="empty">No moments matched.</div>'; return; }
+  const params = new URLSearchParams({
+    q: $("#reelq").value,
+    limit: $("#reelcount").value || 8,
+    seconds_per_clip: $("#reelsecs").value || 30,
+    subtitles: $("#reelsubs").checked,
+  });
+  if ($("#reelscope").value) params.set("case", $("#reelscope").value);
+  if ($("#reelcap").value) params.set("max_total_seconds", $("#reelcap").value);
+  out.innerHTML = '<div class="loading">Cutting the reel across the library' +
+    ($("#reelsubs").checked ? ", then burning in subtitles" : "") + '...</div>';
+  const r = await fetch(`/api/reel?${params}`);
+  if (!r.ok) { out.innerHTML = '<div class="empty">No moments matched that anywhere in the library.</div>'; return; }
   const data = await r.json();
-  out.innerHTML = `<div class="card"><div class="meta">${data.count} moments compiled</div></div>`;
+  const mins = Math.floor(data.total_seconds / 60), secs = Math.round(data.total_seconds % 60);
+  out.innerHTML = `<div class="card">
+      <div class="meta">${data.count} moments · ${mins}m ${secs}s${data.subtitles ? " · subtitled" : ""}</div>
+      ${data.sources && data.sources.length ? `<div class="caption">From: ${data.sources.join("; ")}</div>` : ""}
+      ${data.subtitle_note ? `<div class="caption">${data.subtitle_note}</div>` : ""}
+    </div>`;
   out.firstChild.appendChild(player(data.stream_url));
 }
 
+async function loadReelScopes() {
+  const cases = await (await fetch("/api/cases")).json();
+  const sel = $("#reelscope");
+  cases.forEach(c => {
+    const o = document.createElement("option");
+    o.value = c.case_id; o.textContent = c.name;
+    sel.appendChild(o);
+  });
+}
+
 /* ---------- Add a link ---------- */
+async function loadContributions() {
+  const out = $("#contributions");
+  const { contributions } = await (await fetch("/api/contributions")).json();
+  out.classList.remove("loading");
+  if (!contributions.length) {
+    out.className = "empty";
+    out.textContent = "No links added yet. Paste one above and it will appear here for everyone.";
+    return;
+  }
+  out.className = "";
+  out.innerHTML = "";
+  contributions.forEach(c => {
+    const row = document.createElement("div");
+    row.className = "card";
+    const mins = c.duration ? `${Math.round(c.duration / 60)} min` : "";
+    row.innerHTML = `<div class="meta">${c.contributor}${mins ? " · " + mins : ""} · ${c.state}</div>
+      <b>${c.title}</b>
+      ${c.error ? `<blockquote>${c.error}</blockquote>` : ""}
+      <div class="caption"><a href="${c.url}" target="_blank" rel="noopener">source link</a>${
+        c.state === "ready" && c.case_id ? ` · <a onclick='ask("")' href="javascript:void(0)" data-case="${c.case_id}">search it</a>` : ""}</div>`;
+    const link = row.querySelector("a[data-case]");
+    if (link) link.onclick = () => {
+      CASE = link.dataset.case;
+      showView("search");
+      loadArchives().then(() => { $("#archive").value = CASE; renderExamples(); });
+    };
+    out.appendChild(row);
+  });
+}
 async function runDrop() {
   const out = $("#dropout");
   const url = $("#dropurl").value.trim();
@@ -881,6 +997,7 @@ async function runDrop() {
 
 refreshSetCount();
 loadPlaybooks();
+loadReelScopes();
 loadLibrary();
 loadArchives();
 </script>

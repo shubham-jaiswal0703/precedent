@@ -1,7 +1,7 @@
 """Precedent API: professor questions in, playable moments out."""
 import json
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException, Query, Request
@@ -16,7 +16,7 @@ from ..casepacks.generator import generate_case_pack
 from ..catalog import _load as load_catalog, sessions_for_case
 from ..config import DATA_DIR, PROJECT_ROOT
 from ..discuss import discuss
-from ..reels.builder import build_reel
+from ..reels.builder import ReelSpec, build_reel
 from ..search import engine, router
 
 app = FastAPI(title="Precedent", description="Playable testimony for law schools")
@@ -192,6 +192,9 @@ class SavedClip(BaseModel):
 class ClipSet(BaseModel):
     name: str = "Prep set"
     clips: List[SavedClip]
+    seconds_per_clip: float = 30.0
+    max_total_seconds: Optional[float] = None
+    subtitles: bool = False
 
 
 @app.post("/api/export/reel")
@@ -207,10 +210,16 @@ def export_reel(payload: ClipSet):
         )
         for c in payload.clips
     ]
+    spec = ReelSpec(seconds_per_clip=payload.seconds_per_clip,
+                    max_total_seconds=payload.max_total_seconds,
+                    subtitles=payload.subtitles)
     try:
-        return {"stream_url": build_reel(moments), "count": len(moments)}
+        result = build_reel(moments, spec=spec)
     except Exception as exc:
         raise HTTPException(400, f"Could not build the reel: {exc}")
+    return {"stream_url": result.stream_url, "count": result.count,
+            "total_seconds": result.total_seconds, "subtitles": result.subtitles,
+            "subtitle_note": result.subtitle_note}
 
 
 @app.post("/api/export/sheet", response_class=PlainTextResponse)
@@ -269,17 +278,78 @@ def contradictions(case_id: str, witness: Optional[str] = None):
 
 
 @app.get("/api/reel")
-def reel(case: str, q: str = Query(..., description="semantic query"), limit: int = 6):
-    moments = engine.semantic_search(case, q, limit=limit)
+def reel(
+    q: str = Query(..., description="what the reel should show"),
+    case: Optional[str] = Query(None, description="one case, or omit to use the whole library"),
+    cases: Optional[str] = Query(None, description="comma separated case ids"),
+    limit: int = 8,
+    seconds_per_clip: float = 30.0,
+    max_total_seconds: Optional[float] = None,
+    subtitles: bool = False,
+    title_cards: bool = True,
+):
+    """Build a teaching reel across the library.
+
+    A reel of five sustained objections from five different courtrooms teaches
+    more than five from one, so the default scope is every case.
+    """
+    wanted = [c for c in (cases.split(",") if cases else []) if c.strip()]
+    if case:
+        wanted.append(case)
+    if not wanted:
+        wanted = list(load_catalog()["cases"])
+
+    moments: List[Any] = []
+    per_case = max(2, limit // max(1, len(wanted)) + 1)
+    for case_id in wanted:
+        try:
+            found = router.search(case_id, q, limit=per_case, with_clips=False)["results"]
+        except Exception:
+            continue
+        for m in found:
+            m.attrs["label"] = m.attrs.get("label") or m.session_title
+            moments.append(m)
+
     if not moments:
-        raise HTTPException(404, "No moments matched")
+        raise HTTPException(404, "No moments matched anywhere in the library")
+
+    # Interleave across cases so the reel compares courtrooms rather than
+    # running through one case before reaching the next.
+    by_case: Dict[str, list] = {}
     for m in moments:
-        m.attrs["label"] = m.session_title
-    return {"stream_url": build_reel(moments), "count": len(moments)}
+        by_case.setdefault(m.attrs.get("case_id") or m.session_title, []).append(m)
+    ordered: List[Any] = []
+    while len(ordered) < limit and any(by_case.values()):
+        for bucket in list(by_case.values()):
+            if bucket and len(ordered) < limit:
+                ordered.append(bucket.pop(0))
+
+    spec = ReelSpec(seconds_per_clip=seconds_per_clip, max_total_seconds=max_total_seconds,
+                    title_cards=title_cards, subtitles=subtitles)
+    try:
+        result = build_reel(ordered, spec=spec)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+    return {
+        "stream_url": result.stream_url,
+        "count": result.count,
+        "total_seconds": result.total_seconds,
+        "subtitles": result.subtitles,
+        "subtitle_note": result.subtitle_note,
+        "sources": result.sources,
+        "scope": wanted,
+    }
+
+
+@app.get("/api/contributions")
+def contributions(limit: int = 40):
+    """Links added by anyone, shown publicly and credited to a pseudonym."""
+    return {"contributions": jobs.contributions(limit)}
 
 
 @app.post("/api/analyze")
 def analyze(
+    request: Request,
     url: str,
     title: str = "Untitled proceeding",
     case: str = "dropped-links",
@@ -291,7 +361,12 @@ def analyze(
     VideoDB's webhook when PUBLIC_BASE_URL is configured, so the work is not
     tied to this process staying alive.
     """
-    job = jobs.start(url=url, title=title, case_id=case, case_name=case_name)
+    # Seed the pseudonym from the request origin so one person keeps one
+    # credit, without storing anything identifying.
+    seed = (request.headers.get("x-forwarded-for") or
+            (request.client.host if request.client else "") or url)
+    job = jobs.start(url=url, title=title, case_id=case, case_name=case_name,
+                     contributor_seed=seed)
     return job
 
 

@@ -120,6 +120,22 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
   * Clips never render blank now: playbook clips are pre-generated with
     posters, and lazy clips show their cover with a play button.
 
+- 2026-07-26 (session 4): Live on Railway with Postgres. Round of fixes from
+  testing the deployed app:
+  * Teaching reels now draw from the whole library by default and interleave
+    cases, so a reel compares courtrooms instead of replaying one trial. Added
+    controls for clip count, seconds per clip, a total length cap, and burned in
+    subtitles via the editor timeline's CaptionAsset.
+  * Removed the global Contradictions tab, which only ever had one case in it.
+    Contradictions now appear inside the case that has them, and the Search tab
+    carries labelled example questions explaining what each one exercises.
+  * Add a Link shows a public shelf of contributed links, credited to a stable
+    pseudonym derived from the request origin. The library is public record, so
+    a contributed link is visible to everyone.
+  * Railway: Postgres provisioned and referenced, PUBLIC_BASE_URL set, so
+    /api/health reports storage=postgres and webhooks=true. Deploys go out with
+    `railway up` because automatic deploys from main are still not enabled.
+
 ## Scope decision (2026-07-26)
 
 Corpus scale is deliberately capped. This is a hackathon demo, and more clips
