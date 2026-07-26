@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "npx hyperframes present ./composition",
     "studio": "npx hyperframes preview ./composition",
-    "check": "cd composition && npx hyperframes check"
+    "check": "cd composition && npx hyperframes check",
+    "pdf": "./make-pdf.sh"
   }
 }
