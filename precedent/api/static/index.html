@@ -217,6 +217,12 @@
   .obs li button:hover { background:#faf6ef; }
   .obs li.playing button { background:#f3ede2; }
   .obs .at { font-variant-numeric:tabular-nums; color:#8a6d2f; min-width:44px; font-size:13px; }
+  .audioclip {
+    margin-top:10px; padding:12px 14px; background:#efe9de; border-left:3px solid var(--accent);
+    border-radius:var(--radius);
+  }
+  .audioclip span { display:block; font-size:13px; font-style:italic; color:var(--ink-soft); margin-bottom:8px; }
+  .audioclip audio { width:100%; }
   .verticalbox video { max-height:520px; width:auto; max-width:min(100%,300px); display:block; margin:10px auto 0; }
   .chapters { list-style:none; margin:12px 0 0; padding:0; border-top:1px solid var(--line); }
   .chapters li { border-bottom:1px solid var(--line); }
@@ -277,7 +283,7 @@
   </section>
 
   <section id="playbook" class="view">
-    <button class="backlink" onclick="showView('prepare')">Back to playbooks</button>
+    <button class="backlink" onclick="history.length > 1 ? history.back() : showView('prepare')">Back</button>
     <div id="playbookbody"></div>
   </section>
 
@@ -288,7 +294,7 @@
   </section>
 
   <section id="casedetail" class="view">
-    <button class="backlink" onclick="showView('library')">Back to the library</button>
+    <button class="backlink" onclick="history.length > 1 ? history.back() : showView('library')">Back</button>
     <div id="caseheader"></div>
     <div class="askbar">
       <input id="askq" placeholder="Ask about this case. For example: why did counsel concede that point?">
@@ -454,28 +460,86 @@ function ts(s) {
            : `${m}:${String(sec).padStart(2,"0")}`;
 }
 
-function showView(name) {
+// Each section is its own page with its own URL, so back and forward work, a
+// link can be shared, and a refresh lands where you were.
+const TITLES = {
+  prepare: "Prepare", library: "Case library", search: "Search",
+  room: "Read the room", reel: "Teaching reel", myset: "My prep set",
+  drop: "Add a link", casedetail: "Case", playbook: "Playbook",
+};
+
+function pathFor(name, arg) {
+  if (name === "casedetail") return `/case/${arg}`;
+  if (name === "playbook") return `/playbook/${arg}`;
+  return name === "prepare" ? "/" : `/${name}`;
+}
+
+function showView(name, opts = {}) {
+  const section = $("#" + name);
+  if (!section) return;
   document.querySelectorAll(".view").forEach(v => v.classList.remove("show"));
-  $("#" + name).classList.add("show");
+  section.classList.add("show");
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("active", b.dataset.view === name));
+  document.title = `${TITLES[name] || "Precedent"} · Precedent`;
+  const path = pathFor(name, opts.arg);
+  if (!opts.fromHistory && location.pathname !== path) {
+    history.pushState({ name, arg: opts.arg }, "", path);
+  }
   if (name === "myset") renderSet();
   if (name === "drop") loadContributions();
   if (name === "room") loadRoom();
+  window.scrollTo(0, 0);
 }
+
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => showView(b.dataset.view));
 
+function route(fromHistory = false) {
+  const parts = location.pathname.split("/").filter(Boolean);
+  if (!parts.length) return showView("prepare", { fromHistory: true });
+  if (parts[0] === "case" && parts[1]) return openCase(parts[1], { fromHistory: true });
+  if (parts[0] === "playbook" && parts[1]) return openPlaybook(parts[1], { fromHistory: true });
+  const known = ["prepare", "library", "search", "room", "reel", "myset", "drop"];
+  return showView(known.includes(parts[0]) ? parts[0] : "prepare", { fromHistory: true });
+}
+
+window.addEventListener("popstate", () => route(true));
+
 function player(url, poster) {
-  const v = document.createElement("video");
+  // An audio proceeding has no picture at all, so give it an audio element and
+  // a label rather than a black rectangle that looks broken.
+  const audioOnly = /\/audio\/[^/]*\.m3u8/.test(url);
+  const v = document.createElement(audioOnly ? "audio" : "video");
   v.controls = true;
-  // "metadata" pulls the first frame so the player is never an empty black box,
-  // without downloading the clip until the student presses play.
   v.preload = "metadata";
-  if (poster) v.poster = poster;
-  if (v.canPlayType("application/vnd.apple.mpegurl")) v.src = url;
-  else if (window.Hls) { const h = new Hls(); h.loadSource(url); h.attachMedia(v); }
+  if (!audioOnly && poster) v.poster = poster;
+
+  // hls.js first. Chromium answers "maybe" to canPlayType for HLS and then
+  // fails with "no supported source", so trusting the browser breaks playback
+  // on every desktop except Safari.
+  if (window.Hls && Hls.isSupported()) {
+    const h = new Hls();
+    h.loadSource(url);
+    h.attachMedia(v);
+    h.on(Hls.Events.ERROR, (_e, d) => {
+      if (d.fatal && v.canPlayType("application/vnd.apple.mpegurl")) v.src = url;
+    });
+  } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
+    v.src = url;
+  }
+  if (audioOnly) {
+    const box = document.createElement("div");
+    box.className = "audioclip";
+    box.innerHTML = '<span>Audio proceeding. The Supreme Court and the appellate courts do not allow cameras, so the record is sound only.</span>';
+    box.appendChild(v);
+    box.__media = v;
+    return box;
+  }
   return v;
 }
+
+// player() may hand back a wrapper, so callers that need the media element ask.
+function mediaOf(el) { return el && el.__media ? el.__media : el; }
 
 function transcriptPanel(highlight, clipStart, video) {
   const words = (highlight && highlight.words) || [];
@@ -530,7 +594,7 @@ function momentCard(m, extraBadges = []) {
   save.onclick = (e) => { e.stopPropagation(); toggleSet(m, save); };
   card.querySelector(".cardhead").appendChild(save);
   let video = null;
-  if (m.stream_url) { video = player(m.stream_url, m.poster); card.appendChild(video); }
+  if (m.stream_url) { const el = player(m.stream_url, m.poster); card.appendChild(el); video = mediaOf(el); }
   else {
     // Show the cover with a play affordance so a clip never reads as blank,
     // and fetch the stream only when the student actually wants it.
@@ -543,9 +607,9 @@ function momentCard(m, extraBadges = []) {
       const r = await fetch(`/api/clip?video_id=${m.video_id}&start=${m.start}&end=${m.end}`);
       if (r.ok) {
         const { stream_url } = await r.json();
-        const v = player(stream_url, m.poster);
-        holder.replaceWith(v);
-        v.play().catch(() => {});
+        const el = player(stream_url, m.poster);
+        holder.replaceWith(el);
+        mediaOf(el).play().catch(() => {});
       } else {
         holder.innerHTML = '<span class="playbtn">clip unavailable</span>';
       }
@@ -759,7 +823,7 @@ function reactionCard(m) {
   card.querySelector(".cardhead").appendChild(save);
 
   let video = null;
-  if (m.stream_url) { video = player(m.stream_url, m.poster); card.appendChild(video); }
+  if (m.stream_url) { const el = player(m.stream_url, m.poster); card.appendChild(el); video = mediaOf(el); }
 
   const timeline = attrs.reaction_timeline || [];
   if (timeline.length) {
@@ -855,8 +919,11 @@ async function loadPlaybooks() {
   });
 }
 
-async function openPlaybook(id) {
-  showView("playbook");
+async function openPlaybook(id, opts = {}) {
+  showView("playbook", { arg: id, fromHistory: opts.fromHistory });
+  if (!opts.fromHistory && location.pathname !== `/playbook/${id}`) {
+    history.pushState({ name: "playbook", arg: id }, "", `/playbook/${id}`);
+  }
   const body = $("#playbookbody");
   body.innerHTML = '<div class="loading">Pulling the moments that show this...</div>';
   const b = await (await fetch(`/api/playbook/${id}`)).json();
@@ -927,9 +994,12 @@ async function loadLibrary() {
   if (!cases.length) out.innerHTML = '<div class="empty">No cases ingested yet.</div>';
 }
 
-async function openCase(caseId) {
+async function openCase(caseId, opts = {}) {
   CASE = caseId;
-  showView("casedetail");
+  showView("casedetail", { arg: caseId, fromHistory: opts.fromHistory });
+  if (!opts.fromHistory && location.pathname !== `/case/${caseId}`) {
+    history.pushState({ name: "casedetail", arg: caseId }, "", `/case/${caseId}`);
+  }
   $("#caseheader").innerHTML = '<div class="loading">Opening the case...</div>';
   $("#sections").innerHTML = ""; $("#discussout").innerHTML = ""; $("#suggest").innerHTML = "";
   const c = await (await fetch(`/api/case/${caseId}`)).json();
@@ -1069,6 +1139,7 @@ function renderExamples() {
          <b>${label}</b><span>${why}</span></button>`).join("");
 }
 function ask(q) { showView("search"); $("#q").value = q; runSearch(); }
+function linkTo(name, arg) { showView(name, { arg }); }
 
 async function runSearch() {
   const out = $("#results");
@@ -1145,8 +1216,9 @@ async function runReel() {
   card.innerHTML = `<div class="meta">${data.count} clips · ${mins}m ${secs}s${data.subtitles ? " · subtitled" : ""}</div>
       ${data.sources && data.sources.length ? `<div class="caption">From: ${data.sources.join("; ")}</div>` : ""}
       ${data.subtitle_note ? `<div class="caption">${data.subtitle_note}</div>` : ""}`;
-  const video = player(data.stream_url);
-  card.appendChild(video);
+  const videoEl = player(data.stream_url);
+  card.appendChild(videoEl);
+  const video = mediaOf(videoEl);
 
   // A four minute stream with no structure is unusable for teaching. Show what
   // is in it, in order, and let a click jump straight to that clip.
@@ -1311,6 +1383,7 @@ loadPlaybooks();
 loadReelScopes();
 loadLibrary();
 loadArchives();
+route();  // land on whatever page the URL asks for
 </script>
 </body>
 </html>

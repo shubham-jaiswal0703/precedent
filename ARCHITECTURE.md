@@ -144,6 +144,23 @@ hour player with the interesting part buried somewhere inside. Clips are always
 generated from `start`/`end` through `generate_stream`; the session-length URL is
 kept separately as `full_video_url` and never handed to a player.
 
+## Audio-only proceedings
+
+The Supreme Court and the appellate courts do not allow cameras, so most of the
+library is sound. Two things have to be right for that to play at all.
+
+VideoDB advertises a 1280x720 video variant even for an audio-only upload, and
+those video segments answer with **HTTP 500** while the audio segments serve
+correctly. A player follows the advertised variant and fails, so `clip_url`
+resolves audio proceedings to the audio rendition of the manifest instead.
+
+Separately, Chromium answers `"maybe"` to `canPlayType("application/vnd.apple.mpegurl")`
+and then fails with "no supported source". So the player uses hls.js first and
+only falls back to native HLS, which is the reverse of the obvious order.
+
+Audio clips render in an `audio` element with a line explaining why there is no
+picture, rather than a black rectangle that reads as broken.
+
 ## Known limits
 
 * **Vertical reframing is slow and occasionally fails** upstream. It is cached

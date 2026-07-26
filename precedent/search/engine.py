@@ -205,6 +205,43 @@ def _remember_clip(key: str, url: str) -> None:
     store.write("clips", cache)
 
 
+def is_audio_only(video_id: str) -> bool:
+    """True for proceedings with no picture (Supreme Court and appellate audio).
+
+    A cover frame can only be produced from real video, so an empty cached
+    thumbnail is a reliable marker.
+    """
+    try:
+        from ..media import _cache
+
+        cached = _cache()
+        if video_id in cached:
+            return not cached[video_id]
+    except Exception:
+        pass
+    session = get_session(video_id)
+    return bool(session and session.session_type == "oral_argument")
+
+
+def audio_playlist(master_url: str) -> str:
+    """The audio rendition of an HLS manifest.
+
+    VideoDB advertises a 1280x720 video variant even for audio-only uploads, and
+    those video segments answer with HTTP 500 while the audio segments are fine.
+    Players follow the advertised variant and fail, so for audio proceedings we
+    hand over the audio playlist directly.
+    """
+    import re
+    import urllib.request
+
+    try:
+        body = urllib.request.urlopen(master_url, timeout=30).read().decode()
+    except Exception:
+        return master_url
+    match = re.search(r'#EXT-X-MEDIA:TYPE=AUDIO[^\n]*URI="([^"]+)"', body)
+    return match.group(1) if match else master_url
+
+
 def clip_url(video_id: str, start: float, end: float, pad: float = 2.0) -> str:
     """Instant playable HLS clip for a moment (with a little context padding)."""
     key = f"{video_id}:{round(start, 1)}:{round(end, 1)}"
@@ -222,5 +259,7 @@ def clip_url(video_id: str, start: float, end: float, pad: float = 2.0) -> str:
         clip_end = min(clip_end, float(duration))
         clip_start = min(clip_start, max(0.0, clip_end - 1.0))
     url = video.generate_stream(timeline=[(clip_start, clip_end)])
+    if is_audio_only(video_id):
+        url = audio_playlist(url)
     _remember_clip(key, url)
     return url

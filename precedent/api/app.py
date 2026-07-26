@@ -572,4 +572,23 @@ def index():
     return FileResponse(STATIC_DIR / "index.html")
 
 
+# The front end owns these paths. Serving the app for each one means a refresh
+# or a shared link lands on the right page instead of a 404.
+@app.get("/{page}")
+def page(page: str):
+    if page in {"prepare", "library", "search", "room", "reel", "myset", "drop"}:
+        return FileResponse(STATIC_DIR / "index.html")
+    raise HTTPException(404, "Not found")
+
+
+@app.get("/case/{case_id}")
+def case_page(case_id: str):
+    return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/playbook/{playbook_id}")
+def playbook_page(playbook_id: str):
+    return FileResponse(STATIC_DIR / "index.html")
+
+
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
