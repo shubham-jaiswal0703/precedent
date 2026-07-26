@@ -26,28 +26,6 @@ app = FastAPI(title="Precedent", description="Playable testimony for law schools
 STATIC_DIR = PROJECT_ROOT / "precedent" / "api" / "static"
 
 
-@app.get("/api/cases")
-def cases():
-    data = load_catalog()
-    return [
-        {
-            "case_id": cid,
-            "name": c["name"],
-            "sessions": [
-                {
-                    "video_id": s.video_id,
-                    "title": s.title,
-                    "session_type": s.session_type,
-                    "witnesses": s.witnesses,
-                    "duration": s.duration,
-                }
-                for s in sessions_for_case(cid)
-            ],
-        }
-        for cid, c in data["cases"].items()
-    ]
-
-
 SEARCH_CACHE = "search_cache"
 
 
@@ -73,6 +51,28 @@ def _remember_response(key: str, payload: dict) -> None:
             cache.pop(stale, None)
     cache[key] = payload
     store.write(SEARCH_CACHE, cache)
+
+
+@app.get("/api/cases")
+def cases():
+    data = load_catalog()
+    return [
+        {
+            "case_id": cid,
+            "name": c["name"],
+            "sessions": [
+                {
+                    "video_id": s.video_id,
+                    "title": s.title,
+                    "session_type": s.session_type,
+                    "witnesses": s.witnesses,
+                    "duration": s.duration,
+                }
+                for s in sessions_for_case(cid)
+            ],
+        }
+        for cid, c in data["cases"].items()
+    ]
 
 
 @app.get("/api/search")
@@ -208,9 +208,16 @@ def gallery(refresh: bool = False):
 
 
 @app.get("/api/playbooks")
-def playbooks():
+def playbooks(fresh: bool = False):
     """What a student might be preparing to do."""
-    return playbook_index()
+    key = _cache_key(kind="playbooks")
+    if not fresh:
+        hit = _cached_response(key)
+        if hit:
+            return hit
+    payload = playbook_index()
+    _remember_response(key, payload)
+    return payload
 
 
 @app.get("/api/playbook/{playbook_id}")
@@ -259,12 +266,19 @@ def warm_on_startup() -> None:
 
 
 @app.get("/api/case/{case_id}")
-def case(case_id: str, per_section: int = 4):
+def case(case_id: str, per_section: int = 4, fresh: bool = False):
     """One case opened up: sessions, participants, recommended sections."""
+    key = _cache_key(kind="case", case=case_id, per_section=per_section)
+    if not fresh:
+        hit = _cached_response(key)
+        if hit:
+            return hit
     try:
-        return case_detail(case_id, per_section=per_section)
+        payload = case_detail(case_id, per_section=per_section)
     except ValueError as exc:
         raise HTTPException(404, str(exc))
+    _remember_response(key, payload)
+    return payload
 
 
 @app.get("/api/discuss")
