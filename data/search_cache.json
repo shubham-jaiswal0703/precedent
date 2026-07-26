@@ -1,0 +1,765 @@
+{
+  "case=depp-v-heard|kind=case|per_section=4": {
+    "case_id": "depp-v-heard",
+    "name": "Depp v. Heard (2022)",
+    "kind": "trial",
+    "cover": {
+      "image": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image",
+      "kind": "trial",
+      "seal": "trial record",
+      "monogram": "D v H"
+    },
+    "hours": 2.7,
+    "sessions": [
+      {
+        "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+        "title": "Kate James testimony (Depp v. Heard)",
+        "session_type": "trial_day",
+        "duration": 4965.0,
+        "date": "",
+        "source_url": "https://www.youtube.com/watch?v=iPSvDxcBqIQ",
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image",
+        "judge": "",
+        "docket": ""
+      },
+      {
+        "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+        "title": "Amber Heard rebuttal testimony (May 26)",
+        "session_type": "trial_day",
+        "duration": 3550.0,
+        "date": "",
+        "source_url": "https://www.youtube.com/watch?v=FfnXPXVPKJk",
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image",
+        "judge": "",
+        "docket": ""
+      },
+      {
+        "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+        "title": "Amber Heard cross-examination (May 16)",
+        "session_type": "trial_day",
+        "duration": 1131.0,
+        "date": "",
+        "source_url": "https://www.youtube.com/watch?v=WwowAve-ONw",
+        "thumbnail": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image",
+        "judge": "",
+        "docket": ""
+      }
+    ],
+    "participants": [
+      {
+        "name": "A",
+        "role": "other",
+        "seconds": null,
+        "session": "Kate James testimony (Depp v. Heard)"
+      },
+      {
+        "name": "B",
+        "role": "witness",
+        "seconds": null,
+        "session": "Kate James testimony (Depp v. Heard)"
+      },
+      {
+        "name": "C",
+        "role": "examiner",
+        "seconds": null,
+        "session": "Kate James testimony (Depp v. Heard)"
+      },
+      {
+        "name": "D",
+        "role": "examiner",
+        "seconds": null,
+        "session": "Kate James testimony (Depp v. Heard)"
+      },
+      {
+        "name": "E",
+        "role": "narrator",
+        "seconds": null,
+        "session": "Kate James testimony (Depp v. Heard)"
+      },
+      {
+        "name": "A",
+        "role": "examiner",
+        "seconds": null,
+        "session": "Amber Heard rebuttal testimony (May 26)"
+      },
+      {
+        "name": "B",
+        "role": "judge",
+        "seconds": null,
+        "session": "Amber Heard rebuttal testimony (May 26)"
+      },
+      {
+        "name": "C",
+        "role": "examiner",
+        "seconds": null,
+        "session": "Amber Heard rebuttal testimony (May 26)"
+      },
+      {
+        "name": "D",
+        "role": "witness",
+        "seconds": null,
+        "session": "Amber Heard rebuttal testimony (May 26)"
+      },
+      {
+        "name": "E",
+        "role": "other",
+        "seconds": null,
+        "session": "Amber Heard rebuttal testimony (May 26)"
+      },
+      {
+        "name": "A",
+        "role": "witness",
+        "seconds": null,
+        "session": "Amber Heard cross-examination (May 16)"
+      },
+      {
+        "name": "B",
+        "role": "narrator",
+        "seconds": null,
+        "session": "Amber Heard cross-examination (May 16)"
+      },
+      {
+        "name": "C",
+        "role": "examiner",
+        "seconds": null,
+        "session": "Amber Heard cross-examination (May 16)"
+      },
+      {
+        "name": "D",
+        "role": "examiner",
+        "seconds": null,
+        "session": "Amber Heard cross-examination (May 16)"
+      },
+      {
+        "name": "E",
+        "role": "other",
+        "seconds": null,
+        "session": "Amber Heard cross-examination (May 16)"
+      }
+    ],
+    "sections": [
+      {
+        "type": "impeachment_prior_statement",
+        "label": "Impeachment with a prior statement",
+        "total": 5,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 3733.7,
+            "end": 3764.0,
+            "text": "it. - You testified previously that - you observed Ms. Heard be",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          },
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 4672.5,
+            "end": 4702.7,
+            "text": "Angeles, California. Do you remember your testimony about that - incident? -",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          },
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 4677.9,
+            "end": 4708.1,
+            "text": "incident? - You testified previously that she. - That Ms. Heard asked",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 1925.9,
+            "end": 1956.1,
+            "text": "I know you testified earlier that you haven't been smirking in this",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "objection",
+        "label": "Objections",
+        "total": 19,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 1415.4,
+            "end": 1445.9,
+            "text": "844. Any objection to 8 - 4. - Four? - All right,",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          },
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 2025.5,
+            "end": 2056.2,
+            "text": "things, correct? Objection. - You are not. - You never served as",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          },
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 4708.9,
+            "end": 4739.6,
+            "text": "body? - Objection. - Did you see any red marks on Ms.",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 106.4,
+            "end": 137.1,
+            "text": "statements? - Objection. Speculation. - Overruled. - I am - harassed, -",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {
+              "ground": "speculation",
+              "ruling": "overruled"
+            },
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "ruling_sustained",
+        "label": "Sustained rulings",
+        "total": 7,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 169.5,
+            "end": 199.8,
+            "text": "right, I'll sustain the objection as to that. If you want to",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 322.6,
+            "end": 352.9,
+            "text": "- I'll sustain the objection. Next question. - Amber, - how the",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 423.4,
+            "end": 453.8,
+            "text": "charity work. Sustain the objection. - Amber, other than the threats that",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 505.3,
+            "end": 535.5,
+            "text": "right, I'll sustain the objection. Next question. - What do you hope",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "cross_examination_marker",
+        "label": "Cross-examination",
+        "total": 6,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 570.1,
+            "end": 600.3,
+            "text": "All right. Cross examination. - Your Honor, may we approach? First, -",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 2716.6,
+            "end": 2746.8,
+            "text": "of your cross examination last - May we approach? - Yes. -",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 2794.8,
+            "end": 2825.0,
+            "text": "of your cross examination last week, I showed you an audio where",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+            "start": 20.6,
+            "end": 50.9,
+            "text": "script on cross examination. - I pledged the entirety - of the",
+            "session": "Amber Heard cross-examination (May 16)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image"
+          }
+        ]
+      },
+      {
+        "type": "sidebar",
+        "label": "Sidebars",
+        "total": 4,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 579.7,
+            "end": 609.8,
+            "text": "Your Honor, may we approach? First, - Miss Heard, you just testified",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 2717.7,
+            "end": 2747.9,
+            "text": "last - May we approach? - Yes. - It. - All right,",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+            "start": 33.2,
+            "end": 63.8,
+            "text": "and Crime sidebar podcast, where we take a deep dive into the",
+            "session": "Amber Heard cross-examination (May 16)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image"
+          },
+          {
+            "video_id": "m-z-019f9a93-51f0-7681-8484-11748ad4db6c",
+            "start": 1101.7,
+            "end": 1132.3,
+            "text": "and Crime Sidebar Podcast. I'm Angenette Levy, and thanks so much for",
+            "session": "Amber Heard cross-examination (May 16)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a93-51f0-7681-8484-11748ad4db6c-thumbnail-282.75/image"
+          }
+        ]
+      },
+      {
+        "type": "examination_end",
+        "label": "Ends of examination",
+        "total": 2,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 3048.6,
+            "end": 3078.8,
+            "text": "this. - Nothing further. All right. - Redirect. - Thank you, your",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 3285.2,
+            "end": 3315.6,
+            "text": "here. - No further questions. Thank you so much, amber. All right,",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "exhibit",
+        "label": "Exhibits",
+        "total": 1,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac",
+            "start": 1534.5,
+            "end": 1564.8,
+            "text": "ask for permission to publish. To admit this into evidence and publish",
+            "session": "Kate James testimony (Depp v. Heard)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image"
+          }
+        ]
+      },
+      {
+        "type": "motion_to_strike",
+        "label": "Motions to strike",
+        "total": 1,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 1599.3,
+            "end": 1629.5,
+            "text": "going to move to strike - everything - after - he summed",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "redirect_marker",
+        "label": "Redirect",
+        "total": 1,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 3050.2,
+            "end": 3080.8,
+            "text": "right. - Redirect. - Thank you, your honor. - Ms. Heard, if",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "refreshing_recollection",
+        "label": "Refreshing recollection",
+        "total": 1,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 2072.6,
+            "end": 2104.6,
+            "text": "speak. Let's refresh your recollection. - Let's refresh your recollection about when",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      },
+      {
+        "type": "ruling_overruled",
+        "label": "Overruled rulings",
+        "total": 7,
+        "moments": [
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 108.2,
+            "end": 139.0,
+            "text": "Speculation. - Overruled. - I am - harassed, - humiliated, - threatened",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 224.9,
+            "end": 255.4,
+            "text": "rules. - Overruled. - About how to not touch me, - not",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 1607.9,
+            "end": 1640.4,
+            "text": "Over - overruled In a security guard testimony, you, Honor. I'll allow",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          },
+          {
+            "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+            "start": 3098.8,
+            "end": 3129.6,
+            "text": "foundation. - Overruled. - Because there are so many - incidents of",
+            "session": "Amber Heard rebuttal testimony (May 26)",
+            "attrs": {},
+            "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image"
+          }
+        ]
+      }
+    ],
+    "suggested_questions": [
+      "What was the theory of the case on cross-examination?",
+      "Which objections changed the course of the testimony?",
+      "How did the witness's answers shift under pressure?",
+      "How did counsel impeach the witness with a prior statement?"
+    ]
+  },
+  "case=depp-v-heard|limit=3|mode=auto|precise=True|q=hearsay objection sustained|role=": {
+    "intent": "find_objection",
+    "interpretation": "Objections on hearsay grounds that were sustained: none labeled, showing closest spoken matches",
+    "filters": {
+      "ground": "hearsay",
+      "ruling": "sustained",
+      "moment_type": "objection"
+    },
+    "results": [
+      {
+        "video_id": "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c",
+        "start": 3425.25,
+        "end": 3437.25,
+        "text": "your honor, the counterclaimant, Amber Heard, rests. All right, thank you, ma'.",
+        "score": 0.638581336,
+        "session_title": "Amber Heard rebuttal testimony (May 26)",
+        "session_type": "trial_day",
+        "stream_url": "https://play.videodb.io/v1/32d1ebbe-4a38-4a2d-a957-698168158df3.m3u8",
+        "player_url": "",
+        "full_video_url": "https://play.videodb.io/v1/a82333ff-b308-4997-8d78-9a63efee9279.m3u8",
+        "poster": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c-thumbnail-123.5995/image",
+        "attrs": {
+          "highlight": {
+            "quote": "your honor, the counterclaimant, Amber Heard, rests. All right, thank you, ma'.",
+            "matched_terms": [],
+            "speakers": [
+              "B",
+              "D",
+              "E"
+            ],
+            "words": [
+              {
+                "start": 3428.79,
+                "end": 3429.19,
+                "text": "Witness,",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3429.35,
+                "end": 3429.67,
+                "text": "your",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3429.67,
+                "end": 3430.03,
+                "text": "honor,",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3430.03,
+                "end": 3430.15,
+                "text": "the",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3430.15,
+                "end": 3430.83,
+                "text": "counterclaimant,",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3430.83,
+                "end": 3431.15,
+                "text": "Amber",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3431.15,
+                "end": 3431.63,
+                "text": "Heard,",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3431.63,
+                "end": 3432.23,
+                "text": "rests.",
+                "speaker": "D",
+                "match": false
+              },
+              {
+                "start": 3432.23,
+                "end": 3432.47,
+                "text": "All",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3432.47,
+                "end": 3432.67,
+                "text": "right,",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3432.67,
+                "end": 3432.99,
+                "text": "thank",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3432.99,
+                "end": 3433.15,
+                "text": "you,",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3433.15,
+                "end": 3433.31,
+                "text": "ma'.",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3433.31,
+                "end": 3433.51,
+                "text": "Am.",
+                "speaker": "E",
+                "match": false
+              },
+              {
+                "start": 3434.23,
+                "end": 3434.47,
+                "text": "All",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3434.47,
+                "end": 3434.63,
+                "text": "right,",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3434.63,
+                "end": 3434.91,
+                "text": "ladies",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3434.91,
+                "end": 3435.07,
+                "text": "and",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3435.07,
+                "end": 3435.43,
+                "text": "gentlemen,",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3435.43,
+                "end": 3435.63,
+                "text": "you",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3435.63,
+                "end": 3435.79,
+                "text": "have",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3435.79,
+                "end": 3436.07,
+                "text": "heard",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3436.07,
+                "end": 3436.23,
+                "text": "all",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3436.23,
+                "end": 3436.35,
+                "text": "the",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3436.35,
+                "end": 3436.63,
+                "text": "evidence",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3436.63,
+                "end": 3436.91,
+                "text": "you're",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3436.91,
+                "end": 3437.03,
+                "text": "going",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3437.03,
+                "end": 3437.11,
+                "text": "to",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3437.11,
+                "end": 3437.23,
+                "text": "hear",
+                "speaker": "B",
+                "match": false
+              },
+              {
+                "start": 3437.23,
+                "end": 3437.39,
+                "text": "in",
+                "speaker": "B",
+                "match": false
+              }
+            ]
+          },
+          "precision_score": 0.0,
+          "core_hits": 0,
+          "attribution": {
+            "label": "the court \u00b7 witness",
+            "named": [],
+            "roles": [
+              "judge",
+              "other",
+              "witness"
+            ],
+            "source": "inferred",
+            "lead": null,
+            "lead_role": "judge"
+          },
+          "roles_present": [
+            "judge",
+            "other",
+            "witness"
+          ]
+        }
+      }
+    ]
+  }
+}

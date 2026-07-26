@@ -19,6 +19,7 @@ from videodb import IndexType, SearchType
 
 from ..catalog import get_session
 from ..config import get_connection
+from ..llm import LlmUnavailable
 from ..indexing.indexer import get_transcript
 from ..search.engine import PlayableMoment, _to_moment, clip_url
 
@@ -57,14 +58,10 @@ class Contradiction:
     clip_b: str = ""
 
 
-def _llm(prompt: str) -> str:
-    conn = get_connection()
-    coll = conn.get_collection()
-    result = coll.generate_text(prompt=prompt, response_type="text")
-    if isinstance(result, dict):
-        return str(result.get("output", result))
-    output = getattr(result, "output", None)
-    return str(output if output is not None else result)
+def _llm(prompt: str, tag: str) -> str:
+    from ..llm import generate
+
+    return generate(prompt, response_type="text", tag=tag)
 
 
 def _parse_json(raw: str):
@@ -122,8 +119,11 @@ def extract_claims(video_id: str, window_seconds: float = 300.0, max_claims: int
             text = " ".join(s["text"] for s in window if s.get("text"))
             w_end = float(window[-1]["end"])
             try:
-                raw = _llm(CLAIM_PROMPT.format(transcript=text[:8000], max_claims=max_claims))
+                raw = _llm(CLAIM_PROMPT.format(transcript=text[:8000], max_claims=max_claims),
+                           tag="claims.v1")
                 parsed = _parse_json(raw) or []
+            except LlmUnavailable:
+                raise  # a dead tier is not "this witness made no claims"
             except Exception:
                 parsed = []
             for item in parsed:
@@ -165,7 +165,7 @@ def find_contradictions(
             continue  # SDK raises InvalidRequestError("No results found") on zero hits
         for shot in shots:
             verdict_raw = _llm(
-                JUDGE_PROMPT.format(
+                tag="judge.v1", prompt=JUDGE_PROMPT.format(
                     label_a=label_a, text_a=f"{claim.claim}: quote: {claim.quote}",
                     label_b=label_b, text_b=shot.text or "",
                 )

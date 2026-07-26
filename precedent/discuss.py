@@ -14,6 +14,7 @@ from typing import List, Optional
 
 from .catalog import get_session
 from .config import get_connection
+from .llm import LlmUnavailable
 from .search.engine import PlayableMoment, clip_url
 from .search.router import search as routed_search
 
@@ -38,12 +39,10 @@ class Discussion:
     case_id: str = ""
 
 
-def _llm(prompt: str) -> str:
-    coll = get_connection().get_collection()
-    result = coll.generate_text(prompt=prompt, response_type="text")
-    if isinstance(result, dict):
-        return str(result.get("output", result))
-    return str(getattr(result, "output", result))
+def _llm(prompt: str, tag: str) -> str:
+    from .llm import generate
+
+    return generate(prompt, response_type="text", tag=tag)
 
 
 def _excerpt(index: int, moment: PlayableMoment) -> str:
@@ -70,7 +69,12 @@ def discuss(
 
     excerpts = "\n\n".join(_excerpt(i, m) for i, m in enumerate(moments, 1))
     try:
-        answer = _llm(PROMPT.format(question=question, excerpts=excerpts)).strip()
+        answer = _llm(PROMPT.format(question=question, excerpts=excerpts),
+                      tag="discuss.v1").strip()
+    except LlmUnavailable as exc:
+        # Say what actually went wrong. A model budget failure reading as "the
+        # record has nothing to say" is the worst possible error message here.
+        raise
     except Exception as exc:
         answer = f"Could not generate a discussion right now ({type(exc).__name__})."
 

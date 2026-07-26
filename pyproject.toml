@@ -5,6 +5,8 @@ description = "Playable testimony for law schools: searchable courtroom archives
 requires-python = ">=3.9"
 dependencies = [
     "videodb>=0.5.1",
+    "numpy>=1.26",
+    "pillow>=10.0",
     "python-dotenv>=1.0",
     "fastapi>=0.110",
     "uvicorn>=0.29",

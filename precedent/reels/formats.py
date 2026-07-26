@@ -46,15 +46,53 @@ class ClipOut:
     vertical_key: str = ""
     vertical_state: str = ""      # "", "queued", "processing", "ready", "failed"
     vertical_stream_url: str = ""
+    vertical_error: str = ""
 
 
 def key_for(video_id: str, start: float, end: float) -> str:
     return f"{video_id}:{round(start, 1)}:{round(end, 1)}"
 
 
+VERTICAL_CACHE_INSTANT = "verticals_instant"
+
+
+def vertical_instant(video_id: str, start: float, end: float) -> str:
+    """A 9:16 clip built by setting the output size, not by reframing.
+
+    The editor timeline's output resolution is ours to choose, so a single-clip
+    timeline at 1080x1920 with a centre crop returns immediately. Smart
+    reframing tracks the speaker and looks better on an off-centre subject, but
+    it costs minutes per clip, so this is the default and that is the upgrade.
+    """
+    key = key_for(video_id, start, end)
+    cache = store.read(VERTICAL_CACHE_INSTANT, {}) or {}
+    if key in cache:
+        return cache[key]
+
+    from videodb.editor import Clip, Fit, Position, Timeline, Track
+    from videodb.editor import VideoAsset as EditorVideoAsset
+
+    from ..reels.builder import VERTICAL
+
+    editor = Timeline(get_connection())
+    editor.resolution = VERTICAL
+    editor.background = "#000000"
+    track = Track(z_index=0)
+    editor.add_track(track)
+    track.add_clip(
+        0,
+        Clip(EditorVideoAsset(video_id, start=start), duration=max(1.0, end - start),
+             fit=Fit.crop, position=Position.center),
+    )
+    url = editor.generate_stream()
+    cache[key] = url
+    store.write(VERTICAL_CACHE_INSTANT, cache)
+    return url
+
+
 def separate_clips(moments: List[PlayableMoment], seconds_per_clip: float = 30.0,
                    max_total_seconds: Optional[float] = None,
-                   aspect: str = "16:9") -> List[ClipOut]:
+                   aspect: str = "16:9", vertical_mode: str = "instant") -> List[ClipOut]:
     """Each moment as its own playable clip, in order, nothing stitched."""
     out: List[ClipOut] = []
     spent = 0.0
@@ -95,6 +133,15 @@ def separate_clips(moments: List[PlayableMoment], seconds_per_clip: float = 30.0
 
     if aspect == "9:16":
         for clip in out:
+            if vertical_mode == "instant":
+                try:
+                    clip.vertical_stream_url = vertical_instant(clip.video_id, clip.start, clip.end)
+                    clip.vertical_state = "ready"
+                    continue
+                except Exception as exc:
+                    clip.vertical_state = "failed"
+                    clip.vertical_error = str(exc)[:160]
+                    continue
             cached = (store.read(VERTICAL_CACHE, {}) or {}).get(clip.vertical_key)
             if cached:
                 clip.vertical_state = "ready"

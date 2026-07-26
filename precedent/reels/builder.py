@@ -30,6 +30,18 @@ from ..config import get_connection
 from ..search.engine import PlayableMoment
 
 
+# The editor timeline defaults to 1280x720, which silently downscales 1080p
+# sources, so output size is always stated explicitly.
+#
+# Portrait is 608x1080, not 1080x1920: the compiler rejects any output taller
+# than 1080 ("Height must be less than or equal to 1080"), so 9:16 has to be
+# expressed within that ceiling. 608x1080 is a true 9:16 frame and the manifest
+# confirms it.
+LANDSCAPE = "1920x1080"
+VERTICAL = "608x1080"
+SQUARE = "1080x1080"
+
+
 @dataclass
 class ReelSpec:
     """What the reel should look like."""
@@ -39,6 +51,11 @@ class ReelSpec:
     subtitles: bool = False
     label_seconds: float = 3.5
     voiceover: str = ""  # spoken intro text, read over the opening clip
+    aspect: str = "16:9"  # "16:9", "9:16" or "1:1"
+
+    @property
+    def resolution(self) -> str:
+        return {"9:16": VERTICAL, "1:1": SQUARE}.get(self.aspect, LANDSCAPE)
 
 
 @dataclass
@@ -63,6 +80,8 @@ class ReelResult:
     subtitle_note: str = ""
     sources: List[str] = field(default_factory=list)
     segments: List[Segment] = field(default_factory=list)
+    resolution: str = LANDSCAPE
+    aspect: str = "16:9"
 
 
 def _label_for(moment: PlayableMoment) -> str:
@@ -154,24 +173,37 @@ def build_reel(
         subtitle_note=note,
         sources=sorted({s.session_title for s in plan if s.session_title}),
         segments=plan,
+        resolution=spec.resolution,
+        aspect=spec.aspect,
     )
 
 
 def _compose(conn, moments: List[PlayableMoment], plan: List["Segment"], spec: ReelSpec) -> str:
     """One editor timeline: video, chapter cards, and captions as three tracks."""
-    from videodb.editor import (Background, Clip, FontStyling, Position,
+    from videodb.editor import (Background, Clip, Fit, FontStyling, Position,
                                 Timeline as EditorTimeline, Track)
     from videodb.editor import CaptionAsset, TextAsset as EditorTextAsset
     from videodb.editor import VideoAsset as EditorVideoAsset
 
     editor = EditorTimeline(conn)
+    # Setting the output size is also how a vertical reel is produced without
+    # smart reframing, which costs minutes of processing per clip. The trade is
+    # quality: this crops geometrically, where reframe tracks the speaker.
+    editor.resolution = spec.resolution
+    editor.background = "#000000"
+
     video_track = Track(z_index=0)
     editor.add_track(video_track)
+    reframed = spec.aspect in ("9:16", "1:1")
     for segment in plan:
         video_track.add_clip(
             segment.reel_start,
-            Clip(EditorVideoAsset(segment.video_id, start=segment.source_start),
-                 duration=segment.reel_end - segment.reel_start),
+            Clip(
+                EditorVideoAsset(segment.video_id, start=segment.source_start),
+                duration=segment.reel_end - segment.reel_start,
+                fit=Fit.crop if reframed else None,
+                position=Position.center,
+            ),
         )
 
     if spec.title_cards:

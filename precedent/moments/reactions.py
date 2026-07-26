@@ -112,6 +112,56 @@ def widen(video_id: str, start: float, end: float,
     return round(new_start, 1), round(new_end, 1)
 
 
+def _frame_urls(video_id: str, start: float, end: float) -> List[str]:
+    """Frame images inside a window, from the scene collection we already paid for."""
+    session = get_session(video_id)
+    if not session:
+        return []
+    try:
+        conn = get_connection()
+        video = conn.get_collection(session.collection_id).get_video(video_id)
+        collections = video.list_scene_collection()
+        if not collections:
+            return []
+        scene_collection = video.get_scene_collection(collections[0]["scene_collection_id"])
+    except Exception:
+        return []
+    urls: List[str] = []
+    for scene in scene_collection.scenes:
+        if scene.end < start or scene.start > end:
+            continue
+        urls.extend(frame.url for frame in scene.frames)
+    return urls[:12]
+
+
+def verify_window(video_id: str, start: float, end: float) -> dict:
+    """Deterministic check that this window can support a demeanour claim.
+
+    Skin-tone coverage decides it. See moments/verify.py for why the obvious
+    sharpness measures are the wrong signal on broadcast courtroom footage.
+    """
+    from .verify import motion_series, readable_frames, shift_gate
+
+    urls = _frame_urls(video_id, start, end)
+    if not urls:
+        return {"checked": False}
+    kept, rejected = readable_frames(urls)
+    result = {
+        "checked": True,
+        "frames": len(urls),
+        "readable_frames": len(kept),
+        "people_visible": bool(kept),
+        "skin_fraction": round(max((k.skin_fraction for k in kept), default=0.0), 3),
+    }
+    if not kept:
+        result["reason"] = rejected[0].reason if rejected else "no readable frame"
+        return result
+    shift = shift_gate(motion_series(urls))
+    if shift:
+        result["shift"] = shift
+    return result
+
+
 def attach(moments: List, breakdown: bool = False) -> List:
     """Annotate each moment with what the camera saw during it.
 
@@ -125,6 +175,14 @@ def attach(moments: List, breakdown: bool = False) -> List:
         except Exception:
             continue
         if not notes:
+            continue
+        # Verify before asserting. A confident description of a face in a frame
+        # with no people in it is the one failure mode this feature cannot have.
+        verdict = verify_window(m.video_id, m.start, m.end)
+        m.attrs["camera_verified"] = verdict
+        if verdict.get("checked") and not verdict.get("people_visible"):
+            m.attrs["camera_saw_unverified"] = summarize(notes)
+            m.attrs["camera_saw"] = ""
             continue
         m.attrs["camera_saw"] = summarize(notes)
         if breakdown:

@@ -282,14 +282,49 @@ def case(case_id: str, per_section: int = 4, fresh: bool = False):
 
 
 @app.get("/api/discuss")
-def discuss_case(case: str, q: str, limit: int = 5):
-    """Ask about a case; every claim carries a playable citation."""
+def discuss_case(case: str, q: str, limit: int = 5, corroborate: bool = False):
+    """Ask about a case; every claim carries a playable citation.
+
+    `corroborate=true` also asks VideoDB's own `ask()` against the session the
+    top citation came from, so the two answers can be read side by side. It is
+    off by default because its source spans are too coarse to play.
+    """
     result = discuss(case, q, limit=limit)
-    return {
+    payload = {
         "question": result.question,
         "answer": result.answer,
         "citations": [m.__dict__ for m in result.citations],
     }
+    if corroborate and result.citations:
+        from ..indexing import v2
+
+        payload["corroboration"] = v2.ask(result.citations[0].video_id, q)
+    return payload
+
+
+@app.get("/api/counts/{video_id}")
+def moment_counts(video_id: str, group_by: str = "moment_type"):
+    """Counts per moment type for a session, computed server side by VideoDB.
+
+    Falls back to the local moment cache when this session has no V2 index, so
+    the shape of the response is the same either way.
+    """
+    from ..indexing import v2
+
+    counts = v2.counts(video_id, group_by)
+    if counts:
+        return {"source": "videodb_aggregate", "group_by": group_by, "counts": counts}
+
+    from ..moments.extractor import cached_moments
+
+    local: dict = {}
+    for moment in cached_moments(video_id):
+        key = (moment.moment_type if group_by == "moment_type"
+               else str((moment.attrs or {}).get(group_by) or ""))
+        if key:
+            local[key] = local.get(key, 0) + 1
+    return {"source": "local", "group_by": group_by,
+            "counts": dict(sorted(local.items(), key=lambda kv: -kv[1]))}
 
 
 @app.get("/api/clip")
@@ -438,6 +473,7 @@ def reel(
     voiceover: bool = False,
     output: str = Query("stitched", description="stitched or separate"),
     aspect: str = Query("16:9", description="16:9 or 9:16"),
+    vertical_mode: str = Query("instant", description="instant crop, or smart speaker tracking"),
 ):
     """Build a teaching reel across the library.
 
@@ -477,7 +513,8 @@ def reel(
 
     if output == "separate":
         clips = separate_clips(ordered[:limit], seconds_per_clip=seconds_per_clip,
-                              max_total_seconds=max_total_seconds, aspect=aspect)
+                              max_total_seconds=max_total_seconds, aspect=aspect,
+                              vertical_mode=vertical_mode)
         if not clips:
             raise HTTPException(400, "Every moment was shorter than the minimum clip length")
         return {
@@ -488,9 +525,14 @@ def reel(
             "sources": sorted({c.session_title for c in clips if c.session_title}),
             "scope": wanted,
             "clips": [c.__dict__ for c in clips],
-            "vertical_note": ("Vertical reframing tracks the speaker and takes a few minutes "
-                              "per clip. Each one appears here as it finishes."
-                              if aspect == "9:16" else ""),
+            "vertical_mode": vertical_mode if aspect == "9:16" else "",
+            "vertical_note": (
+                ("Cropped to 9:16 instantly. Switch to speaker tracking for an off-centre "
+                 "subject, which takes a few minutes per clip.")
+                if aspect == "9:16" and vertical_mode == "instant"
+                else ("Reframing tracks the speaker and takes a few minutes per clip. "
+                      "Each one appears here as it finishes.")
+                if aspect == "9:16" else ""),
         }
 
     intro = ""
@@ -498,7 +540,8 @@ def reel(
         intro = (f"A Precedent teaching reel on {q}. "
                  f"{min(limit, len(ordered))} moments from the record.")
     spec = ReelSpec(seconds_per_clip=seconds_per_clip, max_total_seconds=max_total_seconds,
-                    title_cards=title_cards, subtitles=subtitles, voiceover=intro)
+                    title_cards=title_cards, subtitles=subtitles, voiceover=intro,
+                    aspect=aspect)
     try:
         result = build_reel(ordered, spec=spec)
     except ValueError as exc:
@@ -512,6 +555,8 @@ def reel(
         "sources": result.sources,
         "scope": wanted,
         "segments": [s.__dict__ for s in result.segments],
+        "resolution": result.resolution,
+        "aspect": result.aspect,
     }
 
 
@@ -595,6 +640,24 @@ def speakers(video_id: str):
     ]}
 
 
+def _require_admin(request: Request) -> None:
+    admin_key = os.environ.get("ADMIN_KEY", "")
+    if not admin_key or request.headers.get("x-admin-key") != admin_key:
+        raise HTTPException(403, "admin key required")
+
+
+@app.post("/api/admin/index-v2/{video_id}")
+def admin_index_v2(request: Request, video_id: str, transcript: bool = False):
+    """Build the V2 indexes for one session. Slow, so it is opt-in per session."""
+    _require_admin(request)
+    from ..indexing import v2
+
+    out = {"moments": v2.build_moments(video_id)}
+    if transcript:
+        out["transcript"] = v2.build(video_id)
+    return out
+
+
 @app.post("/api/admin/sync")
 def admin_sync(request: Request, docs: str = "catalog,thumbnails,clips,reactions,moments"):
     """Overwrite store documents from the files shipped in this image.
@@ -603,9 +666,7 @@ def admin_sync(request: Request, docs: str = "catalog,thumbnails,clips,reactions
     locally ingested content (new sessions, new indexes) needs an explicit
     push into the store after a deploy. Guarded by ADMIN_KEY.
     """
-    admin_key = os.environ.get("ADMIN_KEY", "")
-    if not admin_key or request.headers.get("x-admin-key") != admin_key:
-        raise HTTPException(403, "admin key required")
+    _require_admin(request)
 
     from ..config import DATA_DIR
 

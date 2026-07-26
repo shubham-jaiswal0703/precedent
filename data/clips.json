@@ -49,5 +49,7 @@
   "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e:535.9:566.4": "https://play.videodb.io/v1/85944d10-0a1a-42b0-b73e-97d0637e52bb/audio/default.m3u8",
   "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e:674.4:704.9": "https://play.videodb.io/v1/cc8abe76-90f8-4b64-9c73-b74695107562/audio/default.m3u8",
   "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e:715.4:746.1": "https://play.videodb.io/v1/9ae938ce-d2c5-42c9-8614-bab35421cb45/audio/default.m3u8",
-  "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e:724.0:754.4": "https://play.videodb.io/v1/ef578b44-e80b-415a-93a8-401fcfd591d6/audio/default.m3u8"
+  "m-z-019f9ba8-add5-7ee1-adb5-3b9b3f05bb0e:724.0:754.4": "https://play.videodb.io/v1/ef578b44-e80b-415a-93a8-401fcfd591d6/audio/default.m3u8",
+  "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c:3425.2:3437.2": "https://play.videodb.io/v1/32d1ebbe-4a38-4a2d-a957-698168158df3.m3u8",
+  "m-z-019f9a91-99cf-7950-a41e-12e5a6e4563c:219.0:249.5": "https://play.videodb.io/v1/f877552e-1afe-4d70-86b0-81650593bf01.m3u8"
 }
