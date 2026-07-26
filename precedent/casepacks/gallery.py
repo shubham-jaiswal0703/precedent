@@ -128,6 +128,7 @@ def case_detail(case_id: str, per_section: int = 4) -> dict:
             entry = {
                 "video_id": m.video_id, "start": round(m.start, 1), "end": round(m.end, 1),
                 "text": m.text[:320], "session": session.title, "attrs": m.attrs,
+                "poster": session_thumbnail(m.video_id),
             }
             by_type.setdefault(m.moment_type, []).append(entry)
 

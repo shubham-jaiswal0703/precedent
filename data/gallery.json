@@ -1,0 +1,271 @@
+[
+  {
+    "case_id": "scotus-oral-arguments",
+    "name": "US Supreme Court: Oral Arguments",
+    "kind": "appellate",
+    "cover": {
+      "image": "",
+      "kind": "appellate",
+      "seal": "oral argument",
+      "monogram": "USC"
+    },
+    "sessions": 31,
+    "hours": 40.1,
+    "moments": 1208,
+    "highlights": [
+      {
+        "type": "justiciability_colloquy",
+        "label": "Standing and jurisdiction",
+        "count": 330
+      },
+      {
+        "type": "hypothetical_from_bench",
+        "label": "Hypotheticals from the bench",
+        "count": 299
+      },
+      {
+        "type": "time_expired",
+        "label": "Time expiring",
+        "count": 106
+      },
+      {
+        "type": "stare_decisis_argument",
+        "label": "Stare decisis",
+        "count": 84
+      }
+    ],
+    "people": [
+      "Brian H. Fletcher",
+      "Damien M. Schiff",
+      "Elena Kagan",
+      "Elizabeth B. Prelogar",
+      "Eric R. Olson",
+      "Julie Rikelman"
+    ],
+    "titles": [
+      "303 Creative LLC v. Elenis: oral argument",
+      "Dobbs v. Jackson Women's Health Organization: oral argument",
+      "Axon Enterprise, Inc. v. Federal Trade Commission: oral argument",
+      "Sackett v. Environmental Protection Agency: oral argument",
+      "Students for Fair Admissions v. President and Fellows of Harvard College: oral argument"
+    ]
+  },
+  {
+    "case_id": "federal-appellate",
+    "name": "Federal Appellate: Oral Arguments",
+    "kind": "appellate",
+    "cover": {
+      "image": "",
+      "kind": "appellate",
+      "seal": "oral argument",
+      "monogram": "FAO"
+    },
+    "sessions": 5,
+    "hours": 2.4,
+    "moments": 68,
+    "highlights": [
+      {
+        "type": "justiciability_colloquy",
+        "label": "Standing and jurisdiction",
+        "count": 23
+      },
+      {
+        "type": "argument_opening",
+        "label": "Opening lines of argument",
+        "count": 11
+      },
+      {
+        "type": "record_citation",
+        "label": "Citations to the record",
+        "count": 11
+      },
+      {
+        "type": "refusal_to_concede",
+        "label": "Refusals to concede",
+        "count": 8
+      }
+    ],
+    "people": [],
+    "titles": [
+      "Kingsolver v. US Attorney General (CA11)",
+      "United States v. Scott Hollington",
+      "Ernest Finley, Jr. v. Thomas Albritton",
+      "United States v. Alonso Pineda-Torres",
+      "Dominick Russo, Appellants/Cross v. Secretary, U.S. Department of Commerce, Appellees/Cross"
+    ]
+  },
+  {
+    "case_id": "depp-v-heard",
+    "name": "Depp v. Heard (2022)",
+    "kind": "trial",
+    "cover": {
+      "image": "https://storage.videodb.io/media/u-5a412c8f-0156-436c-b6b1-a47beccea941/img-m-z-019f9a8a-e626-75a3-9b4f-26fa26d35eac-thumbnail-1430.67/image",
+      "kind": "trial",
+      "seal": "trial record",
+      "monogram": "D v H"
+    },
+    "sessions": 3,
+    "hours": 2.7,
+    "moments": 54,
+    "highlights": [
+      {
+        "type": "objection",
+        "label": "Objections",
+        "count": 19
+      },
+      {
+        "type": "ruling_overruled",
+        "label": "Overruled rulings",
+        "count": 7
+      },
+      {
+        "type": "ruling_sustained",
+        "label": "Sustained rulings",
+        "count": 7
+      },
+      {
+        "type": "cross_examination_marker",
+        "label": "Cross-examination",
+        "count": 6
+      }
+    ],
+    "people": [],
+    "titles": [
+      "Kate James testimony (Depp v. Heard)",
+      "Amber Heard rebuttal testimony (May 26)",
+      "Amber Heard cross-examination (May 16)"
+    ]
+  },
+  {
+    "case_id": "trial-3-09-cv-00010-jeg",
+    "name": "IAS- Manning v. Jones (Part 13)",
+    "kind": "trial",
+    "cover": {
+      "image": "https://thumbs.piksel.tech/thumbs/aid/t1489627787/2821391.jpg?w=480&h=360",
+      "kind": "trial",
+      "seal": "trial record",
+      "monogram": "I v J"
+    },
+    "sessions": 3,
+    "hours": 2.6,
+    "moments": 40,
+    "highlights": [
+      {
+        "type": "objection",
+        "label": "Objections",
+        "count": 9
+      },
+      {
+        "type": "cross_examination_marker",
+        "label": "Cross-examination",
+        "count": 9
+      },
+      {
+        "type": "ruling_overruled",
+        "label": "Overruled rulings",
+        "count": 6
+      },
+      {
+        "type": "ruling_sustained",
+        "label": "Sustained rulings",
+        "count": 5
+      }
+    ],
+    "people": [],
+    "titles": [
+      "IAS- Manning v. Jones (Part 10)",
+      "IAS- Manning v. Jones (Part 11)",
+      "IAS- Manning v. Jones (Part 13)"
+    ]
+  },
+  {
+    "case_id": "trial-2-12-cv-02268",
+    "name": "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 11)",
+    "kind": "trial",
+    "cover": {
+      "image": "https://thumbs.piksel.tech/thumbs/aid/t1489623788/2434089.jpg?w=1280&h=720",
+      "kind": "trial",
+      "seal": "trial record",
+      "monogram": "T v P"
+    },
+    "sessions": 2,
+    "hours": 1.3,
+    "moments": 21,
+    "highlights": [
+      {
+        "type": "sidebar",
+        "label": "Sidebars",
+        "count": 6
+      },
+      {
+        "type": "objection",
+        "label": "Objections",
+        "count": 5
+      },
+      {
+        "type": "witness_sequestration",
+        "label": "Witness sequestration",
+        "count": 2
+      },
+      {
+        "type": "motion_in_limine",
+        "label": "Motions in limine",
+        "count": 1
+      }
+    ],
+    "people": [],
+    "titles": [
+      "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 1)",
+      "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 10)"
+    ]
+  },
+  {
+    "case_id": "trial-in-re-roundup-products-liability-litigation-part",
+    "name": "In re Roundup Products Liability Litigation (Part 6)",
+    "kind": "trial",
+    "cover": {
+      "image": "https://thumbs.piksel.tech/thumbs/aid/t1520882271/3534154.jpg?w=1280&h=720",
+      "kind": "trial",
+      "seal": "trial record",
+      "monogram": "IRR"
+    },
+    "sessions": 1,
+    "hours": 0.6,
+    "moments": 3,
+    "highlights": [
+      {
+        "type": "examination_end",
+        "label": "Ends of examination",
+        "count": 2
+      },
+      {
+        "type": "impeachment_prior_statement",
+        "label": "Impeachment with a prior statement",
+        "count": 1
+      }
+    ],
+    "people": [],
+    "titles": [
+      "In re Roundup Products Liability Litigation (Part 3)"
+    ]
+  },
+  {
+    "case_id": "trial-3-24-cv-06468-crb",
+    "name": "Beckford et al v. The Children's Group, Inc",
+    "kind": "trial",
+    "cover": {
+      "image": "https://thumbs.piksel.tech/thumbs/aid/t1774636485/4057513.jpg?w=1280&h=720",
+      "kind": "trial",
+      "seal": "trial record",
+      "monogram": "B v T"
+    },
+    "sessions": 1,
+    "hours": 0.3,
+    "moments": 0,
+    "highlights": [],
+    "people": [],
+    "titles": [
+      "Beckford et al v. The Children's Group, Inc"
+    ]
+  }
+]

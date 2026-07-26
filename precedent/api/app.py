@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from ..casepacks.gallery import case_cards, case_detail
+from ..playbooks import build as build_playbook, index as playbook_index
 from ..casepacks.generator import generate_case_pack
 from ..catalog import _load as load_catalog, sessions_for_case
 from ..config import DATA_DIR, PROJECT_ROOT
@@ -84,10 +85,55 @@ def search(
     return {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
 
 
+GALLERY_CACHE = DATA_DIR / "gallery.json"
+
+
 @app.get("/api/gallery")
-def gallery():
-    """Browsable shelf of cases in the library."""
-    return case_cards()
+def gallery(refresh: bool = False):
+    """Browsable shelf of cases in the library.
+
+    Served from a disk cache, because assembling it walks every session's
+    moments and cover art. Rebuild with ?refresh=1 after an ingest, or by
+    running scripts/warm_caches.py.
+    """
+    if GALLERY_CACHE.exists() and not refresh:
+        return json.loads(GALLERY_CACHE.read_text())
+    cards = case_cards()
+    GALLERY_CACHE.parent.mkdir(parents=True, exist_ok=True)
+    GALLERY_CACHE.write_text(json.dumps(cards, indent=2))
+    return cards
+
+
+@app.get("/api/playbooks")
+def playbooks():
+    """What a student might be preparing to do."""
+    return playbook_index()
+
+
+@app.get("/api/playbook/{playbook_id}")
+def playbook(playbook_id: str, per_step: int = 2):
+    """One playbook, with real moments attached to every step."""
+    try:
+        return build_playbook(playbook_id, per_step=per_step)
+    except ValueError as exc:
+        raise HTTPException(404, str(exc))
+
+
+@app.on_event("startup")
+def warm_on_startup() -> None:
+    """Build the gallery in the background so the first visitor never waits."""
+    import threading
+
+    def warm() -> None:
+        try:
+            cards = case_cards()
+            GALLERY_CACHE.parent.mkdir(parents=True, exist_ok=True)
+            GALLERY_CACHE.write_text(json.dumps(cards, indent=2))
+            playbook_index()
+        except Exception:
+            pass  # a cold cache is slow, not broken
+
+    threading.Thread(target=warm, daemon=True).start()
 
 
 @app.get("/api/case/{case_id}")

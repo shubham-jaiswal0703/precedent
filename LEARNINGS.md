@@ -213,6 +213,23 @@ overruled) took sustained-objection detection from 0 to 2 in the archive.
   unknown filter params: use documented ones.
 See SOURCES.md for endpoints.
 
+## Performance and UX notes (2026-07-26)
+
+- Everything expensive is per-session work multiplied by the corpus: moment
+  extraction (a transcript fetch each), cover frames (thumbnail generation),
+  and clip URLs (generate_stream, about 1 to 9 seconds each). None of it is
+  slow alone and all of it is slow at forty sessions, so each has a cache:
+  data/moments/*.json, data/thumbnails.json, data/clips.json, data/gallery.json.
+  A FastAPI startup hook warms them in a background thread, and
+  scripts/warm_caches.py does it offline. Run that after any ingest.
+- The moment pool is memoized against the catalog file mtime, so it rebuilds
+  after an ingest and never during a request.
+- `preload="none"` on a video element renders a black box. Use
+  `preload="metadata"` plus a poster, and for lazily-loaded clips show the
+  cover image with a play affordance rather than a button.
+- VideoDB's generate_thumbnail on an audio-only asset simply fails, which is a
+  clean way to detect that a session has no frames to show.
+
 ## Footage notes
 
 - 2026-07-25: Depp v. Heard chosen as primary corpus (see SOURCES.md).

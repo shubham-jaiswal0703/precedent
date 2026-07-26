@@ -1,0 +1,92 @@
+[
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 28.6,
+    "end": 58.88,
+    "moment_type": "sidebar",
+    "text": "So - may we approach? - Okay. - Just briefly, - Let's",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 218.95,
+    "end": 249.79,
+    "moment_type": "objection",
+    "text": "What's the objection? The objection is based on the court's prior order",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 243.95,
+    "end": 274.43,
+    "moment_type": "sidebar",
+    "text": "respond to sidebar on that. - Okay, come up. - All right,",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 574.47,
+    "end": 605.03,
+    "moment_type": "objection",
+    "text": "there? - Objection. Lack of foundation. - Yeah. I think you're going",
+    "attrs": {
+      "ground": "foundation"
+    }
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 732.49,
+    "end": 762.81,
+    "moment_type": "examination_end",
+    "text": "Peak? - No further questions. - Can you redirect? - Yes. You.",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 734.57,
+    "end": 765.05,
+    "moment_type": "redirect_marker",
+    "text": "Can you redirect? - Yes. You. - You okay, Ms. Dang? Yes,",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 1390.97,
+    "end": 1423.73,
+    "moment_type": "objection",
+    "text": "- Any objection? - No, you, Honor. All right. Without objection. Be",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 1457.96,
+    "end": 1488.32,
+    "moment_type": "objection",
+    "text": "what's your objection, Ms. Wofford? Well, I can't read it. I don't",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 1512.77,
+    "end": 1542.97,
+    "moment_type": "ruling_overruled",
+    "text": "All right, I'll allow it to be marked as exhibit - 26.",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 1513.61,
+    "end": 1543.97,
+    "moment_type": "exhibit",
+    "text": "to be marked as exhibit - 26. - Just one minute. -",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+    "start": 1571.95,
+    "end": 1602.23,
+    "moment_type": "impeachment_prior_statement",
+    "text": "day. - You testified earlier that you're familiar and have entered into",
+    "attrs": {}
+  }
+]

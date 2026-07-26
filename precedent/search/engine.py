@@ -3,6 +3,7 @@
 Every result path normalizes to PlayableMoment so the API/UI/reel layers
 never touch raw SDK objects.
 """
+import json
 from dataclasses import dataclass, field
 from typing import List, Optional
 
@@ -23,7 +24,18 @@ class PlayableMoment:
     session_type: str = ""
     stream_url: str = ""
     player_url: str = ""
+    poster: str = ""
     attrs: dict = field(default_factory=dict)
+
+
+def _poster(video_id: str) -> str:
+    """Cached cover frame, so a player never renders as an empty black box."""
+    try:
+        from ..media import session_thumbnail
+
+        return session_thumbnail(video_id)
+    except Exception:
+        return ""
 
 
 def _to_moment(shot) -> PlayableMoment:
@@ -38,6 +50,7 @@ def _to_moment(shot) -> PlayableMoment:
         session_type=session.session_type if session else "",
         stream_url=getattr(shot, "stream_url", "") or "",
         player_url=getattr(shot, "player_url", "") or "",
+        poster=_poster(shot.video_id),
     )
 
 
@@ -164,8 +177,44 @@ def scene_search(case_id: str, query: str, limit: int = 10) -> List[PlayableMome
     return moments[:limit]
 
 
+_CLIP_CACHE_PATH = None
+_CLIP_CACHE: Optional[dict] = None
+
+
+def _clip_cache() -> dict:
+    """Generated stream URLs, memoized on disk.
+
+    generate_stream is quick but not free, and the playbooks ask for the same
+    curated clips on every page load.
+    """
+    global _CLIP_CACHE, _CLIP_CACHE_PATH
+    if _CLIP_CACHE is None:
+        from ..config import DATA_DIR
+
+        _CLIP_CACHE_PATH = DATA_DIR / "clips.json"
+        try:
+            _CLIP_CACHE = json.loads(_CLIP_CACHE_PATH.read_text())
+        except Exception:
+            _CLIP_CACHE = {}
+    return _CLIP_CACHE
+
+
+def _remember_clip(key: str, url: str) -> None:
+    cache = _clip_cache()
+    cache[key] = url
+    try:
+        _CLIP_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _CLIP_CACHE_PATH.write_text(json.dumps(cache, indent=2))
+    except Exception:
+        pass
+
+
 def clip_url(video_id: str, start: float, end: float, pad: float = 2.0) -> str:
     """Instant playable HLS clip for a moment (with a little context padding)."""
+    key = f"{video_id}:{round(start, 1)}:{round(end, 1)}"
+    cached = _clip_cache().get(key)
+    if cached:
+        return cached
     session = get_session(video_id)
     conn = get_connection()
     coll = conn.get_collection(session.collection_id) if session else conn.get_collection()
@@ -176,4 +225,6 @@ def clip_url(video_id: str, start: float, end: float, pad: float = 2.0) -> str:
     if duration:
         clip_end = min(clip_end, float(duration))
         clip_start = min(clip_start, max(0.0, clip_end - 1.0))
-    return video.generate_stream(timeline=[(clip_start, clip_end)])
+    url = video.generate_stream(timeline=[(clip_start, clip_end)])
+    _remember_clip(key, url)
+    return url

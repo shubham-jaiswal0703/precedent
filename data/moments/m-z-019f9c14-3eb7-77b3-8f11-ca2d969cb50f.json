@@ -1,0 +1,76 @@
+[
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 1432.389,
+    "end": 1462.99,
+    "moment_type": "objection",
+    "text": "- No. Objection. - 126 is admitted. - We saw - earlier,",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 1971.97,
+    "end": 2002.61,
+    "moment_type": "objection",
+    "text": "tainted. - Objection. Aspen Anderson. Sustained. - And - you never asked",
+    "attrs": {
+      "ruling": "sustained"
+    }
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 1973.53,
+    "end": 2004.05,
+    "moment_type": "ruling_sustained",
+    "text": "Aspen Anderson. Sustained. - And - you never asked Mr. Anderson -",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 2020.47,
+    "end": 2050.71,
+    "moment_type": "cross_examination_marker",
+    "text": "possible. - Cross examination. - Good afternoon. - Hello. - We've met",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 2293.96,
+    "end": 2324.68,
+    "moment_type": "ruling_overruled",
+    "text": "moment. - Overruled. - Please continue. - So, - Professor Jones, -",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 3038.18,
+    "end": 3068.98,
+    "moment_type": "ruling_overruled",
+    "text": "Iowa? - Overruled. - I remember - that she gave after her",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 3497.15,
+    "end": 3527.31,
+    "moment_type": "examination_end",
+    "text": "I have no further questions. - Redirect. - Eric Anderson - about",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 3499.91,
+    "end": 3530.55,
+    "moment_type": "redirect_marker",
+    "text": "questions. - Redirect. - Eric Anderson - about my - letter and",
+    "attrs": {}
+  },
+  {
+    "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+    "start": 3663.25,
+    "end": 3693.45,
+    "moment_type": "witness_dismissed",
+    "text": "your honor. You may step down. Thank you. - All right. -",
+    "attrs": {}
+  }
+]

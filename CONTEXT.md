@@ -102,6 +102,31 @@ Running notes on VideoDB behavior: [LEARNINGS.md](LEARNINGS.md).
     student queries captured (see the research notes in this file's history and
     router.py's tables, which implement the first slice).
 
+- 2026-07-26 (session 3): Reoriented the product around preparation rather
+  than search, which is what the audience actually does.
+  * playbooks.py: five task-first playbooks (cross-examine a witness who
+    changed her story, make and meet objections, argue to a hot bench, frame
+    the standard of review, qualify and attack an expert). Each names the task,
+    states what good looks like in course vocabulary with attribution
+    (Younger, FRE 613, Daubert), and proves every step with real moments.
+    This is now the landing view.
+  * Cameras in Courts ingest working (ingest/cameras.py), so the library has
+    real trial video including In re Roundup before Judge Chhabria.
+  * Cover art everywhere: real frames for video, typographic plates for
+    audio-only argument.
+  * Performance: gallery cached to disk, moment pool memoized on catalog
+    mtime, clip URLs cached in data/clips.json, warm-up on server startup.
+    First load went from minutes to ~2.8s; warm loads are ~3ms.
+  * Clips never render blank now: playbook clips are pre-generated with
+    posters, and lazy clips show their cover with a play button.
+
+## Scope decision (2026-07-26)
+
+Corpus scale is deliberately capped. This is a hackathon demo, and more clips
+means more surface to keep correct, not a better story. ~47 hours across six
+cases is enough to demonstrate every mechanic. Scaling to the full 1,100-hour
+Cameras in Courts archive is filed as issue #15 rather than done.
+
 ## Next steps (build order)
 
 1. `ingest` + catalog + `indexing` wrappers: one trial segment searchable end-to-end

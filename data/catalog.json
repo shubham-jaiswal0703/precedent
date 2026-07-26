@@ -17,7 +17,7 @@
       "collection_id": "c-e3fd257c-14ca-4be8-b64b-2a7a55be107c"
     },
     "trial-3-09-cv-00010-jeg": {
-      "name": "IAS- Manning v. Jones (Part 11)",
+      "name": "IAS- Manning v. Jones (Part 13)",
       "collection_id": "c-ea78e7b2-8d7f-47b1-9b64-3d8c4af905ba"
     },
     "trial-ne-teresa-malone-et-al-vs-kantner-ingredients-et": {
@@ -29,7 +29,7 @@
       "collection_id": "c-cbf4a94c-9d67-48ae-91b2-41b6ed0ef0b1"
     },
     "trial-2-12-cv-02268": {
-      "name": "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 10)",
+      "name": "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 11)",
       "collection_id": "c-4bde6eb3-c2a9-44e3-9ad4-40a1cbd22fbb"
     }
   },
@@ -794,6 +794,86 @@
         "docket": "2:12-cv-02268",
         "proceeding": "",
         "courthouse": "Odell Horton Federal Building",
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282": {
+      "video_id": "m-z-019f9c0d-9591-7811-9c75-b9c0d4e69282",
+      "case_id": "trial-2-12-cv-02268",
+      "title": "TNW- National Bankers Trust Corp. v Peak Logistics, LLC et al (Part 10)",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/y/7/n/y7n6ar23_ig64mujq_h264_298K.mp4?cid=3697&aid=2439951&afid=4747565&apid=1032989&programid=4051565",
+      "date": "2014-11-17",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-4bde6eb3-c2a9-44e3-9ad4-40a1cbd22fbb",
+      "duration": 2006.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1489624875/2439951.jpg?w=1280&h=720",
+        "judge": "S. Thomas Anderson",
+        "docket": "2:12-cv-02268",
+        "proceeding": "",
+        "courthouse": "Odell Horton Federal Building",
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9c10-ed8c-7be2-b5fa-5ee563e7e699": {
+      "video_id": "m-z-019f9c10-ed8c-7be2-b5fa-5ee563e7e699",
+      "case_id": "trial-3-09-cv-00010-jeg",
+      "title": "IAS- Manning v. Jones (Part 10)",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/f/j/7/fj78mx9j_uvj0b149_h264_298K.mp4?cid=3697&aid=2821391&afid=5650163&apid=1032989&programid=4051975",
+      "date": "",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-ea78e7b2-8d7f-47b1-9b64-3d8c4af905ba",
+      "duration": 3656.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1489627787/2821391.jpg?w=480&h=360",
+        "judge": "James E. Gritzner",
+        "docket": "3:09-cv-00010-JEG",
+        "proceeding": "jury trial",
+        "courthouse": "U.S. District Courthouse",
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9c12-a275-77b1-af86-a513853241d6": {
+      "video_id": "m-z-019f9c12-a275-77b1-af86-a513853241d6",
+      "case_id": "trial-3-09-cv-00010-jeg",
+      "title": "IAS- Manning v. Jones (Part 11)",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/p/d/1/pd1xj7w4_ek0186b7_h264_298K.mp4?cid=3697&aid=2821393&afid=5650157&apid=1032989&programid=4051989",
+      "date": "",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-ea78e7b2-8d7f-47b1-9b64-3d8c4af905ba",
+      "duration": 1867.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1489627798/2821393.jpg?w=480&h=360",
+        "judge": "James E. Gritzner",
+        "docket": "3:09-cv-00010-JEG",
+        "proceeding": "jury trial",
+        "courthouse": "U.S. District Courthouse",
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f": {
+      "video_id": "m-z-019f9c14-3eb7-77b3-8f11-ca2d969cb50f",
+      "case_id": "trial-3-09-cv-00010-jeg",
+      "title": "IAS- Manning v. Jones (Part 13)",
+      "session_type": "trial_day",
+      "source_url": "https://uscourts-back.cdn.piksel.tech/543007/mm/flvmedia/3697/n/6/x/n6xu48xz_t4mu4bl5_h264_298K.mp4?cid=3697&aid=2821397&afid=5650181&apid=1032989&programid=4051991",
+      "date": "",
+      "day_number": null,
+      "witnesses": [],
+      "collection_id": "c-ea78e7b2-8d7f-47b1-9b64-3d8c4af905ba",
+      "duration": 3803.0,
+      "indexes": {
+        "thumbnail": "https://thumbs.piksel.tech/thumbs/aid/t1489628021/2821397.jpg?w=480&h=360",
+        "judge": "James E. Gritzner",
+        "docket": "3:09-cv-00010-JEG",
+        "proceeding": "jury trial",
+        "courthouse": "U.S. District Courthouse",
         "spoken_word": "default"
       }
     }

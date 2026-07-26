@@ -174,9 +174,12 @@ def plan_query(query: str) -> QueryPlan:
 
 
 def _moment_to_playable(m: Moment, session_title: str, session_type: str) -> PlayableMoment:
+    from .engine import _poster
+
     return PlayableMoment(
         video_id=m.video_id, start=m.start, end=m.end, text=m.text,
         session_title=session_title, session_type=session_type,
+        poster=_poster(m.video_id),
         attrs={"moment_type": m.moment_type, **m.attrs},
     )
 

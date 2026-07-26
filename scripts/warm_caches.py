@@ -36,6 +36,16 @@ def main() -> None:
                 pass
             print(f"   {len(moments):4d} moments  {'cover' if thumb else 'audio'}  "
                   f"{session.title[:46]}  ({time.time()-t0:.0f}s)")
+    from precedent.playbooks import PLAYBOOKS, build
+
+    for book in PLAYBOOKS:
+        try:
+            result = build(book.id, per_step=5)
+            clips = sum(1 for s in result["steps"] for m in s["moments"] if m["stream_url"])
+            print(f"playbook {book.id[:36]:38s} {clips} clips ready  ({time.time()-t0:.0f}s)")
+        except Exception as exc:
+            print(f"playbook {book.id[:36]:38s} failed: {type(exc).__name__}")
+
     print(f"\nwarmed in {time.time()-t0:.0f}s")
 
 

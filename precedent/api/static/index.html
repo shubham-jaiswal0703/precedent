@@ -94,6 +94,24 @@
   .chip b { color:var(--accent); font-weight:600; }
   .people { font-size:13px; color:var(--ink-soft); }
 
+  .playbookcard { padding-top:20px; }
+  .playbookcard p.muted { font-size:14.5px; }
+  .step { display:flex; gap:16px; padding:22px 0; border-top:1px solid var(--line); }
+  .stepnum {
+    flex:0 0 auto; width:34px; height:34px; border-radius:50%; background:var(--ink);
+    color:var(--paper); display:flex; align-items:center; justify-content:center;
+    font-size:15px; margin-top:2px;
+  }
+  .stepbody { flex:1; min-width:0; }
+  .stepbody p { margin-bottom:8px; }
+  .watch {
+    font-size:14px; color:var(--ink-soft); background:#faf6ef; border-left:3px solid var(--accent-soft);
+    padding:7px 12px; margin-bottom:10px;
+  }
+  .pitfalls { margin-top:26px; padding:18px 20px; background:var(--card); border:1px solid var(--line); }
+  .pitfalls ul { margin:8px 0 0 20px; }
+  .pitfalls li { margin-bottom:6px; }
+
   /* Case detail */
   .backlink { background:none; border:none; color:var(--accent); cursor:pointer; padding:0; margin-bottom:14px; }
   .askbar { display:flex; gap:10px; margin:16px 0 10px; }
@@ -130,6 +148,20 @@
     border:1px solid var(--accent); color:var(--accent); padding:1px 8px; margin-right:6px; border-radius:20px;
   }
   blockquote { border-left:3px solid var(--accent-soft); padding-left:14px; font-style:italic; margin:10px 0; color:#2c2723; }
+  .lazyclip {
+    position:relative; width:100%; height:190px; margin-top:10px; cursor:pointer;
+    background:#241f1a center/cover no-repeat; border-radius:var(--radius);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lazyclip.noposter { background:linear-gradient(160deg,#3a322a,#1d1915); }
+  .lazyclip .playbtn {
+    width:56px; height:56px; border-radius:50%; background:rgba(20,16,13,.72);
+    border:1px solid rgba(240,230,214,.5); color:#f5ece0; display:flex;
+    align-items:center; justify-content:center; font-size:19px; padding-left:3px;
+    transition:transform .12s, background .12s;
+  }
+  .lazyclip:hover .playbtn { transform:scale(1.08); background:rgba(138,31,31,.88); }
+  .lazyclip.loading-clip .playbtn { opacity:.5; }
   video { width:100%; max-height:340px; background:#000; margin-top:10px; border-radius:var(--radius); }
   .transcript {
     margin-top:10px; padding:12px 14px; background:#faf7f1; border:1px solid var(--line);
@@ -164,14 +196,26 @@
   <span class="tag">Students used to read this in a book. Now they watch the moment.</span>
 </header>
 <nav>
-  <button data-view="library" class="active">Library</button>
+  <button data-view="prepare" class="active">Prepare</button>
+  <button data-view="library">Library</button>
   <button data-view="search">Search</button>
   <button data-view="contradictions">Contradictions</button>
   <button data-view="reel">Teaching Reel</button>
   <button data-view="drop">Add a Link</button>
 </nav>
 <main>
-  <section id="library" class="view show">
+  <section id="prepare" class="view show">
+    <h2>What are you preparing?</h2>
+    <p class="sub">Each playbook names the task, states what good looks like, and proves every step with real moments from the record.</p>
+    <div id="playbooks" class="loading">Loading playbooks...</div>
+  </section>
+
+  <section id="playbook" class="view">
+    <button class="backlink" onclick="showView('prepare')">Back to playbooks</button>
+    <div id="playbookbody"></div>
+  </section>
+
+  <section id="library" class="view">
     <h2>Case library</h2>
     <p class="sub">Open a case to see its participants, its recommended sections, and to ask about how it was argued.</p>
     <div id="cases" class="loading">Loading the library...</div>
@@ -293,7 +337,10 @@ document.querySelectorAll("nav button").forEach(b => b.onclick = () => showView(
 
 function player(url, poster) {
   const v = document.createElement("video");
-  v.controls = true; v.preload = "none";
+  v.controls = true;
+  // "metadata" pulls the first frame so the player is never an empty black box,
+  // without downloading the clip until the student presses play.
+  v.preload = "metadata";
   if (poster) v.poster = poster;
   if (v.canPlayType("application/vnd.apple.mpegurl")) v.src = url;
   else if (window.Hls) { const h = new Hls(); h.loadSource(url); h.attachMedia(v); }
@@ -345,17 +392,27 @@ function momentCard(m, extraBadges = []) {
     ${badges.map(b => `<span class="badge">${b}</span>`).join("")}
     <blockquote>${(h.quote || m.text || "").slice(0,340)}</blockquote>`;
   let video = null;
-  if (m.stream_url) { video = player(m.stream_url); card.appendChild(video); }
+  if (m.stream_url) { video = player(m.stream_url, m.poster); card.appendChild(video); }
   else {
-    const load = document.createElement("button");
-    load.className = "btn ghost"; load.textContent = "Load clip";
-    load.onclick = async () => {
-      load.textContent = "Loading...";
+    // Show the cover with a play affordance so a clip never reads as blank,
+    // and fetch the stream only when the student actually wants it.
+    const holder = document.createElement("div");
+    holder.className = "lazyclip" + (m.poster ? "" : " noposter");
+    if (m.poster) holder.style.backgroundImage = `url("${m.poster}")`;
+    holder.innerHTML = `<span class="playbtn">&#9654;</span>`;
+    holder.onclick = async () => {
+      holder.classList.add("loading-clip");
       const r = await fetch(`/api/clip?video_id=${m.video_id}&start=${m.start}&end=${m.end}`);
-      if (r.ok) { const { stream_url } = await r.json(); load.replaceWith(player(stream_url)); }
-      else load.textContent = "Clip unavailable";
+      if (r.ok) {
+        const { stream_url } = await r.json();
+        const v = player(stream_url, m.poster);
+        holder.replaceWith(v);
+        v.play().catch(() => {});
+      } else {
+        holder.innerHTML = '<span class="playbtn">clip unavailable</span>';
+      }
     };
-    card.appendChild(load);
+    card.appendChild(holder);
   }
   const panel = transcriptPanel(h, m.start, video);
   if (panel) {
@@ -368,6 +425,71 @@ function momentCard(m, extraBadges = []) {
     card.appendChild(note);
   }
   return card;
+}
+
+/* ---------- Prepare ---------- */
+async function loadPlaybooks() {
+  const out = $("#playbooks");
+  const books = await (await fetch("/api/playbooks")).json();
+  out.classList.remove("loading");
+  out.className = "grid";
+  out.innerHTML = "";
+  books.forEach(b => {
+    const card = document.createElement("div");
+    card.className = "casecard playbookcard";
+    card.onclick = () => openPlaybook(b.id);
+    card.innerHTML = `<span class="kind">${b.audience === "trial" ? "Trial skill" : "Appellate skill"}</span>
+      <h3>${b.task}</h3>
+      <p class="muted">${b.summary}</p>
+      <div class="stats"><span>${b.steps} steps</span><span>${b.clips} clips in the record</span></div>
+      ${b.authority ? `<div class="people">${b.authority}</div>` : ""}`;
+    out.appendChild(card);
+  });
+}
+
+async function openPlaybook(id) {
+  showView("playbook");
+  const body = $("#playbookbody");
+  body.innerHTML = '<div class="loading">Pulling the moments that show this...</div>';
+  const b = await (await fetch(`/api/playbook/${id}`)).json();
+  body.innerHTML = `<h2>${b.task}</h2>
+    <p class="sub">${b.summary}</p>
+    ${b.authority ? `<div class="interp"><b>Authority:</b> ${b.authority}</div>` : ""}`;
+
+  b.steps.forEach((step, i) => {
+    const wrap = document.createElement("div");
+    wrap.className = "step";
+    wrap.innerHTML = `<div class="stepnum">${i + 1}</div>
+      <div class="stepbody">
+        <h3>${step.title}</h3>
+        <p>${step.note}</p>
+        ${step.watch_for ? `<div class="watch"><b>Watch for:</b> ${step.watch_for}</div>` : ""}
+        ${step.moments.length ? "" : '<div class="empty">No moment in the library shows this step yet.</div>'}
+      </div>`;
+    const holder = wrap.querySelector(".stepbody");
+    step.moments.forEach(m => holder.appendChild(momentCard(m)));
+    if (step.available > step.moments.length) {
+      const more = document.createElement("button");
+      more.className = "btn ghost";
+      more.textContent = `Show more of the ${step.available} in the record`;
+      more.onclick = async () => {
+        more.disabled = true; more.textContent = "Loading...";
+        const full = await (await fetch(`/api/playbook/${id}?per_step=5`)).json();
+        const s2 = full.steps[i];
+        s2.moments.slice(step.moments.length).forEach(m => holder.appendChild(momentCard(m)));
+        more.remove();
+      };
+      holder.appendChild(more);
+    }
+    body.appendChild(wrap);
+  });
+
+  if ((b.pitfalls || []).length) {
+    const p = document.createElement("div");
+    p.className = "pitfalls";
+    p.innerHTML = `<h3>Common ways this goes wrong</h3><ul>${b.pitfalls.map(x => `<li>${x}</li>`).join("")}</ul>`;
+    body.appendChild(p);
+  }
 }
 
 /* ---------- Library ---------- */
@@ -535,7 +657,7 @@ async function loadContradictions() {
       const col = document.createElement("div");
       col.innerHTML = `<div class="meta">${label}: ${m.session_title} · ${ts(m.start)}</div>
         <blockquote>${(m.text || "").slice(0,220)}</blockquote>`;
-      if (clip) col.appendChild(player(clip));
+      if (clip) col.appendChild(player(clip, m.poster));
       split.appendChild(col);
     });
     card.appendChild(split); out.appendChild(card);
@@ -578,6 +700,7 @@ async function runDrop() {
   }, 4000);
 }
 
+loadPlaybooks();
 loadLibrary();
 loadArchives();
 </script>
