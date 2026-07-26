@@ -22,6 +22,18 @@ ROLE_WITNESS = "witness"
 ROLE_NARRATOR = "narrator"
 ROLE_OTHER = "other"
 
+# Canonical roles -> how they read in the UI. Oyez roles land here too.
+ROLE_NAMES_BY_ROLE = {
+    ROLE_JUDGE: "the court",
+    ROLE_EXAMINER: "attorney",
+    ROLE_WITNESS: "witness",
+    ROLE_NARRATOR: "broadcast voiceover",
+    "scotus_justice": "justice",
+    "attorney": "advocate",
+    "attorney_general": "advocate",
+    "inferred_attorney": "attorney",
+}
+
 RULING_RE = re.compile(r"\b(sustained|overruled|i'?ll allow it|the objection is)\b", re.I)
 OBJECTION_RE = re.compile(r"\bobjection\b", re.I)
 HONORIFIC_RE = re.compile(r"\b(your honor|may it please the court)\b", re.I)

@@ -42,6 +42,8 @@
   .interp .caption { display:block; margin-top:4px; }
   .examples { margin-bottom:16px; font-size:14px; }
   .examples a { color:var(--accent); cursor:pointer; margin-right:14px; text-decoration:underline; }
+  .who { display:inline-block; font-weight:bold; font-size:15px; margin-right:8px; }
+  .who::before { content:"🎙 "; }
 </style>
 </head>
 <body>
@@ -60,6 +62,7 @@
       <button onclick="runSearch()">Search</button>
     </div>
     <div class="controls">
+      <label>Archive: <select id="archive"></select></label>
       <label><input type="checkbox" id="precise" checked> Narrow to the exact words</label>
       <label>Spoken by:
         <select id="role">
@@ -70,13 +73,7 @@
         </select>
       </label>
     </div>
-    <div class="examples">Try:
-      <a onclick="ask('show me every sustained objection')">every sustained objection</a>
-      <a onclick="ask('objection hearsay')">hearsay objections</a>
-      <a onclick="ask('FRE 611 leading question')">FRE 611 leading</a>
-      <a onclick="ask('cross-examination')">cross-examination</a>
-      <a onclick="ask('&quot;no further questions&quot;')">"no further questions"</a>
-    </div>
+    <div class="examples" id="examples"></div>
     <div class="hint">Objections, rulings, and rule numbers are answered from the structured legal-moment index; everything else falls back to semantic search narrowed to the exact sentences. Click any transcript word to jump there.</div>
     <div id="results"></div>
   </section>
@@ -106,8 +103,45 @@
   </section>
 </main>
 <script>
-const CASE = "depp-v-heard";
+let CASE = "depp-v-heard";
 const $ = (s) => document.querySelector(s);
+
+// Query suggestions differ by archive: trials have objections, appellate
+// arguments have justices pressing advocates.
+const EXAMPLES = {
+  trial: [["show me every sustained objection", "every sustained objection"],
+          ["objection hearsay", "hearsay objections"],
+          ["FRE 611 leading question", "FRE 611 leading"],
+          ["cross-examination", "cross-examination"],
+          ['"no further questions"', '"no further questions"']],
+  appellate: [["how did Gorsuch press the advocate", "Gorsuch questioning"],
+              ["Kagan hypothetical", "Kagan hypotheticals"],
+              ["standard of review argument", "standard of review"],
+              ["may it please the court", "opening lines"],
+              ['"what is your best case"', '"your best case"']],
+};
+
+async function loadArchives() {
+  const cases = await (await fetch("/api/cases")).json();
+  const sel = $("#archive");
+  sel.innerHTML = "";
+  cases.forEach(c => {
+    const hours = c.sessions.reduce((a, s) => a + (s.duration || 0), 0) / 3600;
+    const opt = document.createElement("option");
+    opt.value = c.case_id;
+    opt.textContent = `${c.name} — ${c.sessions.length} session${c.sessions.length === 1 ? "" : "s"}, ${hours.toFixed(1)} h`;
+    sel.appendChild(opt);
+  });
+  if (cases.length) { CASE = cases[0].case_id; sel.value = CASE; }
+  sel.onchange = () => { CASE = sel.value; objLoaded = contraLoaded = false; renderExamples(); };
+  renderExamples();
+}
+
+function renderExamples() {
+  const kind = CASE.includes("scotus") || CASE.includes("appellate") ? "appellate" : "trial";
+  $("#examples").innerHTML = "Try: " + EXAMPLES[kind]
+    .map(([q, label]) => `<a onclick='ask(${JSON.stringify(q)})'>${label}</a>`).join(" ");
+}
 
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
   document.querySelectorAll("nav button").forEach(x => x.classList.remove("active"));
@@ -163,11 +197,16 @@ function transcriptPanel(highlight, clipStart, video) {
 function momentCard(m, extraBadges = []) {
   const card = document.createElement("div"); card.className = "card";
   const h = (m.attrs && m.attrs.highlight) || {};
+  const att = (m.attrs && m.attrs.attribution) || {};
   const badges = [...extraBadges];
-  (m.attrs?.roles_present || []).forEach(r => { if (ROLE_NAMES[r] && r !== "other") badges.push(ROLE_NAMES[r]); });
+  if (att.source !== "oyez") {
+    (m.attrs?.roles_present || []).forEach(r => { if (ROLE_NAMES[r] && r !== "other") badges.push(ROLE_NAMES[r]); });
+  }
   const dur = (m.end - m.start).toFixed(0);
+  // Named speakers (Oyez) are the headline; inferred roles ride as badges.
+  const who = att.label ? `<span class="who">${att.label}</span>` : "";
   card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)}–${ts(m.end)} · ${dur}s</div>
-    ${badges.map(b => `<span class="badge">${b}</span>`).join("")}
+    ${who}${badges.map(b => `<span class="badge">${b}</span>`).join("")}
     <blockquote>${(h.quote || m.text || "").slice(0, 320)}</blockquote>`;
   let video = null;
   if (m.stream_url) { video = player(m.stream_url); card.appendChild(video); }
@@ -230,6 +269,7 @@ async function runDrop() {
   }, 4000);
 }
 function ask(q) { $("#q").value = q; runSearch(); }
+loadArchives();
 $("#q").addEventListener("keydown", e => e.key === "Enter" && runSearch());
 $("#reelq").addEventListener("keydown", e => e.key === "Enter" && runReel());
 

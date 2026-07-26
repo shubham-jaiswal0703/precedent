@@ -78,8 +78,29 @@ def semantic_search(
         from .precision import refine_many  # local import: keeps SDK-only paths light
 
         moments = refine_many(moments, query)
+    attribute_moments(moments)
     if speaker_role:
         moments = filter_by_role(moments, speaker_role)
+    return moments
+
+
+def attribute_moments(moments: List[PlayableMoment]) -> List[PlayableMoment]:
+    """Name the speakers in each moment (real names for Oyez sessions)."""
+    from ..moments.attribution import attribute
+
+    for m in moments:
+        labels = (m.attrs.get("highlight") or {}).get("speakers") or []
+        att = attribute(m.video_id, m.start, m.end, labels)
+        m.attrs["attribution"] = {
+            "label": att.label,
+            "named": att.named,
+            "roles": att.roles,
+            "source": att.source,
+            "lead": att.lead,
+            "lead_role": att.lead_role,
+        }
+        if att.roles:
+            m.attrs["roles_present"] = att.roles
     return moments
 
 

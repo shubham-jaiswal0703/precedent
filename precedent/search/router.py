@@ -19,13 +19,23 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 from ..catalog import sessions_for_case
 from ..moments.extractor import Moment, extract_moments
-from .engine import PlayableMoment, clip_url, keyword_search, semantic_search
+from .engine import (PlayableMoment, attribute_moments, clip_url, keyword_search,
+                     semantic_search)
 
 INTENT_OBJECTION = "find_objection"
 INTENT_MOMENT = "find_moment"
 INTENT_RULE = "find_by_rule"
 INTENT_VERBATIM = "find_verbatim"
+INTENT_SPEAKER = "find_by_speaker"
 INTENT_SEMANTIC = "find_semantic"
+
+# Named speakers worth recognising in a query without hitting the corpus first.
+# Surnames only: students type "how did Gorsuch press her", not the full name.
+KNOWN_SPEAKERS = (
+    "roberts", "thomas", "alito", "sotomayor", "kagan", "gorsuch", "kavanaugh",
+    "barrett", "jackson", "breyer", "ginsburg", "scalia", "kennedy", "souter",
+    "stevens", "o'connor", "rehnquist", "prelogar", "vasquez", "rottenborn",
+)
 
 # Objection grounds as students name them -> spoken-word cues.
 GROUNDS: Dict[str, Sequence[str]] = {
@@ -96,6 +106,7 @@ class QueryPlan:
     moment_type: Optional[str] = None
     rule: Optional[str] = None
     phrase: Optional[str] = None
+    speaker: Optional[str] = None
     residual: str = ""
 
 
@@ -135,6 +146,16 @@ def plan_query(query: str) -> QueryPlan:
             return QueryPlan(INTENT_MOMENT, f"Courtroom events: {moment_type.replace('_', ' ')}",
                              moment_type=moment_type)
 
+    named = next((s for s in KNOWN_SPEAKERS if re.search(rf"\b{re.escape(s)}\b", q)), None)
+    if named:
+        residual = re.sub(r"\s+", " ", re.sub(rf"\b{re.escape(named)}\b", " ", q)).strip()
+        # "how did Gorsuch press the advocate" -> topic is "press the advocate"
+        topic = re.sub(r"^(?:how|what|when|where|why|show me|find|did|does|do)\b\s*", "",
+                       residual, flags=re.I).strip()
+        return QueryPlan(INTENT_SPEAKER,
+                         f"Spoken by {named.title()}" + (f" · about “{topic}”" if topic else ""),
+                         speaker=named, residual=residual or query)
+
     return QueryPlan(INTENT_SEMANTIC, "Semantic search across the archive", residual=query)
 
 
@@ -163,6 +184,26 @@ def _structured_search(case_id: str, plan: QueryPlan, limit: int) -> List[Playab
     return found[:limit]
 
 
+def _speaker_search(case_id: str, plan: QueryPlan, limit: int) -> List[PlayableMoment]:
+    """Semantic search, then keep only moments the named speaker actually spoke in.
+
+    Oyez gives us real names per turn, so "how did Gorsuch press the advocate"
+    becomes a genuine speaker filter rather than a hope that the transcript
+    happens to contain his name.
+    """
+    from ..moments.attribution import windows_for_speaker
+
+    moments = semantic_search(case_id, plan.residual or plan.speaker, limit=limit * 3)
+    kept: List[PlayableMoment] = []
+    for m in moments:
+        windows = windows_for_speaker(m.video_id, plan.speaker)
+        if not windows:
+            continue
+        if any(min(m.end, w_end) - max(m.start, w_start) > 0 for w_start, w_end in windows):
+            kept.append(m)
+    return (kept or moments)[:limit]
+
+
 def search(
     case_id: str,
     query: str,
@@ -180,9 +221,12 @@ def search(
             plan.explanation += " — none labeled, showing closest spoken matches"
     elif plan.intent == INTENT_VERBATIM:
         moments = keyword_search(case_id, plan.phrase)[:limit]
+    elif plan.intent == INTENT_SPEAKER:
+        moments = _speaker_search(case_id, plan, limit)
     else:
         moments = semantic_search(case_id, query, limit=limit, speaker_role=role)
 
+    attribute_moments(moments)  # name the voices before we hand results out
     if with_clips:
         for m in moments:
             if not m.stream_url:
@@ -196,6 +240,7 @@ def search(
         "interpretation": plan.explanation,
         "filters": {k: v for k, v in
                     {"ground": plan.ground, "ruling": plan.ruling,
-                     "moment_type": plan.moment_type, "rule": plan.rule}.items() if v},
+                     "moment_type": plan.moment_type, "rule": plan.rule,
+                     "speaker": plan.speaker}.items() if v},
         "results": moments,
     }

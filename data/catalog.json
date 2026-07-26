@@ -98,6 +98,61 @@
       "indexes": {
         "spoken_word": "default"
       }
+    },
+    "m-z-019f9bbc-37a9-7bc3-9330-3715b8e116db": {
+      "video_id": "m-z-019f9bbc-37a9-7bc3-9330-3715b8e116db",
+      "case_id": "scotus-oral-arguments",
+      "title": "Axon Enterprise, Inc. v. Federal Trade Commission \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-86/21-86_20221107-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Malcolm L. Stewart",
+        "Paul D. Clement"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 5493.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bbc-4490-7a82-bad7-9622ae18c491": {
+      "video_id": "m-z-019f9bbc-4490-7a82-bad7-9622ae18c491",
+      "case_id": "scotus-oral-arguments",
+      "title": "Sackett v. Environmental Protection Agency \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-454/21-454_20221003-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Brian H. Fletcher",
+        "Damien M. Schiff"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 6485.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bbc-3d8b-7230-a6c3-1b73edf3145c": {
+      "video_id": "m-z-019f9bbc-3d8b-7230-a6c3-1b73edf3145c",
+      "case_id": "scotus-oral-arguments",
+      "title": "Students for Fair Admissions v. President and Fellows of Harvard College \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/20-1199/20-1199_20221031-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Cameron T. Norris",
+        "Elizabeth B. Prelogar",
+        "Seth P. Waxman"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 6915.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
     }
   }
 }
