@@ -153,6 +153,60 @@
       "indexes": {
         "spoken_word": "default"
       }
+    },
+    "m-z-019f9bbf-1571-7913-84a5-2a26bc7bb2e7": {
+      "video_id": "m-z-019f9bbf-1571-7913-84a5-2a26bc7bb2e7",
+      "case_id": "scotus-oral-arguments",
+      "title": "Arellano v. McDonough \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-432/21-432_20221004-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "James R. Barney",
+        "Sopan Joshi"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 2851.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
+    },
+    "m-z-019f9bbf-9d65-7e63-ac91-8ae33b7825fb": {
+      "video_id": "m-z-019f9bbf-9d65-7e63-ac91-8ae33b7825fb",
+      "case_id": "scotus-oral-arguments",
+      "title": "National Pork Producers Council v. Ross \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-468/21-468_20221011-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Edwin S. Kneedler",
+        "Jeffrey A. Lamken",
+        "Michael J. Mongan",
+        "Timothy S. Bishop"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 7928.0,
+      "indexes": {}
+    },
+    "m-z-019f9bc0-526c-71b3-935a-3f170ccd7b10": {
+      "video_id": "m-z-019f9bc0-526c-71b3-935a-3f170ccd7b10",
+      "case_id": "scotus-oral-arguments",
+      "title": "Cruz v. Arizona \u2014 oral argument",
+      "session_type": "oral_argument",
+      "source_url": "https://s3.amazonaws.com/oyez.case-media.mp3/case_data/2022/21-846/21-846_20221101-argument.delivery.mp3",
+      "date": "",
+      "day_number": null,
+      "witnesses": [
+        "Joseph A. Kanefield",
+        "Neal Kumar Katyal"
+      ],
+      "collection_id": "c-ae63d132-b57b-4ded-8b2b-fa7d425f2e29",
+      "duration": 3717.0,
+      "indexes": {
+        "spoken_word": "default"
+      }
     }
   }
 }

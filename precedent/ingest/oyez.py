@@ -11,7 +11,7 @@ import urllib.request
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
-from ..catalog import SessionEntry, upsert_session
+from ..catalog import SessionEntry, sessions_for_case, upsert_session
 from ..config import DATA_DIR
 from .pipeline import get_or_create_case_collection
 
@@ -114,11 +114,18 @@ def ingest_argument(
     docket: str,
     case_id: str = "scotus-oral-arguments",
     case_name: str = "US Supreme Court — Oral Arguments",
+    skip_existing: bool = True,
 ) -> Optional[SessionEntry]:
     """Upload one SCOTUS argument to VideoDB and catalog its speakers."""
     argument = fetch_argument(term, docket)
     if not argument:
         return None
+
+    if skip_existing:
+        # Re-uploading costs real transcription money; the audio URL is stable.
+        for existing in sessions_for_case(case_id):
+            if existing.source_url == argument.audio_url:
+                return existing
 
     coll = get_or_create_case_collection(case_id, case_name)
     media = coll.upload(url=argument.audio_url, name=f"{argument.case_name} ({argument.term})")

@@ -150,7 +150,7 @@ def plan_query(query: str) -> QueryPlan:
     if named:
         residual = re.sub(r"\s+", " ", re.sub(rf"\b{re.escape(named)}\b", " ", q)).strip()
         # "how did Gorsuch press the advocate" -> topic is "press the advocate"
-        topic = re.sub(r"^(?:how|what|when|where|why|show me|find|did|does|do)\b\s*", "",
+        topic = re.sub(r"^(?:(?:how|what|when|where|why|show me|find|did|does|do)\s+)+", "",
                        residual, flags=re.I).strip()
         return QueryPlan(INTENT_SPEAKER,
                          f"Spoken by {named.title()}" + (f" · about “{topic}”" if topic else ""),
@@ -192,16 +192,20 @@ def _speaker_search(case_id: str, plan: QueryPlan, limit: int) -> List[PlayableM
     happens to contain his name.
     """
     from ..moments.attribution import windows_for_speaker
+    from .precision import refine_many
 
-    moments = semantic_search(case_id, plan.residual or plan.speaker, limit=limit * 3)
+    # Filter on the speaker timeline first (free, local), then pay for
+    # sentence-level refinement only on the moments that survive.
+    candidates = semantic_search(case_id, plan.residual or plan.speaker,
+                                 limit=limit * 3, precise=False)
     kept: List[PlayableMoment] = []
-    for m in moments:
+    for m in candidates:
         windows = windows_for_speaker(m.video_id, plan.speaker)
-        if not windows:
-            continue
-        if any(min(m.end, w_end) - max(m.start, w_start) > 0 for w_start, w_end in windows):
+        if windows and any(min(m.end, w_end) - max(m.start, w_start) > 0
+                           for w_start, w_end in windows):
             kept.append(m)
-    return (kept or moments)[:limit]
+    selected = (kept or candidates)[:limit]
+    return refine_many(selected, plan.residual or plan.speaker, drop_unmatched=False)
 
 
 def search(
