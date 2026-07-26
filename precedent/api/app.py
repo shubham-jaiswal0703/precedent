@@ -659,7 +659,9 @@ def admin_index_v2(request: Request, video_id: str, transcript: bool = False):
 
 
 @app.post("/api/admin/sync")
-def admin_sync(request: Request, docs: str = "catalog,thumbnails,clips,reactions,moments"):
+def admin_sync(request: Request,
+               docs: str = ("catalog,thumbnails,clips,reactions,moments,"
+                            "v2_indexes,v2_moment_indexes,llm_model")):
     """Overwrite store documents from the files shipped in this image.
 
     With Postgres live, the database wins over the repo's data/ files, so
