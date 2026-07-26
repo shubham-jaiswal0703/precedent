@@ -95,7 +95,7 @@ Half of what a law student asks is a filter, not a similarity search.
 | objections, rulings, FRE rule numbers | the structured moment layer |
 | quoted text | keyword search |
 | a named justice or advocate | speaker timeline filter, then semantic |
-| reactions, demeanor, expressions | spoken search joined with the vision index |
+| reactions, demeanor, expressions | spoken search joined with the verified vision index |
 | anything else | semantic search, narrowed |
 
 The detected interpretation is returned with the results, so the UI can show why
@@ -115,15 +115,50 @@ adjourning for the day scores well on "objection hearsay sustained".
 * **Reels** (`reels/builder.py`) compose on a single editor timeline so video,
   chapter cards, and captions coexist as three tracks. Returns a segment manifest
   so a reel is navigable rather than one opaque block.
-* **Formats** (`reels/formats.py`) give separate clips or 9:16. Vertical uses
-  smart reframing that tracks the speaker, which costs minutes per clip, so it
-  runs as a cached background job.
+* **Formats** (`reels/formats.py`) give separate clips or 9:16. The default
+  vertical sets the output resolution to 608x1080 and returns in seconds; the
+  compiler rejects any output taller than 1080, which is why it is not 1080x1920.
+  Smart reframing tracks the speaker and looks better on an off-centre subject,
+  but it costs minutes per clip, so it stays a cached background job.
 * **Contradictions** (`contradictions/finder.py`) extract claims from one
   session, cross-search another for the same topic, judge the pair, and return
   both clips. Exportable as one rendered side-by-side clip.
 * **Case packs** (`casepacks/`) and the **gallery**, every entry playable.
 * **Prep sets** live in the browser, exported as a stitched reel or a citable
   markdown sheet.
+
+## Two layers that exist to keep the product honest
+
+**Every model call goes through `precedent/llm.py`.** The text tier is resolved
+by probing basic, pro, and ultra live and keeping the first that answers, because
+there is no usage endpoint and a spent tier fails every call. It raises rather
+than returning empty text: an empty grounded answer would read as the record
+having nothing to say, which is worse than an error. Output is cached against a
+hash of the prompt, so re-running the contradiction judge with unchanged wording
+is free.
+
+**Demeanour claims are gated on pixels** (`moments/verify.py`). A vision model
+will describe a witness's expression from a broadcast title card, and nothing in
+its output distinguishes that from a real reading. Skin-tone coverage decides
+whether there was anyone in the frame to read; a window that fails keeps its note
+under `camera_saw_unverified` with the reason, rather than presenting it as an
+observation. The obvious sharpness measures are anti correlated on this footage
+and the module records the measurements, so the wrong gate is not rebuilt.
+
+## Search V2, alongside the legacy surface
+
+`indexing/v2.py` builds two indexes per session. The transcript index enables
+`ask()`, which is used only as corroboration behind `corroborate=true`, because
+its source spans run to ten minutes and are therefore not playable. The index
+that earns its place holds *our own moment records* as temporal records with
+`fields` declaring which are aggregatable, so `GET /api/counts/{video_id}`
+returns objection, ruling, and ground counts computed server side. It falls back
+to the local moment scan with an identical response shape, so an unindexed
+session still answers.
+
+An index name is scoped to the collection and pinned to the field set of the
+first video indexed under it, so `MOMENTS_INDEX` carries a version suffix:
+changing the field map means a new name, not an edit.
 
 ## Performance
 
