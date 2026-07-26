@@ -19,3 +19,7 @@ HOSTING.md
 # Deck build artifacts
 deck/composition/snapshots/
 deck/composition/node_modules/
+
+# Kept local only: removed from the repo deliberately
+deck/
+DEMO.md
