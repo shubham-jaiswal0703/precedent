@@ -1,220 +1,149 @@
 # Precedent: Architecture
 
-> Playable testimony for law schools. Turn courtroom archives into a searchable
-> library of real advocacy: the objection, the cross-examination, the moment a
-> witness broke.
+Every answer this system gives is a playable span of real footage. That
+constraint drives the whole design: no assertion about what happened in a
+courtroom exists in the product unless you can press play on it.
 
-Built on [VideoDB](https://docs.videodb.io/). This document maps every product
-feature to the concrete VideoDB primitives that implement it, and defines the
-system layers we build on top.
-
----
-
-## 1. System overview
+VideoDB holds the media, the indexes, and the streaming. Our code is the legal
+layer on top: what counts as a courtroom moment, who is speaking, which index a
+question should be routed to, and how moments become teaching material.
 
 ```
-                        ┌──────────────────────────────────────────────┐
-                        │                 VideoDB Cloud                │
-                        │  Collections · Videos · Indexes · Streaming │
-                        └──────▲───────────────▲───────────────▲──────┘
-                               │ upload         │ index/search  │ HLS streams
-┌───────────────┐      ┌───────┴───────┐ ┌──────┴───────┐ ┌─────┴────────┐
-│ Trial sources │──────▶   INGEST      │ │  INDEXING    │ │  DELIVERY    │
-│ YouTube/files │      │ ingest/       │ │  indexing/   │ │  reels/      │
-└───────────────┘      └───────────────┘ └──────┬───────┘ │  casepacks/  │
-                                                │         └─────▲────────┘
-                                         ┌──────┴───────┐       │
-                                         │ LEGAL-MOMENT │       │
-                                         │ LAYER        │───────┤
-                                         │ moments/     │       │
-                                         │ contradictions/      │
-                                         └──────┬───────┘       │
-                                                │               │
-                                         ┌──────┴───────────────┴──────┐
-                                         │        API (FastAPI)        │
-                                         │  api/  →  web player UI     │
-                                         └─────────────────────────────┘
+    ingest ──▶ index ──▶ legal-moment layer ──▶ routed search ──▶ delivery
+   (sources)  (VideoDB)   (our taxonomy)        (intent first)    (clips, reels,
+                                                                   playbooks,
+                                                                   prep sets)
 ```
 
-Six pipeline stages, one Python package (`precedent/`), VideoDB as the only
-media infrastructure: no ffmpeg, no local video files, no vector DB. Every
-"answer" the system gives is a **Shot** (`video_id`, `start`, `end`, `text`,
-`score`) rendered as an instantly playable HLS `stream_url`.
+## Storage
 
-### API-generation note
+`precedent/store.py` keeps every persisted document (catalog, caches, job log)
+as JSON under a name. Postgres when `DATABASE_URL` is set, files otherwise, one
+interface either way. On first boot against an empty database it seeds from the
+files committed in `data/`, so a fresh deploy starts with a warm library rather
+than an empty one. One table with a JSONB column, because the data is genuinely
+document-shaped.
 
-The VideoDB Python SDK has two coexisting generations. We use the **proven
-legacy surface** (`index_spoken_words`, `index_scenes`, `search`,
-`videodb.timeline.Timeline`) as the primary path: it's what all cookbooks and
-Director use: and adopt new-surface calls (`video.ask()`, `video.clip()`,
-`semantic_search`, `query`/`aggregate`, editor `Timeline`) where they buy us
-something, behind thin wrappers in `precedent/indexing/` and
-`precedent/search/` so we can swap generations without touching product code.
+`GET /api/health` reports which backend is live, whether webhooks are wired, and
+the deployed commit SHA.
 
----
+## Stage 1: Ingest
 
-## 2. Stage 1: Ingest (`precedent/ingest/`)
+One VideoDB **collection per case**, plus a local catalog holding what VideoDB
+does not model: case, session type, date, docket, judge, witnesses, and which
+indexes exist. Four ingesters, each in `precedent/ingest/`:
 
-**Product:** load full trials, depositions, hearings: days of footage as one
-queryable archive.
+| Source | Module | Notes |
+|---|---|---|
+| Oyez (SCOTUS) | `oyez.py` | Public S3 MP3s plus a speaker-labelled aligned transcript, stored as ground-truth attribution |
+| CourtListener | `batch.py` | 100k+ appellate recordings. Court sites refuse VideoDB's fetcher, so use CourtListener's own mirror |
+| Cameras in Courts | `cameras.py` | 990 full federal trials. Metadata parsed from the fielded description; the CDN refuses VideoDB's fetcher, so files relay through the local machine |
+| Any URL | `pipeline.py` | The "Add a Link" path, including YouTube |
 
-| Concern | VideoDB primitive |
+Long ingests run as jobs (`precedent/jobs.py`): `POST /api/analyze` returns a job
+id immediately and VideoDB calls `POST /api/webhooks/videodb` when indexing
+finishes, so an ingest never depends on one process staying alive.
+
+## Stage 2: Index
+
+Up to three VideoDB indexes per session, each answering a different question:
+
+1. **Spoken word** (`index_spoken_words`). Powers semantic and keyword search.
+   Its transcript carries **word-level timestamps and speaker labels**, which is
+   what makes precise highlighting and role inference possible.
+2. **Courtroom events** (`index_scenes`, time-based, custom prompt). Visual
+   context for trial footage.
+3. **Reactions** (`index_scenes` with a demeanor prompt, 8s sampling). What every
+   visible face and body was doing. Only on sessions that have video: audio-only
+   argument has no faces, and inventing them would be inventing evidence.
+
+## Stage 3: The legal-moment layer
+
+`precedent/moments/extractor.py` is the core IP. Courtroom speech is ritualised,
+so the language of court gives reliable anchors with exact timestamps. Two anchor
+sets, selected by session type, because a SCOTUS argument has no objections to
+find and a trial has no standard-of-review colloquy:
+
+* **Trial**: objections and their grounds and rulings, impeachment by prior
+  statement, motions to strike, sidebars, offers of proof, motions in limine,
+  dispositive motions, curative instructions, expert qualification, sequestration.
+* **Appellate**: opening lines, hypotheticals from the bench, standard of review,
+  concessions and refusals to concede, line-drawing, interruption recovery, time
+  expiring, rebuttal, justiciability, stare decisis, interpretive method, record
+  citations.
+
+Matching runs over the **joined** transcript with an offset map back to
+timestamps. VideoDB returns roughly five-word chunks, so per-chunk matching can
+never see a phrase like "may it please the court". Fixing this took one argument
+from 3 moments to 65. Results are cached per session.
+
+**Attribution** (`moments/attribution.py`) names the voices, preferring Oyez's
+real names over inference. Where there is no ground truth,
+`moments/speakers.py` infers judge, examiner, witness, and broadcast narrator
+from how each speaker behaves: the examiner asks questions, the witness answers
+at length, the judge rules on objections, and the narrator talks *about* the
+proceeding in the third person and never says "your honor". That last one matters
+because broadcaster voiceover otherwise contaminates the contradiction finder.
+
+## Stage 4: Routed search
+
+Half of what a law student asks is a filter, not a similarity search.
+`precedent/search/router.py` classifies the question first:
+
+| Intent | Goes to |
 |---|---|
-| Archive namespace | One `Collection` per case (`conn.create_collection`) |
-| YouTube ingestion | `coll.upload(url="https://youtube.com/...")`: native |
-| Local files | `coll.upload(file_path=...)` |
-| Finding footage | `conn.youtube_search(query)` (optional helper) |
-| Async ingest | `callback_url` on upload/transcode for job tracking |
+| objections, rulings, FRE rule numbers | the structured moment layer |
+| quoted text | keyword search |
+| a named justice or advocate | speaker timeline filter, then semantic |
+| reactions, demeanor, expressions | spoken search joined with the vision index |
+| anything else | semantic search, narrowed |
 
-Each uploaded video gets a **manifest entry** in our local catalog
-(`data/catalog.json` → SQLite later): case, session type
-(`trial_day | deposition | hearing`), date, witnesses on the stand, source URL.
-This is the metadata VideoDB doesn't know and the contradiction finder needs
-(deposition-vs-trial pairing, day ordering).
+The detected interpretation is returned with the results, so the UI can show why
+these clips came back.
 
-## 3. Stage 2: Indexing (`precedent/indexing/`)
+`search/precision.py` then narrows each hit from a wide shot window to the run of
+sentences that actually answers the question, flags matched words for
+highlighting, and re-ranks on the user's own terms above synonym expansions.
+Semantic score alone puts topically-adjacent-but-wrong moments first: a judge
+adjourning for the day scores well on "objection hearsay sustained".
 
-**Product:** index spoken word plus courtroom *events*.
+## Stage 5: Delivery
 
-Three indexes per video, built concurrently (all support `callback_url`):
+* **Playbooks** (`playbooks.py`) organise the library by task. Teaching notes are
+  written and attributed, not generated, because the craft is settled and
+  citable. The clips are the evidence.
+* **Reels** (`reels/builder.py`) compose on a single editor timeline so video,
+  chapter cards, and captions coexist as three tracks. Returns a segment manifest
+  so a reel is navigable rather than one opaque block.
+* **Formats** (`reels/formats.py`) give separate clips or 9:16. Vertical uses
+  smart reframing that tracks the speaker, which costs minutes per clip, so it
+  runs as a cached background job.
+* **Contradictions** (`contradictions/finder.py`) extract claims from one
+  session, cross-search another for the same topic, judge the pair, and return
+  both clips. Exportable as one rendered side-by-side clip.
+* **Case packs** (`casepacks/`) and the **gallery**, every entry playable.
+* **Prep sets** live in the browser, exported as a stitched reel or a citable
+  markdown sheet.
 
-1. **Spoken-word index**: `video.index_spoken_words()`. Powers semantic +
-   keyword search and word-level transcripts
-   (`video.get_transcript(segmenter=Segmenter.word)`).
-2. **Courtroom-events scene index**: `video.index_scenes(...)` with a custom
-   legal prompt ("Describe courtroom activity: who is at the podium, is an
-   objection occurring, is an exhibit displayed, witness demeanor..."). Trial
-   footage is mostly static-camera, so we use `time_based` extraction
-   (`{"time": 20, "select_frames": ["middle"]}`), not shot-based cut detection.
-3. **Legal-moment annotations** (our layer, stored back INTO VideoDB): see §4.
-   Via the advanced pipeline: `video.extract_scenes()` → annotate each scene →
-   `video.index_scenes(scenes=annotated, name="legal_moments")`, with
-   `metadata={"witness": ..., "moment_type": ..., "ruling": ...}` so search can
-   *filter* by structured fields, not just match text.
+## Performance
 
-Speaker attribution: VideoDB has no diarization for uploaded footage (meetings
-only), so witness/attorney attribution comes from (a) the transcript itself, courtroom speech is highly structured ("Objection, Your Honor" / "Sustained" /
-"Pass the witness"): and (b) LLM tagging of transcript windows, written into
-scene `metadata`. This is a deliberate scope cut for the hackathon.
+Everything expensive is per-session work multiplied by the corpus: a transcript
+fetch per session for moments, a thumbnail generation per cover, a
+`generate_stream` per clip. None is slow alone; all are slow across forty
+sessions. So each has a cache in the store, the moment pool is memoized against
+the catalog's change marker, and a startup hook warms the gallery in a background
+thread. `scripts/warm_caches.py` does the same offline and should be run after
+any ingest. First load went from minutes to under three seconds; warm loads are
+a few milliseconds.
 
-## 4. Stage 3: Legal-moment layer (`precedent/moments/`)
+## Known limits
 
-**Product:** objections (and rulings), cross-examination exchanges, expert
-testimony, sidebars, verdicts, emotional shifts.
-
-This is our core IP on top of VideoDB. A **moment extractor** walks the
-word-level transcript in windows and classifies legal events:
-
-- **Rule-first pass** (cheap, reliable): regex/keyword detection of the ritual
-  language of court: "objection", "sustained"/"overruled", "sidebar",
-  "no further questions", "pass the witness", "please rise", oath
-  administration, "move to strike". Courtroom discourse is formulaic enough
-  that this pass alone catches most objection events with exact timestamps.
-- **LLM enrichment pass**: classify each candidate window (objection ground:
-  hearsay/leading/relevance; examination phase: direct/cross/redirect; witness
-  on stand; emotional register) using transcript context.
-
-Output: `Moment` records `{video_id, start, end, moment_type, attrs, text}`, persisted (a) locally in the catalog and (b) into VideoDB as the
-`legal_moments` scene index with `metadata`, so professors' queries can hit
-them via `coll.search(..., filter=[...])` and results come back as playable
-Shots.
-
-## 5. Stage 4: Ask like a professor (`precedent/search/`)
-
-**Product:** natural-language questions → playable moments.
-
-| Query shape | Implementation |
-|---|---|
-| "Find the cross-examination on the DNA evidence" | `coll.search(query, SearchType.semantic, IndexType.spoken_word)` → Shots |
-| "Show me every sustained objection" | structured: filter `legal_moments` index (`moment_type=objection, ruling=sustained`) → Shots; also `video.query()`/`aggregate()` on the new surface |
-| "What did the witness say about the photos?" | `video.ask(question, include_sources=True)`, grounded QA with source shots |
-| Exact-phrase lookups | `video.search(SearchType.keyword)` (video-scope only, we fan out across the collection ourselves) |
-| One-shot prompt→clips | `video.clip(prompt, content_type="spoken")` |
-
-A small **query router** classifies the professor's question into
-structured-filter vs semantic vs QA and dispatches. Every result path
-normalizes to `list[Shot]` → each shot playable via `shot.stream_url` /
-`player_url`, with transcript context from `get_transcript(start, end)`.
-
-## 6. Stage 5: Contradiction finder (`precedent/contradictions/`)
-
-**Product (signature feature):** same witness, different day or
-deposition-vs-trial → side-by-side playable clips where statements conflict.
-
-Pipeline:
-1. **Pair selection**: catalog metadata picks the video pair (witness X:
-   deposition vid + trial-day vid, or day N vs day M).
-2. **Claim extraction**: LLM extracts factual claims per witness segment from
-   word-timestamped transcripts: `{claim, start, end, quote}`.
-3. **Cross-matching**: for each claim in A, semantic-search video B for the
-   same topic (`video.search(claim_text, semantic)`), giving candidate
-   opposing segments *with timestamps*: VideoDB does the alignment work.
-4. **Conflict judgment**: LLM compares claim A vs candidate B transcripts:
-   `consistent | contradictory | evolved`, with reasoning.
-5. **Side-by-side render**: for each contradiction:
-   `video.generate_stream(timeline=[(a_start, a_end)])` +
-   same for B → two instant clips presented in a split player UI. Optional
-   stitched A-then-B version via `Timeline.add_inline(VideoAsset(A), VideoAsset(B))`
-   with `TextAsset` overlays ("Deposition, Jan 12" / "Trial, Day 4").
-
-## 7. Stage 6: Teaching reels & case packs (`precedent/reels/`, `precedent/casepacks/`)
-
-**Reels** ("every leading-question objection in the archive, stitched"):
-- Query the moments layer → shots across many videos.
-- `videodb.timeline.Timeline`: `add_inline(VideoAsset(...))` per shot,
-  `add_overlay(TextAsset(...))` chapter cards between segments; optional
-  `coll.generate_voice()` TTS intro as an `AudioAsset`.
-- `timeline.generate_stream()` → one playable reel URL; `conn.download()` for
-  an MP4 the professor can keep. Quick path: `search_result.compile()`.
-- Burned captions where useful: `video.add_subtitle(SubtitleStyle(...))`.
-
-**Case packs** (playable casebook chapter): structured JSON per trial: witness list, examination timeline, objection log (with rulings + grounds),
-key exchanges, verdict: every entry carrying `{start, end, stream_url,
-player_url, transcript}`. Generated from catalog + moments + `video.ask()`
-summaries; exported to `data/casepacks/<case>.json` and rendered by the UI.
-Thumbnails per entry via `video.generate_thumbnail(time=...)`.
-
-## 8. API + UI (`precedent/api/`)
-
-- **FastAPI** backend: `/cases`, `/cases/{id}/ingest`, `/search`,
-  `/moments`, `/contradictions/{witness}`, `/reels`, `/casepacks/{id}`.
-  Long jobs (ingest/index) run async; VideoDB `callback_url` webhooks update
-  job state.
-- **Frontend**: React + VideoDB `player_url`/embed codes: no video serving on
-  our side. Split-screen component for contradiction pairs.
-- **Later/optional:** lift agents from [Director](https://github.com/video-db/Director)
-  (MIT): `prompt_clip`, `comparison`, `subtitle`, as a chat interface over
-  the archive.
-
-## 9. VideoDB feature coverage checklist
-
-Used: collections · YouTube + file upload · youtube_search · spoken-word index
-· scene index (time-based, custom prompt) · custom-annotated scene index with
-metadata filters · semantic search (video + collection) · keyword search ·
-`ask()` grounded QA · `clip()` · Shots/compile · `generate_stream(timeline)` ·
-Timeline + Video/Text/Audio assets · `add_subtitle` · transcripts
-(word/sentence/windowed) · thumbnails · `callback_url` async jobs ·
-`conn.download` MP4 export · `generate_voice` TTS (reel narration) ·
-`translate_transcript` (stretch: multilingual case packs).
-
-Known gaps we design around: no speaker diarization on uploads (transcript
-structure + LLM tagging), keyword search is video-scope (we fan out),
-side-by-side is composed in the UI / editor-Timeline (no one-call primitive).
-
-## 10. Demo corpus
-
-Primary: **Depp v. Heard (2022)**: pool-feed audio is clean; objection-dense;
-same witnesses across days *and* video depositions played in open court →
-contradiction pairs inside one archive. Ingest 2-3 targeted segments (one
-direct, one cross, one rebuttal) rather than full 8-hour days.
-Secondary (stretch): **Bill Gates 1998 deposition**: public-record government
-exhibit, demonstrates archival-quality handling.
-
-## 11. Build order
-
-1. `ingest` + catalog + `indexing` wrappers: get one trial segment searchable end-to-end
-2. `search` query router → playable shots (demo beat 1)
-3. `moments` extractor (rule-first, then LLM) → objection log (demo beat 2)
-4. `contradictions` pipeline (demo beat 3: the aha)
-5. `reels` + `casepacks` (demo beats 4-5)
-6. FastAPI + minimal player UI last: CLI demos everything before the UI exists
+* **Vertical reframing is slow and occasionally fails** upstream. It is cached
+  and asynchronous, and a failure is surfaced rather than hidden.
+* **Search still uses the legacy VideoDB surface.** Migrating to Search V2 would
+  unlock VideoDB's own grounded `ask()`; today grounded answers are
+  retrieve-then-generate, which keeps citations under our control.
+* **Reactions cover three sessions.** The medium decides this, not the budget.
+* **Expression descriptions are model output about a real recording.** They are
+  presented as what the camera saw, next to the clip, so a reader can always
+  check them against the footage.

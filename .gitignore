@@ -10,3 +10,8 @@ data/cache/
 dist/
 *.egg-info/
 node_modules/
+
+# Working notes and deployment specifics: kept locally, not part of the project
+LEARNINGS.md
+CONTEXT.md
+HOSTING.md

@@ -18,6 +18,7 @@ from ..catalog import _load as load_catalog, sessions_for_case
 from ..config import DATA_DIR, PROJECT_ROOT
 from ..discuss import discuss
 from ..reels.builder import ReelSpec, build_reel
+from ..reels.formats import request_vertical, separate_clips, vertical_status
 from ..search import engine, router
 
 app = FastAPI(title="Precedent", description="Playable testimony for law schools")
@@ -86,6 +87,18 @@ def search(
                 pass
         results.append(item)
     return {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
+
+
+@app.get("/api/vertical")
+def vertical_state(keys: str = Query(..., description="comma separated clip keys")):
+    """Poll vertical reframe jobs."""
+    return {"status": vertical_status([k for k in keys.split(",") if k.strip()])}
+
+
+@app.post("/api/vertical")
+def vertical_request(video_id: str, start: float, end: float):
+    """Ask for one clip in 9:16. Cached, so asking twice is free."""
+    return request_vertical(video_id, start, end)
 
 
 @app.get("/api/reactions/sessions")
@@ -362,6 +375,8 @@ def reel(
     subtitles: bool = False,
     title_cards: bool = True,
     voiceover: bool = False,
+    output: str = Query("stitched", description="stitched or separate"),
+    aspect: str = Query("16:9", description="16:9 or 9:16"),
 ):
     """Build a teaching reel across the library.
 
@@ -398,6 +413,24 @@ def reel(
         for bucket in list(by_case.values()):
             if bucket and len(ordered) < limit:
                 ordered.append(bucket.pop(0))
+
+    if output == "separate":
+        clips = separate_clips(ordered[:limit], seconds_per_clip=seconds_per_clip,
+                              max_total_seconds=max_total_seconds, aspect=aspect)
+        if not clips:
+            raise HTTPException(400, "Every moment was shorter than the minimum clip length")
+        return {
+            "output": "separate",
+            "aspect": aspect,
+            "count": len(clips),
+            "total_seconds": round(sum(c.seconds for c in clips), 1),
+            "sources": sorted({c.session_title for c in clips if c.session_title}),
+            "scope": wanted,
+            "clips": [c.__dict__ for c in clips],
+            "vertical_note": ("Vertical reframing tracks the speaker and takes a few minutes "
+                              "per clip. Each one appears here as it finishes."
+                              if aspect == "9:16" else ""),
+        }
 
     intro = ""
     if voiceover:

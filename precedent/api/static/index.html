@@ -202,6 +202,11 @@
     margin-top:10px; padding:10px 14px; font-size:14.5px; line-height:1.6;
     background:#f3ede2; border-left:3px solid #b08d3f; border-radius:var(--radius);
   }
+  .card.vertical video { max-height:520px; width:auto; max-width:min(100%,300px); display:block; margin:10px auto 0; }
+  .waiting {
+    margin-top:10px; padding:9px 13px; font-size:14px; font-style:italic;
+    background:#f3ede2; border-left:3px solid #b08d3f; color:#6b5a33;
+  }
   .chapters { list-style:none; margin:12px 0 0; padding:0; border-top:1px solid var(--line); }
   .chapters li { border-bottom:1px solid var(--line); }
   .chapters li button {
@@ -340,6 +345,18 @@
           <option value="300">5 minutes</option>
           <option value="600">10 minutes</option>
           <option value="1200">20 minutes</option>
+        </select>
+      </label>
+      <label>Output
+        <select id="reelout_mode">
+          <option value="stitched">one stitched reel</option>
+          <option value="separate">separate clips</option>
+        </select>
+      </label>
+      <label>Shape
+        <select id="reelaspect">
+          <option value="16:9">16:9 landscape</option>
+          <option value="9:16">9:16 vertical</option>
         </select>
       </label>
       <label><input type="checkbox" id="reelsubs"> Burn in subtitles</label>
@@ -1002,13 +1019,17 @@ async function runReel() {
     subtitles: $("#reelsubs").checked,
     voiceover: $("#reelvoice").checked,
   });
+  params.set("output", $("#reelout_mode").value);
+  params.set("aspect", $("#reelaspect").value);
   if ($("#reelscope").value) params.set("case", $("#reelscope").value);
   if ($("#reelcap").value) params.set("max_total_seconds", $("#reelcap").value);
-  out.innerHTML = '<div class="loading">Cutting the reel across the library' +
-    ($("#reelsubs").checked ? ", then burning in subtitles" : "") + '...</div>';
+  out.innerHTML = '<div class="loading">' +
+    ($("#reelout_mode").value === "separate" ? "Cutting separate clips" : "Cutting the reel across the library") +
+    ($("#reelsubs").checked && $("#reelout_mode").value !== "separate" ? ", then burning in subtitles" : "") + '...</div>';
   const r = await fetch(`/api/reel?${params}`);
   if (!r.ok) { out.innerHTML = '<div class="empty">No moments matched that anywhere in the library.</div>'; return; }
   const data = await r.json();
+  if (data.output === "separate") { renderSeparate(data, out); return; }
   const mins = Math.floor(data.total_seconds / 60), secs = Math.round(data.total_seconds % 60);
   out.innerHTML = "";
   const card = document.createElement("div");
@@ -1046,6 +1067,72 @@ async function runReel() {
     card.appendChild(list);
   }
   out.appendChild(card);
+}
+
+function renderSeparate(data, out) {
+  const mins = Math.floor(data.total_seconds / 60), secs = Math.round(data.total_seconds % 60);
+  out.innerHTML = `<div class="interp"><b>${data.count} separate clips</b> · ${mins}m ${secs}s total · ${data.aspect}
+      ${data.sources && data.sources.length ? `<div class="caption">From: ${data.sources.join("; ")}</div>` : ""}
+      ${data.vertical_note ? `<div class="caption">${data.vertical_note}</div>` : ""}
+    </div>`;
+  const pending = [];
+  data.clips.forEach(clip => {
+    const card = document.createElement("div");
+    card.className = "card" + (data.aspect === "9:16" ? " vertical" : "");
+    const vertical = clip.vertical_state === "ready" && clip.vertical_stream_url;
+    card.innerHTML = `<div class="cardhead">
+        <div class="meta" style="margin:0">${clip.index}. ${clip.session_title} · ${ts(clip.start)} · ${clip.seconds}s</div>
+      </div>
+      <span class="badge">${clip.label}</span>
+      <blockquote>${(clip.text || "").slice(0, 260)}</blockquote>`;
+    const save = document.createElement("button");
+    const already = inSet(clip);
+    save.className = "savebtn" + (already ? " saved" : "");
+    save.textContent = already ? "In my set" : "Save to my set";
+    save.onclick = (e) => { e.stopPropagation(); toggleSet(clip, save); };
+    card.querySelector(".cardhead").appendChild(save);
+
+    const holder = document.createElement("div");
+    holder.dataset.key = clip.vertical_key;
+    if (vertical) {
+      holder.appendChild(player(clip.vertical_stream_url, clip.poster));
+    } else if (data.aspect === "9:16") {
+      holder.innerHTML = `<div class="waiting">Reframing to 9:16, tracking the speaker. This takes a few minutes.</div>`;
+      if (clip.stream_url) holder.appendChild(player(clip.stream_url, clip.poster));
+      pending.push(clip.vertical_key);
+    } else if (clip.stream_url) {
+      holder.appendChild(player(clip.stream_url, clip.poster));
+    }
+    card.appendChild(holder);
+    out.appendChild(card);
+  });
+  if (pending.length) pollVertical(pending, out);
+}
+
+async function pollVertical(keys, out) {
+  const outstanding = new Set(keys);
+  const tick = async () => {
+    if (!outstanding.size) return;
+    const r = await fetch(`/api/vertical?keys=${encodeURIComponent([...outstanding].join(","))}`);
+    if (r.ok) {
+      const { status } = await r.json();
+      Object.entries(status).forEach(([key, s]) => {
+        const holder = out.querySelector(`[data-key="${key}"]`);
+        if (!holder) return;
+        if (s.state === "ready" && s.stream_url) {
+          holder.innerHTML = "";
+          holder.appendChild(player(s.stream_url));
+          outstanding.delete(key);
+        } else if (s.state === "failed") {
+          const note = holder.querySelector(".waiting");
+          if (note) note.textContent = `Could not reframe this clip: ${s.error || "unknown error"}`;
+          outstanding.delete(key);
+        }
+      });
+    }
+    if (outstanding.size) setTimeout(tick, 15000);
+  };
+  setTimeout(tick, 15000);
 }
 
 async function loadReelScopes() {
