@@ -112,6 +112,32 @@
   .pitfalls ul { margin:8px 0 0 20px; }
   .pitfalls li { margin-bottom:6px; }
 
+  .countpill {
+    display:inline-block; min-width:20px; padding:0 6px; margin-left:4px; border-radius:20px;
+    background:var(--accent); color:var(--paper); font-size:11.5px; line-height:18px; text-align:center;
+  }
+  .countpill.zero { background:var(--line); color:var(--ink-soft); }
+  .setbar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+  .setbar input { flex:1; min-width:240px; padding:12px 14px; border:1px solid var(--line); background:#fff; border-radius:var(--radius); }
+  .savebtn {
+    border:1px solid var(--line); background:#faf6ef; color:var(--accent); cursor:pointer;
+    padding:4px 11px; border-radius:20px; font-size:13px; margin-left:auto;
+  }
+  .savebtn:hover { border-color:var(--accent); background:var(--accent-soft); }
+  .savebtn.saved { background:var(--accent); color:var(--paper); border-color:var(--accent); }
+  .cardhead { display:flex; align-items:center; gap:10px; }
+  .setrow { display:flex; gap:10px; align-items:flex-start; }
+  .setrow .order { display:flex; flex-direction:column; gap:2px; padding-top:14px; }
+  .setrow .order button {
+    border:1px solid var(--line); background:#faf6ef; cursor:pointer; width:26px; line-height:18px;
+    color:var(--ink-soft); border-radius:2px;
+  }
+  .setrow .card { flex:1; min-width:0; }
+  .notefield {
+    width:100%; margin-top:8px; padding:8px 10px; border:1px dashed var(--line);
+    background:#faf7f1; font:inherit; font-size:14px; border-radius:var(--radius);
+  }
+
   /* Case detail */
   .backlink { background:none; border:none; color:var(--accent); cursor:pointer; padding:0; margin-bottom:14px; }
   .askbar { display:flex; gap:10px; margin:16px 0 10px; }
@@ -201,6 +227,7 @@
   <button data-view="search">Search</button>
   <button data-view="contradictions">Contradictions</button>
   <button data-view="reel">Teaching Reel</button>
+  <button data-view="myset">My Set <span id="setcount" class="countpill">0</span></button>
   <button data-view="drop">Add a Link</button>
 </nav>
 <main>
@@ -274,6 +301,19 @@
     <div id="reelout"></div>
   </section>
 
+  <section id="myset" class="view">
+    <h2>My prep set</h2>
+    <p class="sub">Clips you saved, in the order you will use them. Stored in this browser, so it survives without an account.</p>
+    <div class="setbar">
+      <input id="setname" placeholder="Name this set, for example: cross of Dr. Reyes">
+      <button class="btn" onclick="exportReel()">Play as one reel</button>
+      <button class="btn ghost" onclick="exportSheet()">Download prep sheet</button>
+      <button class="btn ghost" onclick="clearSet()">Clear</button>
+    </div>
+    <div id="setout"></div>
+    <div id="setexport"></div>
+  </section>
+
   <section id="drop" class="view">
     <h2>Add a link</h2>
     <div class="searchbar">
@@ -332,6 +372,7 @@ function showView(name) {
   document.querySelectorAll("nav button").forEach(b =>
     b.classList.toggle("active", b.dataset.view === name));
   if (name === "contradictions") loadContradictions();
+  if (name === "myset") renderSet();
 }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => showView(b.dataset.view));
 
@@ -387,10 +428,18 @@ function momentCard(m, extraBadges = []) {
     (attrs.roles_present || []).forEach(r => { if (ROLE_NAMES[r] && r !== "other") badges.push(ROLE_NAMES[r]); });
   }
   const dur = Math.round((m.end - m.start));
-  card.innerHTML = `<div class="meta">${m.session_title || m.session || ""} · ${ts(m.start)} to ${ts(m.end)} · ${dur}s</div>
+  card.innerHTML = `<div class="cardhead">
+      <div class="meta" style="margin:0">${m.session_title || m.session || ""} · ${ts(m.start)} to ${ts(m.end)} · ${dur}s</div>
+    </div>
     ${att.label ? `<span class="who">${att.label}</span>` : ""}
     ${badges.map(b => `<span class="badge">${b}</span>`).join("")}
     <blockquote>${(h.quote || m.text || "").slice(0,340)}</blockquote>`;
+  const save = document.createElement("button");
+  const already = inSet(m);
+  save.className = "savebtn" + (already ? " saved" : "");
+  save.textContent = already ? "In my set" : "Save to my set";
+  save.onclick = (e) => { e.stopPropagation(); toggleSet(m, save); };
+  card.querySelector(".cardhead").appendChild(save);
   let video = null;
   if (m.stream_url) { video = player(m.stream_url, m.poster); card.appendChild(video); }
   else {
@@ -425,6 +474,136 @@ function momentCard(m, extraBadges = []) {
     card.appendChild(note);
   }
   return card;
+}
+
+/* ---------- My prep set (browser-local, so a redeploy never drops it) ---------- */
+const SET_KEY = "precedent.set.v1";
+
+function loadSet() {
+  try { return JSON.parse(localStorage.getItem(SET_KEY)) || []; }
+  catch { return []; }
+}
+function saveSet(clips) {
+  localStorage.setItem(SET_KEY, JSON.stringify(clips));
+  refreshSetCount();
+}
+function clipKey(m) { return `${m.video_id}:${Math.round(m.start)}`; }
+function inSet(m) { return loadSet().some(c => clipKey(c) === clipKey(m)); }
+
+function toggleSet(m, button) {
+  const clips = loadSet();
+  const key = clipKey(m);
+  const at = clips.findIndex(c => clipKey(c) === key);
+  if (at >= 0) {
+    clips.splice(at, 1);
+    button.classList.remove("saved");
+    button.textContent = "Save to my set";
+  } else {
+    const h = (m.attrs && m.attrs.highlight) || {};
+    const att = (m.attrs && m.attrs.attribution) || {};
+    clips.push({
+      video_id: m.video_id, start: m.start, end: m.end,
+      label: att.label || (m.attrs && m.attrs.moment_type) || "",
+      session_title: m.session_title || m.session || "",
+      text: (h.quote || m.text || "").slice(0, 600),
+      poster: m.poster || "",
+      note: "",
+    });
+    button.classList.add("saved");
+    button.textContent = "In my set";
+  }
+  saveSet(clips);
+}
+
+function refreshSetCount() {
+  const n = loadSet().length;
+  const pill = $("#setcount");
+  if (pill) { pill.textContent = n; pill.classList.toggle("zero", n === 0); }
+}
+
+function clearSet() {
+  if (!loadSet().length || !confirm("Remove every clip from your set?")) return;
+  saveSet([]);
+  renderSet();
+}
+
+function move(index, delta) {
+  const clips = loadSet();
+  const to = index + delta;
+  if (to < 0 || to >= clips.length) return;
+  [clips[index], clips[to]] = [clips[to], clips[index]];
+  saveSet(clips);
+  renderSet();
+}
+
+function renderSet() {
+  const out = $("#setout");
+  const clips = loadSet();
+  $("#setexport").innerHTML = "";
+  if (!clips.length) {
+    out.innerHTML = '<div class="empty">Nothing saved yet. Use "Save to my set" on any clip.</div>';
+    return;
+  }
+  out.innerHTML = "";
+  clips.forEach((c, i) => {
+    const row = document.createElement("div");
+    row.className = "setrow";
+    const order = document.createElement("div");
+    order.className = "order";
+    order.innerHTML = `<button title="Move up">&#9650;</button><button title="Move down">&#9660;</button>`;
+    order.children[0].onclick = () => move(i, -1);
+    order.children[1].onclick = () => move(i, 1);
+    row.appendChild(order);
+    const card = momentCard({ ...c, attrs: {} }, [`${i + 1}`]);  // poster rides along on c
+    const note = document.createElement("input");
+    note.className = "notefield";
+    note.placeholder = "Your note for practice, for example: watch the pause before the next question";
+    note.value = c.note || "";
+    note.oninput = () => {
+      const all = loadSet();
+      all[i].note = note.value;
+      saveSet(all);
+    };
+    card.appendChild(note);
+    row.appendChild(card);
+    out.appendChild(row);
+  });
+}
+
+async function exportReel() {
+  const clips = loadSet();
+  if (!clips.length) return;
+  const box = $("#setexport");
+  box.innerHTML = '<div class="loading">Stitching your set into one reel...</div>';
+  const r = await fetch("/api/export/reel", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: $("#setname").value || "Prep set", clips }),
+  });
+  if (!r.ok) { box.innerHTML = '<div class="empty">Could not build the reel.</div>'; return; }
+  const data = await r.json();
+  box.innerHTML = `<div class="card"><div class="meta">${data.count} clips, one continuous reel</div></div>`;
+  box.firstChild.appendChild(player(data.stream_url, clips[0] && clips[0].poster));
+}
+
+async function exportSheet() {
+  const clips = loadSet();
+  if (!clips.length) return;
+  const name = $("#setname").value || "Prep set";
+  const box = $("#setexport");
+  box.innerHTML = '<div class="loading">Building your prep sheet...</div>';
+  const r = await fetch("/api/export/sheet", {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, clips }),
+  });
+  if (!r.ok) { box.innerHTML = '<div class="empty">Could not build the sheet.</div>'; return; }
+  const text = await r.text();
+  const url = URL.createObjectURL(new Blob([text], { type: "text/markdown" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name.replace(/[^\w -]/g, "").replace(/\s+/g, "-").toLowerCase() + ".md";
+  a.click();
+  URL.revokeObjectURL(url);
+  box.innerHTML = '<div class="card"><div class="meta">Downloaded</div><blockquote>Every clip with its source, timecode, transcript, and a playable link.</blockquote></div>';
 }
 
 /* ---------- Prepare ---------- */
@@ -700,6 +879,7 @@ async function runDrop() {
   }, 4000);
 }
 
+refreshSetCount();
 loadPlaybooks();
 loadLibrary();
 loadArchives();

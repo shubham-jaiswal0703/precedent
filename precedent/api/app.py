@@ -1,12 +1,13 @@
 """Precedent API: professor questions in, playable moments out."""
 import json
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 from uuid import uuid4
 
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 from ..casepacks.gallery import case_cards, case_detail
 from ..playbooks import build as build_playbook, index as playbook_index
@@ -163,6 +164,73 @@ def clip(video_id: str, start: float, end: float):
         return {"stream_url": engine.clip_url(video_id, start, end)}
     except Exception as exc:
         raise HTTPException(400, str(exc))
+
+
+class SavedClip(BaseModel):
+    """One clip a student put in their prep set."""
+    video_id: str
+    start: float
+    end: float
+    label: str = ""
+    session_title: str = ""
+    text: str = ""
+    note: str = ""
+
+
+class ClipSet(BaseModel):
+    name: str = "Prep set"
+    clips: List[SavedClip]
+
+
+@app.post("/api/export/reel")
+def export_reel(payload: ClipSet):
+    """Stitch a saved set into one continuous reel."""
+    if not payload.clips:
+        raise HTTPException(400, "The set is empty")
+    moments = [
+        engine.PlayableMoment(
+            video_id=c.video_id, start=c.start, end=c.end, text=c.text,
+            session_title=c.session_title,
+            attrs={"label": c.label or c.session_title or payload.name},
+        )
+        for c in payload.clips
+    ]
+    try:
+        return {"stream_url": build_reel(moments), "count": len(moments)}
+    except Exception as exc:
+        raise HTTPException(400, f"Could not build the reel: {exc}")
+
+
+@app.post("/api/export/sheet", response_class=PlainTextResponse)
+def export_sheet(payload: ClipSet):
+    """A citable prep sheet: every clip with its source, timecode, and words.
+
+    Markdown rather than JSON, because this is the artifact a student prints,
+    marks up, and takes to practice.
+    """
+    def stamp(seconds: float) -> str:
+        seconds = int(seconds)
+        return f"{seconds // 3600}:{seconds % 3600 // 60:02d}:{seconds % 60:02d}"
+
+    lines = [f"# {payload.name}", "",
+             f"{len(payload.clips)} clips from the Precedent library.", ""]
+    for i, clip in enumerate(payload.clips, 1):
+        lines.append(f"## {i}. {clip.label or clip.session_title or 'Moment'}")
+        lines.append("")
+        lines.append(f"- Source: {clip.session_title or clip.video_id}")
+        lines.append(f"- Timecode: {stamp(clip.start)} to {stamp(clip.end)}")
+        try:
+            lines.append(f"- Clip: {engine.clip_url(clip.video_id, clip.start, clip.end)}")
+        except Exception:
+            pass
+        if clip.text:
+            lines.append("")
+            lines.append("> " + clip.text.strip().replace("\n", " ")[:600])
+        if clip.note:
+            lines.append("")
+            lines.append(f"**Note:** {clip.note}")
+        lines.append("")
+    return "\n".join(lines)
 
 
 @app.get("/api/casepack/{case_id}")

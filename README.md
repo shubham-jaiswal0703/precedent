@@ -34,7 +34,11 @@ Built on [VideoDB](https://videodb.io).
 7. **Teaching reels and case packs.** Ask for every leading question objection
    in the archive and get one stitched compilation. Or a structured trial
    breakdown where every entry links to its clip.
-8. **Add a link.** Paste any YouTube URL of a trial, hearing, or argument and it
+8. **Save a prep set.** Put clips in your own set, reorder them, add a practice
+   note to each, then play the set as one continuous reel or download a prep
+   sheet with every source, timecode, transcript, and playable link. The set
+   lives in your browser, so there is no account and a redeploy never drops it.
+9. **Add a link.** Paste any YouTube URL of a trial, hearing, or argument and it
    joins the searchable library.
 
 ## The corpus

@@ -21,6 +21,18 @@ traffic, but our ingest jobs run 2+ minutes and job state currently lives in an
 in-process dict: a container that scales down mid-ingest loses it. Use Cloud
 Run only after the two fixes below.
 
+## What survives a redeploy, and what does not
+
+Railway builds from the repo, so all code and the committed `data/` caches
+(catalog, moments, thumbnails, clip URLs, gallery) ship with the image and the
+deployed site is fast on first visit.
+
+What does not survive: anything the deployed app writes at runtime. A video
+ingested through "Add a Link" on the live site, and any cache it warms, lives
+only in that container. Saved prep sets are deliberately kept in the browser's
+localStorage for this reason, so a student never loses their set to a deploy.
+To grow the hosted library, ingest locally and push the updated `data/`.
+
 ## Two things to fix before real multi-user hosting
 
 1. **State is on local disk.** `data/catalog.json`, `data/casepacks/`, and
