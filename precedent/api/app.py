@@ -4,11 +4,12 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from uuid import uuid4
 
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from .. import jobs, store
 from ..casepacks.gallery import case_cards, case_detail
 from ..playbooks import build as build_playbook, index as playbook_index
 from ..casepacks.generator import generate_case_pack
@@ -86,9 +87,6 @@ def search(
     return {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
 
 
-GALLERY_CACHE = DATA_DIR / "gallery.json"
-
-
 @app.get("/api/gallery")
 def gallery(refresh: bool = False):
     """Browsable shelf of cases in the library.
@@ -97,11 +95,12 @@ def gallery(refresh: bool = False):
     moments and cover art. Rebuild with ?refresh=1 after an ingest, or by
     running scripts/warm_caches.py.
     """
-    if GALLERY_CACHE.exists() and not refresh:
-        return json.loads(GALLERY_CACHE.read_text())
+    if not refresh:
+        cached = store.read("gallery")
+        if cached:
+            return cached
     cards = case_cards()
-    GALLERY_CACHE.parent.mkdir(parents=True, exist_ok=True)
-    GALLERY_CACHE.write_text(json.dumps(cards, indent=2))
+    store.write("gallery", cards)
     return cards
 
 
@@ -120,6 +119,16 @@ def playbook(playbook_id: str, per_step: int = 2):
         raise HTTPException(404, str(exc))
 
 
+@app.get("/api/health")
+def health():
+    """Where state lives and whether webhooks are wired, for debugging a deploy."""
+    return {
+        "storage": store.backend(),
+        "webhooks": bool(jobs.webhook_base()),
+        "public_base_url": jobs.webhook_base() or None,
+    }
+
+
 @app.on_event("startup")
 def warm_on_startup() -> None:
     """Build the gallery in the background so the first visitor never waits."""
@@ -127,9 +136,12 @@ def warm_on_startup() -> None:
 
     def warm() -> None:
         try:
-            cards = case_cards()
-            GALLERY_CACHE.parent.mkdir(parents=True, exist_ok=True)
-            GALLERY_CACHE.write_text(json.dumps(cards, indent=2))
+            # On a fresh Postgres, start from the warm documents in the image.
+            store.seed_from_files({
+                "catalog": {"cases": {}, "sessions": {}},
+                "thumbnails": {}, "clips": {}, "jobs": {},
+            })
+            store.write("gallery", case_cards())
             playbook_index()
         except Exception:
             pass  # a cold cache is slow, not broken
@@ -266,47 +278,53 @@ def reel(case: str, q: str = Query(..., description="semantic query"), limit: in
     return {"stream_url": build_reel(moments), "count": len(moments)}
 
 
-JOBS: Dict[str, dict] = {}
-
-
-def _ingest_and_index(job_id: str, url: str, title: str, case_id: str, case_name: str) -> None:
-    from ..indexing.indexer import index_spoken
-    from ..ingest.pipeline import ingest
-
-    try:
-        JOBS[job_id] = {"state": "uploading", "url": url}
-        entry = ingest(case_id=case_id, case_name=case_name, title=title,
-                       session_type="trial_day", url=url)
-        JOBS[job_id] = {"state": "indexing", "video_id": entry.video_id,
-                        "duration": entry.duration, "url": url}
-        index_spoken(entry.video_id)
-        JOBS[job_id] = {"state": "ready", "video_id": entry.video_id,
-                        "duration": entry.duration, "case_id": case_id, "url": url}
-    except Exception as exc:  # surfaced to the UI rather than swallowed
-        JOBS[job_id] = {"state": "failed", "error": str(exc), "url": url}
-
-
 @app.post("/api/analyze")
 def analyze(
-    background: BackgroundTasks,
     url: str,
     title: str = "Untitled proceeding",
     case: str = "dropped-links",
     case_name: str = "Dropped links",
 ):
-    """Drop in any YouTube/media URL: we ingest, transcribe, and index it."""
-    job_id = uuid4().hex[:12]
-    JOBS[job_id] = {"state": "queued", "url": url}
-    background.add_task(_ingest_and_index, job_id, url, title, case, case_name)
-    return {"job_id": job_id, "state": "queued"}
+    """Drop in any YouTube or media URL: we ingest, transcribe, and index it.
+
+    Returns straight away with a job id. Indexing completion arrives through
+    VideoDB's webhook when PUBLIC_BASE_URL is configured, so the work is not
+    tied to this process staying alive.
+    """
+    job = jobs.start(url=url, title=title, case_id=case, case_name=case_name)
+    return job
 
 
 @app.get("/api/analyze/{job_id}")
 def analyze_status(job_id: str):
-    job = JOBS.get(job_id)
+    job = jobs.get(job_id)
     if not job:
         raise HTTPException(404, "Unknown job")
     return job
+
+
+@app.get("/api/jobs")
+def job_log(limit: int = 20):
+    """Recent ingests, which survive a restart now that they are persisted."""
+    return {"webhooks": bool(jobs.webhook_base()), "jobs": jobs.recent(limit)}
+
+
+@app.post("/api/webhooks/videodb")
+async def videodb_webhook(request: Request, job: str = ""):
+    """Called by VideoDB when an indexing job finishes.
+
+    The payload shape is not contractual, so treat anything that does not look
+    like an explicit failure as success and let the warm-up confirm it.
+    """
+    try:
+        payload = await request.json()
+    except Exception:
+        payload = {}
+    status = str(payload.get("status") or payload.get("state") or "").lower()
+    failed = status in ("failed", "error") or bool(payload.get("error"))
+    if job:
+        jobs.finish(job, ok=not failed, error=str(payload.get("error") or status))
+    return {"received": True, "job": job, "failed": failed}
 
 
 @app.get("/api/speakers/{video_id}")

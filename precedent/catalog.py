@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from typing import Dict, List, Optional
 
-from .config import CATALOG_PATH
+from . import store
 
 
 @dataclass
@@ -25,15 +25,20 @@ class SessionEntry:
     indexes: Dict[str, str] = field(default_factory=dict)  # name -> index_id
 
 
+CATALOG = "catalog"
+
+
 def _load() -> dict:
-    if CATALOG_PATH.exists():
-        return json.loads(CATALOG_PATH.read_text())
-    return {"cases": {}, "sessions": {}}
+    return store.read(CATALOG, {"cases": {}, "sessions": {}}) or {"cases": {}, "sessions": {}}
 
 
 def _save(data: dict) -> None:
-    CATALOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    CATALOG_PATH.write_text(json.dumps(data, indent=2))
+    store.write(CATALOG, data)
+
+
+def stamp() -> float:
+    """Change marker for the catalog, so caches know when to rebuild."""
+    return store.stamp(CATALOG)
 
 
 def upsert_case(case_id: str, name: str, collection_id: str) -> None:

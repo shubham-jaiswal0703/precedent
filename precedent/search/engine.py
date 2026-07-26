@@ -177,36 +177,29 @@ def scene_search(case_id: str, query: str, limit: int = 10) -> List[PlayableMome
     return moments[:limit]
 
 
-_CLIP_CACHE_PATH = None
 _CLIP_CACHE: Optional[dict] = None
 
 
 def _clip_cache() -> dict:
-    """Generated stream URLs, memoized on disk.
+    """Generated stream URLs, persisted through the store.
 
     generate_stream is quick but not free, and the playbooks ask for the same
     curated clips on every page load.
     """
-    global _CLIP_CACHE, _CLIP_CACHE_PATH
+    global _CLIP_CACHE
     if _CLIP_CACHE is None:
-        from ..config import DATA_DIR
+        from .. import store
 
-        _CLIP_CACHE_PATH = DATA_DIR / "clips.json"
-        try:
-            _CLIP_CACHE = json.loads(_CLIP_CACHE_PATH.read_text())
-        except Exception:
-            _CLIP_CACHE = {}
+        _CLIP_CACHE = store.read("clips", {}) or {}
     return _CLIP_CACHE
 
 
 def _remember_clip(key: str, url: str) -> None:
+    from .. import store
+
     cache = _clip_cache()
     cache[key] = url
-    try:
-        _CLIP_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
-        _CLIP_CACHE_PATH.write_text(json.dumps(cache, indent=2))
-    except Exception:
-        pass
+    store.write("clips", cache)
 
 
 def clip_url(video_id: str, start: float, end: float, pad: float = 2.0) -> str:

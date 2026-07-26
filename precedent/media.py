@@ -17,21 +17,19 @@ from typing import Dict, List, Optional
 from .catalog import get_session, sessions_for_case, upsert_session
 from .config import DATA_DIR, get_connection
 
-CACHE = DATA_DIR / "thumbnails.json"
+CACHE = DATA_DIR / "thumbnails.json"  # the file copy shipped in the image
 
 
 def _cache() -> Dict[str, str]:
-    if CACHE.exists():
-        try:
-            return json.loads(CACHE.read_text())
-        except Exception:
-            return {}
-    return {}
+    from . import store
+
+    return store.read("thumbnails", {}) or {}
 
 
 def _save(cache: Dict[str, str]) -> None:
-    CACHE.parent.mkdir(parents=True, exist_ok=True)
-    CACHE.write_text(json.dumps(cache, indent=2))
+    from . import store
+
+    store.write("thumbnails", cache)
 
 
 def _candidate_times(video_id: str, duration: Optional[float]) -> List[float]:

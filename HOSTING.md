@@ -33,15 +33,44 @@ only in that container. Saved prep sets are deliberately kept in the browser's
 localStorage for this reason, so a student never loses their set to a deploy.
 To grow the hosted library, ingest locally and push the updated `data/`.
 
-## Two things to fix before real multi-user hosting
+## Persistence, and the two switches that turn it on
 
-1. **State is on local disk.** `data/catalog.json`, `data/casepacks/`, and
-   `data/contradictions/` are files. On ephemeral or multi-instance hosting they
-   vanish or diverge. Move the catalog and moment records to Postgres (managed PG
-   is one click on Railway/Render).
-2. **Long jobs run in-process.** `/api/analyze` uses FastAPI background tasks and
-   an in-memory `JOBS` dict. Replace with VideoDB's `callback_url` webhooks, every long-running SDK call accepts one: so indexing survives restarts and
-   scales across instances.
+Both of the things that used to break on ephemeral hosting are fixed, and each
+is controlled by one environment variable.
+
+**1. State.** The catalog, caches, and job log used to be files, which vanish on
+redeploy and diverge across instances. They now go through `precedent/store.py`,
+which keeps them as JSON documents in Postgres when `DATABASE_URL` is set and in
+files otherwise. On first boot against an empty database it seeds itself from the
+documents committed in `data/`, so a fresh deploy starts with the warm library
+rather than an empty one.
+
+On Railway: add a Postgres service, then reference its connection string from the
+app service. Railway exposes it as `DATABASE_URL` automatically when you add the
+variable reference. Nothing else changes; `GET /api/health` reports which backend
+is live.
+
+**2. Long jobs.** Ingesting used to run in a FastAPI background task with an
+in-memory dict, so a restart lost the job. Now `POST /api/analyze` returns a job
+id immediately, job state lives in the store, and VideoDB calls
+`POST /api/webhooks/videodb?job=<id>` when indexing finishes.
+
+That needs a public address to call back to, so set `PUBLIC_BASE_URL` to the
+deployment's own origin, for example
+`https://precedent-production-900c.up.railway.app`. Without it the app falls back
+to waiting in a background thread, which is still correct on a single instance,
+just not restart-proof. `GET /api/health` also reports whether webhooks are wired,
+and `GET /api/jobs` shows the persisted job log.
+
+### Railway variables
+
+```
+VIDEO_DB_API_KEY   required
+DATABASE_URL       reference the Postgres service, enables durable state
+PUBLIC_BASE_URL    this deployment's origin, enables indexing webhooks
+```
+
+Deploys are automatic from `main`, so pushing is redeploying.
 
 ## Cost shape
 

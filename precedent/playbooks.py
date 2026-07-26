@@ -315,13 +315,10 @@ _POOL_CACHE: Dict[str, object] = {"stamp": None, "pool": None}
 
 
 def _catalog_stamp() -> float:
-    """Mtime of the catalog, so the pool rebuilds only after an ingest."""
-    from .config import CATALOG_PATH
+    """Change marker for the catalog, so the pool rebuilds only after an ingest."""
+    from .catalog import stamp
 
-    try:
-        return CATALOG_PATH.stat().st_mtime
-    except OSError:
-        return 0.0
+    return stamp()
 
 
 def _pool() -> Dict[str, List[PlayableMoment]]:
