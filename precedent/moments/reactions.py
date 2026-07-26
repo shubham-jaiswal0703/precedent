@@ -94,15 +94,50 @@ def summarize(notes: List[SceneNote], max_chars: int = 420) -> str:
     return text[:max_chars]
 
 
-def attach(moments: List) -> List:
-    """Put a camera_saw note on every moment whose session has the index."""
+# A reaction needs room to develop. A twelve second span is barely a sentence,
+# and the point of this section is watching a face change.
+REACTION_WINDOW = 34.0
+
+
+def widen(video_id: str, start: float, end: float,
+          window: float = REACTION_WINDOW) -> tuple:
+    """Grow a spoken moment into a window long enough to watch a reaction."""
+    session = get_session(video_id)
+    duration = (session.duration if session else None) or (end + window)
+    deficit = window - (end - start)
+    if deficit <= 0:
+        return start, end
+    new_start = max(0.0, start - deficit * 0.35)   # a little before the words
+    new_end = min(float(duration), new_start + window)
+    return round(new_start, 1), round(new_end, 1)
+
+
+def attach(moments: List, breakdown: bool = False) -> List:
+    """Annotate each moment with what the camera saw during it.
+
+    With `breakdown`, also return every individual scene observation inside the
+    clip, offset to the clip's own timeline, so a claim about a witness's
+    expression can be checked against the exact second it was made.
+    """
     for m in moments:
         try:
             notes = during(m.video_id, m.start, m.end)
         except Exception:
             continue
-        if notes:
-            m.attrs["camera_saw"] = summarize(notes)
+        if not notes:
+            continue
+        m.attrs["camera_saw"] = summarize(notes)
+        if breakdown:
+            m.attrs["reaction_timeline"] = [
+                {
+                    "start": n.start,
+                    "offset": max(0.0, round(n.start - m.start, 1)),
+                    "seconds": round(n.end - n.start, 1),
+                    "description": " ".join(n.description.replace("\n", " ").split())
+                                    .replace("**", "").replace("- ", "")[:300],
+                }
+                for n in notes
+            ]
     return moments
 
 
@@ -136,6 +171,9 @@ def search_reactions(case_id: str, query: str, limit: int = 8) -> List:
             continue  # zero hits raise; a session with no match just drops out
 
     moments = refine_many(moments, query, drop_unmatched=False)
-    attach(moments)
+    for m in moments:
+        m.attrs["spoken_start"] = m.start
+        m.start, m.end = widen(m.video_id, m.start, m.end)
+    attach(moments, breakdown=True)
     annotated = [m for m in moments if m.attrs.get("camera_saw")]
     return (annotated or moments)[:limit]

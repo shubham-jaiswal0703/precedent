@@ -90,7 +90,7 @@ def search(
 
 
 @app.get("/api/vertical")
-def vertical_state(keys: str = Query(..., description="comma separated clip keys")):
+def vertical_state(keys: str = Query(..., description="comma separated clip keys")):  # noqa: D401
     """Poll vertical reframe jobs."""
     return {"status": vertical_status([k for k in keys.split(",") if k.strip()])}
 

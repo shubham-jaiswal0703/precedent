@@ -22,8 +22,9 @@ class PlayableMoment:
     score: Optional[float] = None
     session_title: str = ""
     session_type: str = ""
-    stream_url: str = ""
+    stream_url: str = ""       # the clipped span, generated on demand
     player_url: str = ""
+    full_video_url: str = ""   # whole-session stream, for reference only
     poster: str = ""
     attrs: dict = field(default_factory=dict)
 
@@ -48,8 +49,10 @@ def _to_moment(shot) -> PlayableMoment:
         score=getattr(shot, "search_score", None) or getattr(shot, "score", None),
         session_title=session.title if session else "",
         session_type=session.session_type if session else "",
-        stream_url=getattr(shot, "stream_url", "") or "",
-        player_url=getattr(shot, "player_url", "") or "",
+        # Deliberately NOT shot.stream_url: VideoDB returns the whole video
+        # there, not the matched span, so a 12 second answer would arrive as a
+        # one hour player. Clips are always generated from start/end instead.
+        full_video_url=getattr(shot, "stream_url", "") or "",
         poster=_poster(shot.video_id),
     )
 

@@ -136,6 +136,14 @@ thread. `scripts/warm_caches.py` does the same offline and should be run after
 any ingest. First load went from minutes to under three seconds; warm loads are
 a few milliseconds.
 
+## One trap worth knowing
+
+A VideoDB search result carries a `stream_url`, and it is **the whole video**,
+not the matched span. Trusting it means a twelve second answer arrives as a one
+hour player with the interesting part buried somewhere inside. Clips are always
+generated from `start`/`end` through `generate_stream`; the session-length URL is
+kept separately as `full_video_url` and never handed to a player.
+
 ## Known limits
 
 * **Vertical reframing is slow and occasionally fails** upstream. It is cached

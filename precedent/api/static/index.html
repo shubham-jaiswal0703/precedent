@@ -207,6 +207,17 @@
     margin-top:10px; padding:9px 13px; font-size:14px; font-style:italic;
     background:#f3ede2; border-left:3px solid #b08d3f; color:#6b5a33;
   }
+  .obs { list-style:none; margin:8px 0 0; padding:0; border-top:1px solid var(--line); }
+  .obs li { border-bottom:1px solid var(--line); }
+  .obs li button {
+    display:flex; gap:12px; align-items:baseline; width:100%; text-align:left;
+    background:none; border:none; cursor:pointer; padding:8px 4px; color:var(--ink);
+    font-size:14px; line-height:1.5;
+  }
+  .obs li button:hover { background:#faf6ef; }
+  .obs li.playing button { background:#f3ede2; }
+  .obs .at { font-variant-numeric:tabular-nums; color:#8a6d2f; min-width:44px; font-size:13px; }
+  .verticalbox video { max-height:520px; width:auto; max-width:min(100%,300px); display:block; margin:10px auto 0; }
   .chapters { list-style:none; margin:12px 0 0; padding:0; border-top:1px solid var(--line); }
   .chapters li { border-bottom:1px solid var(--line); }
   .chapters li button {
@@ -724,7 +735,104 @@ async function runRoom() {
   const data = await r.json();
   if (!data.results.length) { out.innerHTML = '<div class="empty">Nothing matched in the video sessions.</div>'; return; }
   out.innerHTML = "";
-  data.results.forEach(m => out.appendChild(momentCard(m)));
+  data.results.forEach(m => out.appendChild(reactionCard(m)));
+}
+
+function reactionCard(m) {
+  const card = document.createElement("div");
+  card.className = "card";
+  const attrs = m.attrs || {};
+  const h = attrs.highlight || {};
+  const att = attrs.attribution || {};
+  const dur = Math.round(m.end - m.start);
+  card.innerHTML = `<div class="cardhead">
+      <div class="meta" style="margin:0">${m.session_title} · ${ts(m.start)} to ${ts(m.end)} · ${dur}s</div>
+    </div>
+    ${att.label ? `<span class="who">${att.label}</span>` : ""}
+    <blockquote>${(h.quote || m.text || "").slice(0, 300)}</blockquote>`;
+
+  const save = document.createElement("button");
+  const already = inSet(m);
+  save.className = "savebtn" + (already ? " saved" : "");
+  save.textContent = already ? "In my set" : "Save to my set";
+  save.onclick = (e) => { e.stopPropagation(); toggleSet(m, save); };
+  card.querySelector(".cardhead").appendChild(save);
+
+  let video = null;
+  if (m.stream_url) { video = player(m.stream_url, m.poster); card.appendChild(video); }
+
+  const timeline = attrs.reaction_timeline || [];
+  if (timeline.length) {
+    const note = document.createElement("div");
+    note.className = "caption";
+    note.textContent = `Frame by frame through these ${dur} seconds. Click an observation to jump to the moment it describes.`;
+    card.appendChild(note);
+    const list = document.createElement("ol");
+    list.className = "obs";
+    timeline.forEach(n => {
+      const li = document.createElement("li");
+      li.innerHTML = `<button><span class="at">+${n.offset.toFixed(0)}s</span>
+        <span class="lab">${n.description}</span></button>`;
+      li.querySelector("button").onclick = () => {
+        if (!video) return;
+        video.currentTime = n.offset;
+        video.play().catch(() => {});
+      };
+      list.appendChild(li);
+    });
+    if (video) {
+      video.addEventListener("timeupdate", () => {
+        const now = video.currentTime;
+        timeline.forEach((n, i) => {
+          const next = timeline[i + 1];
+          const active = now >= n.offset && (!next || now < next.offset);
+          if (list.children[i]) list.children[i].classList.toggle("playing", active);
+        });
+      });
+    }
+    card.appendChild(list);
+  } else if (attrs.camera_saw) {
+    const seen = document.createElement("div");
+    seen.className = "cameraSaw";
+    seen.innerHTML = `<b>What the camera saw</b> ${attrs.camera_saw}`;
+    card.appendChild(seen);
+  }
+
+  // Speaker-tracking reframe literally zooms in on whoever is talking, which is
+  // what "look at the face" means here. It is slow, so it is opt-in.
+  const zoom = document.createElement("button");
+  zoom.className = "btn ghost";
+  zoom.style.marginTop = "10px";
+  zoom.textContent = "Zoom in on the speaker (9:16)";
+  zoom.onclick = async () => {
+    zoom.disabled = true;
+    zoom.textContent = "Reframing, this takes a few minutes...";
+    const r = await fetch(`/api/vertical?video_id=${m.video_id}&start=${m.start}&end=${m.end}`, { method: "POST" });
+    if (!r.ok) { zoom.textContent = "Could not reframe"; return; }
+    const started = await r.json();
+    if (started.state === "ready" && started.stream_url) {
+      zoom.replaceWith(wrapVertical(player(started.stream_url)));
+      return;
+    }
+    const key = started.key;
+    const tick = async () => {
+      const s = await (await fetch(`/api/vertical?keys=${encodeURIComponent(key)}`)).json();
+      const st = s.status[key] || {};
+      if (st.state === "ready" && st.stream_url) { zoom.replaceWith(wrapVertical(player(st.stream_url))); }
+      else if (st.state === "failed") { zoom.textContent = `Reframe failed: ${st.error || "service error"}`; }
+      else { setTimeout(tick, 15000); }
+    };
+    setTimeout(tick, 15000);
+  };
+  card.appendChild(zoom);
+  return card;
+}
+
+function wrapVertical(videoEl) {
+  const box = document.createElement("div");
+  box.className = "verticalbox";
+  box.appendChild(videoEl);
+  return box;
 }
 
 /* ---------- Prepare ---------- */
