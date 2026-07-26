@@ -119,10 +119,14 @@ def playbook(playbook_id: str, per_step: int = 2):
         raise HTTPException(404, str(exc))
 
 
+VERSION = "2026.07.26-4"  # bumped per deploy so /api/health proves which build is live
+
+
 @app.get("/api/health")
 def health():
     """Where state lives and whether webhooks are wired, for debugging a deploy."""
     return {
+        "version": VERSION,
         "storage": store.backend(),
         "webhooks": bool(jobs.webhook_base()),
         "public_base_url": jobs.webhook_base() or None,
