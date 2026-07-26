@@ -48,6 +48,33 @@ def cases():
     ]
 
 
+SEARCH_CACHE = "search_cache"
+
+
+def _cache_key(**parts) -> str:
+    return "|".join(f"{k}={parts[k]}" for k in sorted(parts))
+
+
+def _cached_response(key: str):
+    return (store.read(SEARCH_CACHE, {}) or {}).get(key)
+
+
+def _remember_response(key: str, payload: dict) -> None:
+    """Remember a search response.
+
+    The same question asked twice should not repeat minutes of work: a speaker
+    filtered query fans out across every session and can take half a minute
+    cold. Results are deterministic for a fixed corpus, so caching them is
+    honest as well as fast. Pass fresh=1 to bypass.
+    """
+    cache = store.read(SEARCH_CACHE, {}) or {}
+    if len(cache) > 400:
+        for stale in list(cache)[:100]:
+            cache.pop(stale, None)
+    cache[key] = payload
+    store.write(SEARCH_CACHE, cache)
+
+
 @app.get("/api/search")
 def search(
     case: str,
@@ -57,16 +84,26 @@ def search(
     clips: bool = True,
     precise: bool = True,
     role: Optional[str] = None,
+    fresh: bool = False,
 ):
     """Ask like a professor. `auto` routes by intent; the rest force an index."""
+    key = _cache_key(case=case, q=q.strip().lower(), mode=mode, limit=limit,
+                     precise=precise, role=role or "")
+    if not fresh:
+        hit = _cached_response(key)
+        if hit:
+            return hit
+
     if mode == "auto":
         routed = router.search(case, q, limit=limit, with_clips=clips, role=role)
-        return {
+        payload = {
             "intent": routed["intent"],
             "interpretation": routed["interpretation"],
             "filters": routed["filters"],
             "results": [m.__dict__ for m in routed["results"]],
         }
+        _remember_response(key, payload)
+        return payload
 
     if mode == "semantic":
         moments = engine.semantic_search(case, q, limit=limit, precise=precise, speaker_role=role)
@@ -86,7 +123,9 @@ def search(
             except Exception:
                 pass
         results.append(item)
-    return {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
+    payload = {"intent": mode, "interpretation": interpretation, "filters": {}, "results": results}
+    _remember_response(key, payload)
+    return payload
 
 
 @app.get("/api/vertical")
@@ -117,10 +156,16 @@ def reaction_sessions():
 
 
 @app.get("/api/reactions/search")
-def reaction_search(q: str, case: Optional[str] = None, limit: int = 5):
+def reaction_search(q: str, case: Optional[str] = None, limit: int = 5, fresh: bool = False):
     """Spoken moments joined with what the camera saw, across every video session."""
     from ..catalog import get_session
     from ..moments.reactions import search_reactions, video_ids_with_reactions
+
+    key = _cache_key(kind="reactions", q=q.strip().lower(), case=case or "", limit=limit)
+    if not fresh:
+        hit = _cached_response(key)
+        if hit:
+            return hit
 
     cases = [case] if case else sorted({
         get_session(v).case_id for v in video_ids_with_reactions() if get_session(v)
@@ -140,7 +185,9 @@ def reaction_search(q: str, case: Optional[str] = None, limit: int = 5):
                 m.stream_url = engine.clip_url(m.video_id, m.start, m.end)
             except Exception:
                 pass
-    return {"query": q, "cases": cases, "results": [m.__dict__ for m in results]}
+    payload = {"query": q, "cases": cases, "results": [m.__dict__ for m in results]}
+    _remember_response(key, payload)
+    return payload
 
 
 @app.get("/api/gallery")
