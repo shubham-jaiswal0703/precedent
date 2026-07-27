@@ -9,6 +9,29 @@ reading about it in a casebook.
 
 Built on [VideoDB](https://videodb.io).
 
+## In 200 words
+
+Law students learn advocacy from transcripts: they read what was argued and never
+hear how it was won. Precedent turns courtroom archives into a searchable library
+of real advocacy where every answer is a playable clip, not a page citation.
+
+Real footage: 46 sessions, 50 hours, 8 cases. SCOTUS arguments from Oyez, federal
+appellate arguments from CourtListener, and televised trials including Depp v.
+Heard and In re Roundup.
+
+VideoDB does all of it. Spoken-word and scene indexing give word-level
+transcripts carrying speaker diarization, which a rule-first pass over court's
+ritual language turns into 1,394 typed moments: objections with their grounds,
+rulings, sidebars, impeachment by prior statement, standard of review. Search V2
+indexes those moments as temporal records with declared aggregate fields, so
+ruling counts come back server side, and `ask()` corroborates grounded answers.
+The scene index feeds Read the Room, reporting what the camera saw when a line
+landed, gated on a pixel check so it cannot invent a face. Programmable editing
+composes teaching reels on a multi-track timeline with chapter cards and captions.
+
+The signature feature is the contradiction finder: it pulls a witness's claims
+from one day, cross-searches another, and returns both clips side by side.
+
 ## What it does
 
 **Prepare.** The landing view asks what you are preparing, not what you want to
@@ -55,9 +78,9 @@ pseudonym.
 
 ## The corpus
 
-Roughly 47 hours across seven cases, all public record. Scale is deliberately
-capped: every mechanic is demonstrated, and more footage would mean more surface
-to keep correct rather than a better story.
+50 hours across 8 cases in 46 sessions, all public record, yielding 1,394 indexed
+moments. Scale is deliberately capped: every mechanic is demonstrated, and more
+footage would mean more surface to keep correct rather than a better story.
 
 * **US Supreme Court oral arguments** via Oyez, including Dobbs, Students for
   Fair Admissions v. Harvard, Sackett v. EPA, 303 Creative, Ramos v. Louisiana.
